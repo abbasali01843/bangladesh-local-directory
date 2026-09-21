@@ -18,7 +18,7 @@
     "react": "latest",
     "react-dom": "latest",
     "lucide-react": "latest",
-    "@prisma/client": "latest"
+    "@prisma/client": "7.9.1"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -28,7 +28,7 @@
     "tailwindcss": "latest",
     "@tailwindcss/postcss": "latest",
     "postcss": "latest",
-    "prisma": "latest",
+    "prisma": "7.9.1",
     "tsx": "latest"
   },
   "prisma": {
