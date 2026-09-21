@@ -5,11 +5,11 @@ datasource db {
   provider = "postgresql"
   url = env("DATABASE_URL")
 }
-enum Role { USER BUSINESS_OWNER ADMIN }
-enum ListingStatus { PENDING APPROVED REJECTED SUSPENDED }
-enum VerificationStatus { UNVERIFIED VERIFIED OWNER_CLAIMED }
-enum ClaimStatus { PENDING APPROVED REJECTED }
-enum ModerationStatus { PENDING APPROVED REJECTED }
+enum Role {\n  USER\n  BUSINESS_OWNER\n  ADMIN\n}
+enum ListingStatus {\n  PENDING\n  APPROVED\n  REJECTED\n  SUSPENDED\n}
+enum VerificationStatus {\n  UNVERIFIED\n  VERIFIED\n  OWNER_CLAIMED\n}
+enum ClaimStatus {\n  PENDING\n  APPROVED\n  REJECTED\n}
+enum ModerationStatus {\n  PENDING\n  APPROVED\n  REJECTED\n}
 
 model User {
   id String @id @default(cuid())
