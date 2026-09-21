@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum Role { USER BUSINESS_OWNER ADMIN }
+enum ListingStatus { PENDING APPROVED REJECTED SUSPENDED }
+enum VerificationStatus { UNVERIFIED VERIFIED OWNER_CLAIMED }
+enum ClaimStatus { PENDING APPROVED REJECTED }
+enum ModerationStatus { PENDING APPROVED REJECTED }
+
+model User {
+  id String @id @default(cuid())
+  name String
+  email String? @unique
+  phone String? @unique
+  role Role @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  servicesCreated Service[] @relation("CreatedServices")
+  claims Claim[]
+  reviews Review[]
+  reports Report[]
+  favorites Favorite[]
+}
+model District {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  upazilas Upazila[]
+  services Service[]
+}
+model Upazila {
+  id String @id @default(cuid())
+  name String
+  slug String
+  districtId String
+  district District @relation(fields:[districtId], references:[id], onDelete:Cascade)
+  unions Union[]
+  services Service[]
+  @@unique([districtId, slug])
+}
+model Union {
+  id String @id @default(cuid())
+  name String
+  slug String
+  upazilaId String
+  upazila Upazila @relation(fields:[upazilaId], references:[id], onDelete:Cascade)
+  areas Area[]
+  services Service[]
+  @@unique([upazilaId, slug])
+}
+model Area {
+  id String @id @default(cuid())
+  name String
+  slug String
+  unionId String
+  union Union @relation(fields:[unionId], references:[id], onDelete:Cascade)
+  services Service[]
+  @@unique([unionId, slug])
+}
+model Category {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  icon String?
+  fields CategoryField[]
+  services Service[]
+}
+model CategoryField {
+  id String @id @default(cuid())
+  categoryId String
+  category Category @relation(fields:[categoryId], references:[id], onDelete:Cascade)
+  key String
+  label String
+  type String @default("text")
+  required Boolean @default(false)
+  values ServiceFieldValue[]
+  @@unique([categoryId, key])
+}
+model Service {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  categoryId String
+  districtId String
+  upazilaId String
+  unionId String?
+  areaId String?
+  phone String?
+  email String?
+  address String?
+  description String?
+  latitude Float?
+  longitude Float?
+  status ListingStatus @default(PENDING)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  createdById String?
+  claimedById String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  category Category @relation(fields:[categoryId], references:[id])
+  district District @relation(fields:[districtId], references:[id])
+  upazila Upazila @relation(fields:[upazilaId], references:[id])
+  union Union? @relation(fields:[unionId], references:[id])
+  area Area? @relation(fields:[areaId], references:[id])
+  createdBy User? @relation("CreatedServices", fields:[createdById], references:[id])
+  claimedBy User? @relation(fields:[claimedById], references:[id])
+  fields ServiceFieldValue[]
+  photos ServicePhoto[]
+  claims Claim[]
+  reviews Review[]
+  reports Report[]
+  favorites Favorite[]
+  @@index([districtId, upazilaId, categoryId, status])
+}
+model ServiceFieldValue {
+  id String @id @default(cuid())
+  serviceId String
+  fieldId String
+  value String
+  service Service @relation(fields:[serviceId], references:[id], onDelete:Cascade)
+  field CategoryField @relation(fields:[fieldId], references:[id], onDelete:Cascade)
+  @@unique([serviceId, fieldId])
+}
+model ServicePhoto {
+  id String @id @default(cuid())
+  serviceId String
+  url String
+  sortOrder Int @default(0)
+  service Service @relation(fields:[serviceId], references:[id], onDelete:Cascade)
+}
+model Claim {
+  id String @id @default(cuid())
+  serviceId String
+  userId String
+  status ClaimStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  reviewedAt DateTime?
+  service Service @relation(fields:[serviceId], references:[id], onDelete:Cascade)
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  @@unique([serviceId, userId])
+}
+model Review {
+  id String @id @default(cuid())
+  serviceId String
+  userId String
+  rating Int
+  body String?
+  status ModerationStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  service Service @relation(fields:[serviceId], references:[id], onDelete:Cascade)
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  @@unique([serviceId, userId])
+}
+model Report {
+  id String @id @default(cuid())
+  serviceId String
+  userId String?
+  reason String
+  status ModerationStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  service Service @relation(fields:[serviceId], references:[id], onDelete:Cascade)
+  user User? @relation(fields:[userId], references:[id])
+}
+model Favorite {
+  id String @id @default(cuid())
+  serviceId String
+  userId String
+  createdAt DateTime @default(now())
+  service Service @relation(fields:[serviceId], references:[id], onDelete:Cascade)
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  @@unique([serviceId, userId])
+}
