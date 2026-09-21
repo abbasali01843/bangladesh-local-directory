@@ -107,7 +107,7 @@ model Service {
   union Union? @relation(fields:[unionId], references:[id])
   area Area? @relation(fields:[areaId], references:[id])
   createdBy User? @relation("CreatedServices", fields:[createdById], references:[id])
-  claimedBy User? @relation(fields:[claimedById], references:[id])
+  claimedBy User? @relation("ClaimedServices", fields:[claimedById], references:[id])
   fields ServiceFieldValue[]
   photos ServicePhoto[]
   claims Claim[]
