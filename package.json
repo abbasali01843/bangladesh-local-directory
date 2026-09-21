@@ -7,7 +7,6 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
@@ -18,7 +17,8 @@
     "react": "latest",
     "react-dom": "latest",
     "lucide-react": "latest",
-    "@prisma/client": "6.19.1"
+    "@prisma/client": "6.19.3",
+    "prisma": "6.19.3"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -28,7 +28,6 @@
     "tailwindcss": "latest",
     "@tailwindcss/postcss": "latest",
     "postcss": "latest",
-    "prisma": "6.19.1",
     "tsx": "latest"
   },
   "prisma": {
