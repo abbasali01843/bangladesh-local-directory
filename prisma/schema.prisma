@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
   servicesCreated Service[] @relation("CreatedServices")
   servicesClaimed Service[] @relation("ClaimedServices")
+  sessions Session[]
   claims Claim[]
   reviews Review[]
   reports Report[]
