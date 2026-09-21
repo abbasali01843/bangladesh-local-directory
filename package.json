@@ -24,6 +24,10 @@
     "tailwindcss": "latest",
     "@tailwindcss/postcss": "latest",
     "postcss": "latest",
-    "prisma": "latest"
+    "prisma": "latest",
+    "tsx": "latest"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
