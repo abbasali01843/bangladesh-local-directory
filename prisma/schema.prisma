@@ -20,6 +20,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   servicesCreated Service[] @relation("CreatedServices")
+  servicesClaimed Service[] @relation("ClaimedServices")
   claims Claim[]
   reviews Review[]
   reports Report[]
