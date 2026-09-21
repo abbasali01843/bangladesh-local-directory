@@ -1,0 +1,1 @@
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#f6f8fb;color:#172033;font-family:Arial,sans-serif}body{min-height:100vh}button,input{font:inherit}.container{width:min(1120px,calc(100% - 32px));margin:auto}
