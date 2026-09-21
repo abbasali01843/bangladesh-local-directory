@@ -1,0 +1,7 @@
+"use client";
+import { useState } from "react"; import { useRouter } from "next/navigation";
+export default function Register(){
+ const [name,setName]=useState(""),[contact,setContact]=useState(""),[password,setPassword]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false); const router=useRouter();
+ async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);const isEmail=contact.includes("@");const r=await fetch("/api/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,password,[isEmail?"email":"phone"]:contact})});const j=await r.json();setMessage(r.ok?"Account created":"Account তৈরি হয়নি");setBusy(false);if(r.ok)router.push("/");}
+ return <main className="container" style={{maxWidth:460,padding:"48px 0"}}><h1>Register</h1><form onSubmit={submit} style={{display:"grid",gap:14,background:"#fff",padding:24,borderRadius:18,border:"1px solid #e5e7eb"}}><input required placeholder="নাম" value={name} onChange={e=>setName(e.target.value)} style={{padding:12}}/><input required placeholder="Email বা মোবাইল" value={contact} onChange={e=>setContact(e.target.value)} style={{padding:12}}/><input required minLength={8} type="password" placeholder="Password (কমপক্ষে ৮)" value={password} onChange={e=>setPassword(e.target.value)} style={{padding:12}}/>{message&&<p>{message}</p>}<button disabled={busy} style={{padding:13}}>{busy?"অপেক্ষা করুন...":"Account তৈরি করুন"}</button></form></main>;
+}
