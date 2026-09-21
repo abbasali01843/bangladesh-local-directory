@@ -1,2 +1,125 @@
-import {categories} from "@/data/categories";
-export default function Home(){return <main><header style={{background:"#fff",borderBottom:"1px solid #e5e7eb"}}><div className="container" style={{height:64,display:"flex",alignItems:"center",justifyContent:"space-between"}}><strong style={{fontSize:20}}>🇧🇩 Local Hub</strong><span>বাংলাদেশ</span></div></header><section style={{background:"linear-gradient(135deg,#0f766e,#155e75)",color:"#fff",padding:"56px 0"}}><div className="container"><p style={{margin:0,opacity:.85}}>আপনার এলাকার প্রয়োজনীয় তথ্য</p><h1 style={{fontSize:"clamp(30px,6vw,52px)",margin:"10px 0 20px"}}>সবকিছু খুঁজুন এক জায়গায়</h1><form action="/search" style={{display:"flex",gap:10,maxWidth:720}}><input name="q" aria-label="Search" placeholder="ডাক্তার, দোকান, মিস্ত্রি, রেস্টুরেন্ট..." style={{flex:1,padding:"16px 18px",border:0,borderRadius:12}}/><button style={{border:0,borderRadius:12,padding:"0 22px",background:"#fff",color:"#0f766e",fontWeight:700}}>খুঁজুন</button></form></div></section><section className="container" style={{padding:"32px 0"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><h2>জনপ্রিয় ক্যাটাগরি</h2><a href="/categories">সবগুলো →</a></div><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:12}}>{categories.map(c=><a key={c.id} href={"/services?category="+c.id} style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:16,padding:18,textAlign:"center",textDecoration:"none",color:"inherit"}}><div style={{fontSize:28}}>{c.icon}</div><div style={{marginTop:8,fontWeight:600}}>{c.name}</div></a>)}</div></section><section className="container" style={{paddingBottom:48,display:"flex",gap:12,flexWrap:"wrap"}}><a href="/add-listing" style={{padding:"14px 18px",background:"#0f766e",color:"#fff",borderRadius:10,textDecoration:"none"}}>＋ তথ্য যোগ করুন</a><a href="/admin" style={{padding:"14px 18px",background:"#fff",border:"1px solid #d0d5dd",borderRadius:10,textDecoration:"none",color:"inherit"}}>Admin Preview</a></section></main>}
+import { categories } from "@/data/categories";
+
+export default function Home() {
+  return (
+    <main className="pb-24">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="container h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🇧🇩</span>
+            <strong className="text-lg font-bold text-teal-800">Local Hub</strong>
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <a href="/login" className="text-teal-700 font-medium">লগইন</a>
+            <a
+              href="/add-listing"
+              className="bg-teal-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium"
+            >
+              + যোগ করুন
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-teal-700 to-cyan-800 text-white">
+        <div className="container py-10 md:py-14">
+          <p className="text-teal-100 text-sm mb-1">আপনার এলাকার প্রয়োজনীয় তথ্য</p>
+          <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
+            সবকিছু খুঁজুন<br className="md:hidden" /> এক জায়গায়
+          </h1>
+
+          <form action="/search" className="flex gap-2 max-w-2xl">
+            <input
+              name="q"
+              aria-label="Search"
+              placeholder="ডাক্তার, দোকান, মিস্ত্রি, রেস্টুরেন্ট..."
+              className="flex-1 px-4 py-3.5 rounded-xl text-gray-900 border-0 outline-none shadow-sm"
+            />
+            <button
+              type="submit"
+              className="bg-white text-teal-800 font-bold px-5 rounded-xl shadow-sm hover:bg-teal-50 transition"
+            >
+              খুঁজুন
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="container py-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-800">জনপ্রিয় ক্যাটাগরি</h2>
+          <a href="/categories" className="text-teal-700 text-sm font-medium">
+            সবগুলো →
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {categories.map((c) => (
+            <a
+              key={c.id}
+              href={`/services?category=${c.id}`}
+              className="bg-white border border-gray-200 rounded-2xl p-4 text-center hover:shadow-md hover:border-teal-300 transition group"
+            >
+              <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
+                {c.icon}
+              </div>
+              <div className="font-semibold text-gray-800 text-sm">{c.name}</div>
+              <div className="text-xs text-gray-400 mt-1">তথ্য দেখুন</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* Quick Actions */}
+      <section className="container pb-8">
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div>
+            <h3 className="font-bold text-gray-800">আপনার ব্যবসা বা সেবা যোগ করুন</h3>
+            <p className="text-sm text-gray-500 mt-0.5">
+              বিনামূল্যে তালিকাভুক্ত হোন এবং স্থানীয় মানুষের কাছে পৌঁছান
+            </p>
+          </div>
+          <a
+            href="/add-listing"
+            className="bg-teal-700 text-white px-5 py-2.5 rounded-xl font-medium whitespace-nowrap hover:bg-teal-800 transition"
+          >
+            + তথ্য যোগ করুন
+          </a>
+        </div>
+      </section>
+
+      {/* Bottom Nav (Mobile) */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden">
+        <div className="flex items-center justify-around h-16">
+          <a href="/" className="flex flex-col items-center text-teal-700 text-xs font-medium">
+            <span className="text-xl">🏠</span>
+            <span>হোম</span>
+          </a>
+          <a href="/categories" className="flex flex-col items-center text-gray-500 text-xs">
+            <span className="text-xl">📂</span>
+            <span>ক্যাটাগরি</span>
+          </a>
+          <a
+            href="/add-listing"
+            className="flex flex-col items-center -mt-5"
+          >
+            <span className="bg-teal-700 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg">
+              +
+            </span>
+          </a>
+          <a href="/search" className="flex flex-col items-center text-gray-500 text-xs">
+            <span className="text-xl">🔍</span>
+            <span>খুঁজুন</span>
+          </a>
+          <a href="/login" className="flex flex-col items-center text-gray-500 text-xs">
+            <span className="text-xl">👤</span>
+            <span>অ্যাকাউন্ট</span>
+          </a>
+        </div>
+      </nav>
+    </main>
+  );
+}
