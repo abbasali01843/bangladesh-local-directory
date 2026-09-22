@@ -1,82 +1,33 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import TopBar from "@/components/TopBar";
-import BottomNav from "@/components/BottomNav";
+import Link from 'next/link';
+import { useState } from 'react';
+import { LogIn } from 'lucide-react';
 
-export default function Login() {
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [ok, setOk] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const router = useRouter();
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setMessage("");
-    const r = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ identifier, password }),
-    });
-    const j = await r.json();
-    if (r.ok) {
-      setOk(true);
-      setMessage("লগইন সফল!");
-      router.push("/");
-    } else {
-      setOk(false);
-      setMessage(j.message || "লগইন ব্যর্থ");
-    }
-    setBusy(false);
-  }
-
+export default function LoginPage() {
+  const [msg, setMsg] = useState('');
   return (
-    <main className="ps-page">
-      <TopBar title="লগইন" subtitle="অ্যাকাউন্টে প্রবেশ" backHref="/" />
-
-      <div className="ps-content">
-        <form onSubmit={submit} className="ps-form">
-          <label className="ps-label">
-            ইমেইল বা মোবাইল
-            <input
-              required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="01XXXXXXXXX বা email"
-              className="ps-input"
-            />
-          </label>
-          <label className="ps-label">
-            পাসওয়ার্ড
-            <input
-              required
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="ps-input"
-            />
-          </label>
-
-          {message && (
-            <div className={ok ? "ps-msg-ok" : "ps-msg-err"}>{message}</div>
-          )}
-
-          <button disabled={busy} className="ps-btn-primary ps-btn-block">
-            {busy ? "অপেক্ষা করুন..." : "লগইন"}
-          </button>
-
-          <p className="ps-form-footer">
-            অ্যাকাউন্ট নেই? <a href="/register">রেজিস্টার করুন</a>
-          </p>
-        </form>
-      </div>
-
-      <BottomNav active="account" />
-    </main>
+    <div className="max-w-md mx-auto px-4 py-10">
+      <h1 className="text-2xl font-bold mb-6 flex items-center gap-2"><LogIn /> লগইন</h1>
+      <form
+        className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setMsg('⚠️ এটি ডেমো মোড। ডেটাবেজ যুক্ত হলে লগইন সম্পূর্ণ কার্যকর হবে।');
+        }}
+      >
+        <div>
+          <label className="text-sm font-medium">ফোন / ইমেইল</label>
+          <input required className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-green-600" placeholder="০১৭xxxxxxxx" />
+        </div>
+        <div>
+          <label className="text-sm font-medium">পাসওয়ার্ড</label>
+          <input required type="password" className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-green-600" placeholder="••••••••" />
+        </div>
+        {msg && <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">{msg}</p>}
+        <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg font-semibold">লগইন করুন</button>
+        <p className="text-sm text-center text-gray-500">অ্যাকাউন্ট নেই? <Link href="/register" className="text-green-700 underline">রেজিস্ট্রেশন করুন</Link></p>
+      </form>
+    </div>
   );
 }

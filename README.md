@@ -1,46 +1,49 @@
-# 🇧🇩 Local Hub Bangladesh
+# 🇧🇩 লোকাল হাব বাংলাদেশ
 
-বাংলাদেশের স্থানীয় ব্যবসা, সেবা ও প্রয়োজনীয় তথ্য এক জায়গায়।
+সারা বাংলাদেশের স্থানীয় ব্যবসা, সেবা ও প্রয়োজনীয় তথ্য এক জায়গায়।
 
-**Live:** [bangladesh-local-directory.vercel.app](https://bangladesh-local-directory.vercel.app)
+> **v2 ব্রাঞ্চ** — সম্পূর্ণ নতুন কোডবেস (শুরু থেকে), মোবাইল-ফার্স্ট ডিরেক্টরি স্টাইলে।
 
-## Features
+## ফিচার
 
-- 🔍 সার্চ (ডেমো + DB)
-- 📂 ২১টি ক্যাটাগরি + আসল কাউন্ট
-- 📍 জেলা চিপস + লোকেশন ফিল্টার
-- 📢 নোটিশ সিস্টেম
-- ➕ তথ্য যোগ (DB থাকলে সেভ)
-- 👤 প্রোফাইল / লগইন / রেজিস্টার
-- 🛡️ অ্যাডমিন + ওনার ড্যাশবোর্ড
-- 📞 কল / WhatsApp / ম্যাপ
-- 📱 মোবাইল-ফার্স্ট UI (Priyo Sherpur style)
+- 🔍 সার্চ (নাম/ঠিকানা/বিবরণ)
+- 📂 ২১টি ক্যাটাগরি + জেলা ফিল্টার
+- 📍 ৬৪ জেলার জেলা-পেজ
+- 📢 বিজ্ঞপ্তি সিস্টেম + হোমপেজ টিকার
+- ➕ তথ্য যোগ ফর্ম (ডেমো)
+- 👤 লগইন / রেজিস্ট্রেশন / প্রোফাইল (ডেমো)
+- 🛡️ অ্যাডমিন প্যানেল (ডেমো)
+- 📞 কল / WhatsApp / ম্যাপ বাটন
+- 📱 মোবাইল-ফার্স্ট UI (Next.js 16 + Tailwind 4)
 
-## Mode
+## পেজ স্ট্রাকচার
 
-| Mode | কখন |
+| পেজ | রুট |
 |------|------|
-| **Static (ডেমো)** | `DATABASE_URL` না থাকলে — ব্রাউজ/সার্চ কাজ করে |
-| **Full (DB)** | Postgres সেট থাকলে — লগইন, সেভ, মডারেশন |
+| হোম | / |
+| ক্যাটাগরি | /category/[slug] (+ ?district=) |
+| তথ্য বিস্তারিত | /service/[slug] |
+| জেলা | /district/[slug] |
+| সার্চ | /search?q= |
+| বিজ্ঞপ্তি | /notice |
+| তথ্য যোগ | /add |
+| লগইন/রেজিস্ট্রেশন | /login, /register |
+| প্রোফাইল/অ্যাডমিন | /profile, /admin |
+| স্ট্যাটিক | /about, /contact, /advisors, /donors, /privacy |
 
-## Tech
-
-Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
-
-## Roadmap status
-
-- [x] Phase 0 — Stabilization (UI, menu, admin/owner style)
-- [x] Phase 1 — Data foundation (demo services, counts, fallback APIs)
-- [x] Phase 2 — Security basics (rate limit login/register, validation)
-- [x] Phase 3 — Core UX (detail call/map/wa, search fallback)
-- [x] Phase 4 — Engagement (notices, profile, about, SEO)
-- [ ] Phase 5 — Real DB + images + PWA polish (needs your Postgres)
-
-## Optional: Database
-
-When ready, add Vercel Postgres or Neon and set `DATABASE_URL`, then:
+## চালানো
 
 ```bash
-npx prisma db push
-npm run db:seed
+npm install
+npm run dev
 ```
+
+## ডেটাবেজ যোগ (পরে)
+
+ডেমো ডেটা `data/` ফোল্ডারে। ডেটাবেজ যুক্ত করার সময়:
+1. PostgreSQL (Neon/Vercel Postgres) সেট করে `.env`-এ `DATABASE_URL` দিন
+2. Prisma-এর মাধ্যমে `lib/data.ts`-এর ফাংশনগুলো DB কলে বদলে দিন — পেজগুলো অটো কাজ করবে
+
+## ⚠️ নোট
+
+এটি priyosherpur.com-এর **কোনো কনটেন্ট বা ডিজাইন কপি নয়** — শুধু একই ধরনের ডিরেক্টরি ফিচার-সেট, সম্পূর্ণ নিজস্ব কোড ও ডেমো ডেটা দিয়ে তৈরি।

@@ -1,50 +1,14 @@
-import TopBar from "@/components/TopBar";
-import BottomNav from "@/components/BottomNav";
-import { pilot } from "@/data/pilot";
+export const metadata = { title: 'আমাদের সম্পর্কে — লোকাল হাব বাংলাদেশ' };
 
 export default function AboutPage() {
   return (
-    <main className="ps-page">
-      <TopBar title="পরিচিতি" subtitle="Bangladesh Local Directory" backHref="/" />
-      <div className="ps-content">
-        <div className="ps-detail">
-          <div className="ps-detail-icon">🇧🇩</div>
-          <h1 className="ps-detail-title">Bangladesh Local Directory</h1>
-          <p className="ps-detail-desc">
-            সারা বাংলাদেশের স্থানীয় ব্যবসা ও সেবার ডিরেক্টরি। শুরু হয়েছে{" "}
-            <strong>{pilot.label}</strong> থেকে — ধাপে ধাপে সব জেলায় বিস্তার হবে।
-          </p>
-          <div className="ps-detail-fields">
-            <div className="ps-field-row">
-              <span className="ps-field-label">পাইলট জেলা</span>
-              <span className="ps-field-value">{pilot.district.name}</span>
-            </div>
-            <div className="ps-field-row">
-              <span className="ps-field-label">উপজেলা</span>
-              <span className="ps-field-value">{pilot.upazila.name}</span>
-            </div>
-            <div className="ps-field-row">
-              <span className="ps-field-label">ইউনিয়ন</span>
-              <span className="ps-field-value">{pilot.union.name}</span>
-            </div>
-            <div className="ps-field-row">
-              <span className="ps-field-label">লক্ষ্য</span>
-              <span className="ps-field-value">৬৪ জেলা</span>
-            </div>
-          </div>
-          <a href="/area" className="ps-btn-primary ps-btn-block">
-            আপনার এলাকা দেখুন
-          </a>
-          <a
-            href="/add-listing"
-            className="ps-btn-primary ps-btn-block"
-            style={{ marginTop: 8 }}
-          >
-            + তথ্য যোগ করুন
-          </a>
-        </div>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-4">আমাদের সম্পর্কে</h1>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4 text-gray-700">
+        <p>লোকাল হাব বাংলাদেশ একটি স্বাধীন, অ-বাণিজ্যিক উদ্যোগ, যার লক্ষ্য সারা বাংলাদেশের স্থানীয় ব্যবসা, সেবা ও প্রয়োজনীয় তথ্য একটি প্ল্যাটফর্মে সংগঠিত করা।</p>
+        <p>যেকোনো জেলার মানুষ এখানে ডাক্তার, জরুরি সেবা, মিস্ত্রি, পরিবহন, শিক্ষা প্রতিষ্ঠানসহ ২১টি ক্যাটাগরির তথ্য খুঁজে পাবেন — এবং নিজের এলাকার তথ্যও যোগ করতে পারবেন।</p>
+        <p>এটি সম্পূর্ণ ডেমো ডেটা নিয়ে চলছে। ডেটাবেজ যুক্ত হলে ব্যবহারকারীরা নিজেরাই তথ্য যোগ ও মডারেট করতে পারবেন।</p>
       </div>
-      <BottomNav />
-    </main>
+    </div>
   );
 }
