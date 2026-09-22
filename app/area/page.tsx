@@ -1,18 +1,18 @@
 import {
   kanchanaProfile,
   kanchanaSchools,
+  borderSchools,
   kanchanaMadrasas,
   kanchanaPrimarySchools,
   kanchanaMosques,
 } from "@/data/kanchana";
-import { servicesInKanchana, countByCategory } from "@/data/services";
-import { categories } from "@/data/categories";
+import { servicesInKanchana, servicesInSatkaniaSadar } from "@/data/services";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
 export default function AreaPage() {
-  const list = servicesInKanchana();
-  const withData = categories.filter((c) => countByCategory(c.id) > 0);
+  const knList = servicesInKanchana();
+  const sadarList = servicesInSatkaniaSadar();
   const p = kanchanaProfile;
 
   return (
@@ -24,48 +24,41 @@ export default function AreaPage() {
           <div className="ps-detail-icon">📍</div>
           <h1 className="ps-detail-title">{p.name}</h1>
           <p className="ps-list-loc">
-            {p.code} · {p.upazila} · {p.district} · পোস্টকোড {p.postcode}
+            {p.code} · {p.upazila} · {p.district} · পোস্ট {p.postcode}
           </p>
           <p className="ps-detail-desc">
-            আয়তন ~{p.areaKm2} বর্গকিমি · জনসংখ্যা ২০২২: {p.population2022.toLocaleString("bn-BD")} ·
-            উপজেলা সদর থেকে ~{p.distanceToSadarKm} কিমি · গ্রাম: {p.villages.join(", ")}
+            আয়তন ~{p.areaKm2} বর্গকিমি · জনসংখ্যা ২০২২:{" "}
+            {p.population2022.toLocaleString("bn-BD")} · সদর থেকে ~{p.distanceToSadarKm} কিমি
           </p>
           <p className="ps-list-desc">{p.borders}</p>
           <a href={p.website} target="_blank" rel="noopener noreferrer" className="ps-btn-primary ps-btn-block">
-            অফিসিয়াল ইউপি ওয়েবসাইট
-          </a>
-          <a href="/add-listing" className="ps-btn-primary ps-btn-block" style={{ marginTop: 8 }}>
-            + কাঞ্চনায় তথ্য যোগ করুন
+            ইউপি ওয়েবসাইট
           </a>
         </div>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🏘️</span>
-          <h2>গ্রাম ({p.villages.length})</h2>
+          <h2>গ্রাম (কাঞ্চনা)</h2>
         </div>
         <div className="ps-chips" style={{ marginBottom: 16 }}>
           {p.villages.map((v) => (
-            <a key={v} href={`/search?q=${encodeURIComponent(v)}`} className="ps-chip">
-              {v}
-            </a>
+            <span key={v} className="ps-chip">{v}</span>
           ))}
         </div>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🛒</span>
-          <h2>হাট-বাজার</h2>
+          <h2>হাট-বাজার (কাঞ্চনা)</h2>
         </div>
         <div className="ps-chips" style={{ marginBottom: 16 }}>
           {p.hats.map((h) => (
-            <a key={h} href={`/search?q=${encodeURIComponent(h)}`} className="ps-chip">
-              {h}
-            </a>
+            <span key={h} className="ps-chip">{h}</span>
           ))}
         </div>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🏫</span>
-          <h2>মাধ্যমিক বিদ্যালয়</h2>
+          <h2>মাধ্যমিক — কাঞ্চনা ইউনিয়ন</h2>
         </div>
         <div className="ps-list" style={{ marginBottom: 16 }}>
           {kanchanaSchools.map((s) => (
@@ -74,31 +67,47 @@ export default function AreaPage() {
                 <strong>{s.name}</strong>
                 <span className="ps-badge">EIIN {s.eiin}</span>
               </div>
-              <p className="ps-list-loc">📍 {s.area} · {s.type}</p>
+              <p className="ps-list-loc">📍 {s.area}{s.phone ? ` · ${s.phone}` : ""}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="ps-section-head">
+          <span className="ps-section-icon">⚠️</span>
+          <h2>সীমান্ত স্কুল (আমিলাইশ–কাঞ্চনা)</h2>
+        </div>
+        <div className="ps-list" style={{ marginBottom: 16 }}>
+          {borderSchools.map((s) => (
+            <div key={s.eiin} className="ps-list-card">
+              <div className="ps-list-top">
+                <strong>{s.name}</strong>
+                <span className="ps-badge">সীমান্ত</span>
+              </div>
+              <p className="ps-list-loc">📍 {s.area} · EIIN {s.eiin}</p>
+              <p className="ps-list-desc">{s.note}</p>
             </div>
           ))}
         </div>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">📖</span>
-          <h2>মাদ্রাসা</h2>
+          <h2>মাদ্রাসা — কাঞ্চনা</h2>
         </div>
         <div className="ps-list" style={{ marginBottom: 16 }}>
           {kanchanaMadrasas.map((s) => (
             <div key={s.name} className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{s.name}</strong>
-                {s.eiin && <span className="ps-badge">EIIN {s.eiin}</span>}
+                {s.eiin ? <span className="ps-badge">EIIN {s.eiin}</span> : null}
               </div>
-              <p className="ps-list-loc">📍 {s.area} · {s.type}</p>
-              {s.note && <p className="ps-list-desc">{s.note}</p>}
+              <p className="ps-list-loc">📍 {s.area}{s.phone ? ` · ${s.phone}` : ""}</p>
             </div>
           ))}
         </div>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🎒</span>
-          <h2>প্রাথমিক বিদ্যালয় ({kanchanaPrimarySchools.length})</h2>
+          <h2>প্রাথমিক — কাঞ্চনা ({kanchanaPrimarySchools.length})</h2>
         </div>
         <div className="ps-list" style={{ marginBottom: 16 }}>
           {kanchanaPrimarySchools.map((name) => (
@@ -110,7 +119,7 @@ export default function AreaPage() {
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🕌</span>
-          <h2>মসজিদ / ধর্মীয় স্থান</h2>
+          <h2>মসজিদ/মাজার — কাঞ্চনা</h2>
         </div>
         <div className="ps-list" style={{ marginBottom: 16 }}>
           {kanchanaMosques.map((name) => (
@@ -121,33 +130,33 @@ export default function AreaPage() {
         </div>
 
         <div className="ps-section-head">
-          <span className="ps-section-icon">📂</span>
-          <h2>ডিরেক্টরি ক্যাটাগরি</h2>
+          <span className="ps-section-icon">📋</span>
+          <h2>ডিরেক্টরি — শুধু কাঞ্চনা ({knList.length})</h2>
         </div>
-        <div className="ps-cat-grid">
-          {withData.map((c) => (
-            <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
-              <div className="ps-cat-icon-wrap">
-                <span className="ps-cat-icon">{c.icon}</span>
+        <div className="ps-list" style={{ marginBottom: 16 }}>
+          {knList.map((s) => (
+            <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
+              <div className="ps-list-top">
+                <strong>{s.name}</strong>
+                <span className="ps-badge">কাঞ্চনা</span>
               </div>
-              <div className="ps-cat-name">{c.name}</div>
-              <div className="ps-cat-count">{countByCategory(c.id)} টি</div>
+              <p className="ps-list-loc">📍 {s.area}</p>
             </a>
           ))}
         </div>
 
         <div className="ps-section-head">
-          <span className="ps-section-icon">📋</span>
-          <h2>লিস্টিং ({list.length})</h2>
+          <span className="ps-section-icon">🏥</span>
+          <h2>সাতকানিয়া সদর (কাঞ্চনা নয় — কাছাকাছি সেবা)</h2>
         </div>
         <div className="ps-list">
-          {list.map((s) => (
+          {sadarList.map((s) => (
             <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{s.name}</strong>
-                {s.verified && <span className="ps-badge">✓</span>}
+                <span className="ps-badge">সদর</span>
               </div>
-              <p className="ps-list-loc">📍 {s.area}{s.phone ? ` · ${s.phone}` : ""}</p>
+              <p className="ps-list-loc">📍 {s.area}</p>
             </a>
           ))}
         </div>

@@ -4,6 +4,8 @@ export type Service = {
   category: string;
   district: string;
   upazila: string;
+  /** ইউনিয়ন বা পৌরসভা — এলাকা মিলিয়ে ফিল্টারের জন্য */
+  union: string;
   area: string;
   phone: string;
   verified: boolean;
@@ -12,23 +14,26 @@ export type Service = {
 };
 
 /**
- * Listings: কাঞ্চনা ইউনিয়ন অগ্রাধিকার + সাতকানিয়া সদরের প্রয়োজনীয় সেবা।
- * Sources: Wikipedia, UP portal, EIIN, DGHS, hospital pages, national hotlines.
- * Updated: 2026-09-22. Verify phones locally.
+ * এলাকা ট্যাগ নিয়ম:
+ * - union: "কাঞ্চনা" = শুধু কাঞ্চনা ইউনিয়ন
+ * - union: "সাতকানিয়া পৌরসভা" = উপজেলা সদর/পৌর
+ * - union: "আমিলাইশ-কাঞ্চনা" = সীমান্ত/নামে দুই ইউনিয়ন
+ * - union: "সাতকানিয়া (উপজেলা)" = পুরো উপজেলা / জাতীয় সেবা
  */
 export const services: Service[] = [
-  // ========== কাঞ্চনা: প্রশাসন ==========
+  // ========== শুধু কাঞ্চনা ইউনিয়ন ==========
   {
     id: "kn-up",
     name: "৪ নং কাঞ্চনা ইউনিয়ন পরিষদ",
     category: "organization",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা (মনু ফকির হাট বাজার এলাকায় কার্যালয় চলে এসেছে — সংবাদ)",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা (মনু ফকির হাট এলাকায় কার্যালয় — সংবাদ)",
     phone: "",
     verified: true,
     description:
-      "কাঞ্চনা ইউনিয়ন পরিষদ। আয়তন ~১৩.৫৩ বর্গকিমি। গ্রাম: উত্তর, মধ্য, দক্ষিণ কাঞ্চনা। জনসংখ্যা ২০২২: ~২২,৭০৩। ওয়েব: kanchanaup.chittagong.gov.bd। উপজেলা সদর থেকে ~১৫ কিমি।",
+      "কাঞ্চনা ইউনিয়ন পরিষদ। আয়তন ~১৩.৫৩ বর্গকিমি। গ্রাম: উত্তর, মধ্য, দক্ষিণ কাঞ্চনা। জনসংখ্যা ২০২২: ~২২,৭০৩। ওয়েব: kanchanaup.chittagong.gov.bd",
     fields: { orgType: "ইউনিয়ন পরিষদ", contactPerson: "চেয়ারম্যান / সচিব অফিস" },
   },
   {
@@ -37,26 +42,12 @@ export const services: Service[] = [
     category: "health",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description:
-      "DGHS ইউনিয়ন সাব-সেন্টার (Organization Code 10000833)। প্রাথমিক বহির্বিভাগ সেবা।",
+    description: "DGHS ইউনিয়ন সাব-সেন্টার (Code 10000833)। প্রাথমিক বহির্বিভাগ — কাঞ্চনা ইউনিয়ন।",
     fields: { serviceType: "ইউনিয়ন স্বাস্থ্য উপকেন্দ্র", openingHours: "অফিস সময়" },
-  },
-
-  // ========== কাঞ্চনা: শিক্ষা (মাধ্যমিক) ==========
-  {
-    id: "kn-akbc",
-    name: "আমিলাইশ কাঞ্চনা বঙ্গ চন্দ্র ঘোষ ইন্সটিটিউট",
-    category: "education",
-    district: "চট্টগ্রাম",
-    upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
-    phone: "",
-    verified: true,
-    description: "মাধ্যমিক বিদ্যালয় (ঐতিহ্যবাহী প্রতিষ্ঠান, ~১৯২৯)। EIIN: 104996।",
-    fields: { institutionType: "মাধ্যমিক বিদ্যালয়", eiin: "104996" },
   },
   {
     id: "kn-girls-hs",
@@ -64,10 +55,11 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
-    phone: "",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
+    phone: "01818136982",
     verified: true,
-    description: "বালিকা উচ্চ বিদ্যালয়। EIIN: 104998।",
+    description: "বালিকা উচ্চ বিদ্যালয়। EIIN: 104998। Union: KANCHANA (পাবলিক EIIN রেকর্ড)।",
     fields: { institutionType: "বালিকা উচ্চ বিদ্যালয়", eiin: "104998" },
   },
   {
@@ -76,25 +68,25 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "কাঞ্চনা",
     area: "দক্ষিণ কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "দক্ষিণ কাঞ্চনা মাধ্যমিক বিদ্যালয়। EIIN: 105011।",
+    description: "দক্ষিণ কাঞ্চনা মাধ্যমিক। EIIN: 105011। কাঞ্চনা ইউনিয়ন।",
     fields: { institutionType: "মাধ্যমিক বিদ্যালয়", eiin: "105011" },
   },
-
-  // ========== কাঞ্চনা: মাদ্রাসা ==========
   {
     id: "kn-anwarul",
     name: "কাঞ্চনা আনোয়ারুল উলুম ইসলামিয়া আলিম মাদ্রাসা",
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "01815507790",
     verified: true,
     description:
-      "আলিম/সিনিয়র মাদ্রাসা। EIIN: 105039। দাখিল ফলাফলে সাতকানিয়ায় শীর্ষস্থানীয় সাফল্যের রেকর্ড (সংবাদ)। যোগাযোগ (পাবলিক তালিকা): ০১৮১৫-৫০৭৭৯০ / ০১৩০৯-১০৫০৩৯।",
+      "আলিম মাদ্রাসা। EIIN: 105039। কাঞ্চনা ইউনিয়ন। ফোন (পাবলিক): ০১৮১৫-৫০৭৭৯০।",
     fields: { institutionType: "আলিম মাদ্রাসা", eiin: "105039" },
   },
   {
@@ -103,10 +95,11 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "কাঞ্চনা",
     area: "দক্ষিণ কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "দাখিল মাদ্রাসা, দক্ষিণ কাঞ্চনা (উইকিপিডিয়া তালিকা)।",
+    description: "দাখিল মাদ্রাসা — দক্ষিণ কাঞ্চনা, কাঞ্চনা ইউনিয়ন।",
     fields: { institutionType: "দাখিল মাদ্রাসা", eiin: "—" },
   },
   {
@@ -115,24 +108,24 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "মহিলা দাখিল মাদ্রাসা, কাঞ্চনা ইউনিয়ন (উইকিপিডিয়া)।",
+    description: "মহিলা দাখিল মাদ্রাসা — কাঞ্চনা, সাতকানিয়া (স্থানীয়/উইকি)।",
     fields: { institutionType: "মহিলা দাখিল মাদ্রাসা", eiin: "—" },
   },
-
-  // ========== কাঞ্চনা: প্রাথমিক (নমুনা — সব নাম তালিকায়) ==========
   {
     id: "kn-gps-main",
     name: "কাঞ্চনা সরকারি প্রাথমিক বিদ্যালয়",
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "কাঞ্চনা",
     area: "কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "সরকারি প্রাথমিক বিদ্যালয়। ইউনিয়নে মোট ৯টি প্রাথমিক বিদ্যালয় (উইকি)।",
+    description: "সরকারি প্রাথমিক — কাঞ্চনা ইউনিয়ন।",
     fields: { institutionType: "সরকারি প্রাথমিক", eiin: "—" },
   },
   {
@@ -141,10 +134,11 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "কাঞ্চনা",
     area: "উত্তর কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "উত্তর কাঞ্চনা সরকারি প্রাথমিক বিদ্যালয়।",
+    description: "উত্তর কাঞ্চনা গ্রাম — কাঞ্চনা ইউনিয়ন।",
     fields: { institutionType: "সরকারি প্রাথমিক", eiin: "—" },
   },
   {
@@ -153,24 +147,24 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "কাঞ্চনা",
     area: "দক্ষিণ কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "দক্ষিণ কাঞ্চনা গুড়গুরী সরকারি প্রাথমিক বিদ্যালয়।",
+    description: "দক্ষিণ কাঞ্চনা গুড়গুরী — কাঞ্চনা ইউনিয়ন।",
     fields: { institutionType: "সরকারি প্রাথমিক", eiin: "—" },
   },
-
-  // ========== কাঞ্চনা: হাট-বাজার ==========
   {
     id: "kn-hat-monu",
     name: "মনু ফকির হাট",
     category: "business",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "কাঞ্চনা ইউনিয়নের প্রধান হাটগুলোর একটি। ইউপি কার্যক্রমও এ বাজার এলাকায় চলেছে বলে সংবাদে উল্লেখ।",
+    description: "কাঞ্চনা ইউনিয়নের প্রধান হাট।",
     fields: { businessType: "হাট / বাজার", openingHours: "হাটের দিন" },
   },
   {
@@ -179,10 +173,11 @@ export const services: Service[] = [
     category: "business",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "কাঞ্চনার প্রধান হাট-বাজার (উইকিপিডিয়া)। পাশে জামে মসজিদ।",
+    description: "কাঞ্চনা ইউনিয়নের হাট-বাজার।",
     fields: { businessType: "হাট / বাজার", openingHours: "হাটের দিন" },
   },
   {
@@ -191,36 +186,37 @@ export const services: Service[] = [
     category: "business",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "কাঞ্চনা ইউনিয়নের তৃতীয় প্রধান হাট-বাজার।",
+    description: "কাঞ্চনা ইউনিয়নের হাট-বাজার।",
     fields: { businessType: "হাট / বাজার", openingHours: "হাটের দিন" },
   },
-
-  // ========== কাঞ্চনা: ধর্মীয় ==========
   {
     id: "kn-kazi-masjid",
-    name: "কাজী বাড়ি / কাজির জামে মসজিদ",
+    name: "কাজী বাড়ি জামে মসজিদ",
     category: "religious",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "ঐতিহ্যবাহী কাজির জামে মসজিদ — উপজেলা/উইকি তালিকায় উল্লেখ।",
+    description: "ঐতিহ্যবাহী জামে মসজিদ — কাঞ্চনা।",
     fields: { institutionType: "জামে মসজিদ", contactPerson: "মসজিদ কমিটি" },
   },
   {
     id: "kn-jangli-pir",
-    name: "জংলি পীর মাজার, কাঞ্চনা",
+    name: "জংলি পীর মাজার",
     category: "religious",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "কাঞ্চনার পরিচিত মাজার/দর্শনীয় স্থান (সাতকানিয়া উইকিপিডিয়া)।",
+    description: "মাজার — কাঞ্চনা (সাতকানিয়া উইকি তালিকা)।",
     fields: { institutionType: "মাজার", contactPerson: "—" },
   },
   {
@@ -229,62 +225,42 @@ export const services: Service[] = [
     category: "religious",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা",
+    union: "কাঞ্চনা",
+    area: "কাঞ্চনা ইউনিয়ন",
     phone: "",
     verified: true,
-    description: "হিন্দু মন্দির — বাংলাপিডিয়া/উইকিতে কাঞ্চনা কালীবাড়ি উল্লেখ।",
+    description: "হিন্দু মন্দির — কাঞ্চনা।",
     fields: { institutionType: "মন্দির", contactPerson: "—" },
   },
 
-  // ========== জরুরি (সারা এলাকা) ==========
+  // ========== সীমান্ত / নামে দুই এলাকা (আলাদা ট্যাগ) ==========
   {
-    id: "bd-999",
-    name: "জাতীয় জরুরি সেবা — ৯৯৯",
-    category: "emergency",
+    id: "ak-akbc",
+    name: "আমিলাইশ কাঞ্চনা বঙ্গ চন্দ্র ঘোষ ইন্সটিটিউট",
+    category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা / সারা উপজেলা",
-    phone: "999",
+    union: "আমিলাইশ-কাঞ্চনা",
+    area: "আমিলাইশ–কাঞ্চনা সীমান্ত এলাকা",
+    phone: "01309104956",
     verified: true,
-    description: "পুলিশ, ফায়ার, অ্যাম্বুলেন্স — ২৪ ঘণ্টা, বিনামূল্যে।",
-    fields: { emergencyType: "পুলিশ / ফায়ার / অ্যাম্বুলেন্স", hotline: "999" },
-  },
-  {
-    id: "bd-102",
-    name: "ফায়ার সার্ভিস হটলাইন — ১০২",
-    category: "emergency",
-    district: "চট্টগ্রাম",
-    upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা / সারা উপজেলা",
-    phone: "102",
-    verified: true,
-    description: "ফায়ার সার্ভিস ও সিভিল ডিফেন্স জাতীয় হটলাইন।",
-    fields: { emergencyType: "ফায়ার সার্ভিস", hotline: "102" },
-  },
-  {
-    id: "bd-109",
-    name: "নারী ও শিশু হেল্পলাইন — ১০৯",
-    category: "emergency",
-    district: "চট্টগ্রাম",
-    upazila: "সাতকানিয়া",
-    area: "কাঞ্চনা / সারা উপজেলা",
-    phone: "109",
-    verified: true,
-    description: "নারী ও শিশু নির্যাতন প্রতিরোধ হটলাইন।",
-    fields: { emergencyType: "নারী ও শিশু সহায়তা", hotline: "109" },
+    description:
+      "ঐতিহ্যবাহী মাধ্যমিক (~১৯২৯)। নামে আমিলাইশ ও কাঞ্চনা দুই ইউনিয়ন। EIIN: 104996। উইকি কখনো কাঞ্চনা স্কুল তালিকায় রাখে — অবস্থান সীমান্তবর্তী।",
+    fields: { institutionType: "মাধ্যমিক বিদ্যালয়", eiin: "104996" },
   },
 
-  // ========== সাতকানিয়া সদর (কাঞ্চনাবাসীর জন্য প্রয়োজনীয়) ==========
+  // ========== সাতকানিয়া পৌরসভা / সদর (কাঞ্চনা নয়) ==========
   {
     id: "sk-uhc",
     name: "সাতকানিয়া উপজেলা স্বাস্থ্য কমপ্লেক্স",
     category: "health",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "সাতকানিয়া পৌরসভা",
     area: "সাতকানিয়া সদর",
     phone: "01730324455",
     verified: true,
-    description: "সরকারি UHC (~৫০ শয্যা)। ইমেইল: satkania@uhfpo.dghs.gov.bd",
+    description: "সরকারি UHC — সাতকানিয়া সদর (কাঞ্চনা ইউনিয়ন নয়)। কাঞ্চনা থেকে ~১৫ কিমি।",
     fields: { serviceType: "সরকারি হাসপাতাল", openingHours: "জরুরি ২৪ ঘণ্টা" },
   },
   {
@@ -293,10 +269,11 @@ export const services: Service[] = [
     category: "health",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "সাতকানিয়া পৌরসভা",
     area: "কোর্ট রোড, সাতকানিয়া পৌরসভা",
     phone: "01857454074",
     verified: true,
-    description: "বেসরকারি হাসপাতাল। সিরিয়াল: ০১৮৫৭-৪৫৪০৭৪, ০১৮৩৮-৮১৭৪৮৪।",
+    description: "বেসরকারি হাসপাতাল — সাতকানিয়া পৌরসভা (কাঞ্চনা নয়)। সিরিয়াল: ০১৮৫৭-৪৫৪০৭৪।",
     fields: { serviceType: "বেসরকারি হাসপাতাল", openingHours: "সিরিয়াল অনুযায়ী" },
   },
   {
@@ -305,13 +282,14 @@ export const services: Service[] = [
     category: "doctor",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "আলফা হাসপাতাল, কোর্ট রোড",
+    union: "সাতকানিয়া পৌরসভা",
+    area: "আলফা হাসপাতাল, কোর্ট রোড, সাতকানিয়া পৌরসভা",
     phone: "01857454074",
     verified: true,
-    description: "মেডিসিন, ডায়াবেটিস, কিডনি, লিভার বিশেষজ্ঞ। এফসিপিএস (মেডিসিন)।",
+    description: "মেডিসিন বিশেষজ্ঞ — চেম্বার সাতকানিয়া পৌরসভায় (কাঞ্চনা নয়)।",
     fields: {
       specialization: "মেডিসিন / ডায়াবেটিস",
-      chamber: "আলফা হাসপাতাল",
+      chamber: "আলফা হাসপাতাল, সাতকানিয়া সদর",
       visitingTime: "শুক্র ১০–৪; শনি/সোম/বুধ ২–৪",
     },
   },
@@ -321,27 +299,70 @@ export const services: Service[] = [
     category: "education",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
+    union: "সাতকানিয়া পৌরসভা",
     area: "সাতকানিয়া পৌরসভা",
     phone: "01824107190",
     verified: true,
-    description: "সরকারি কলেজ (১৯৪৯)। EIIN: 105061।",
+    description: "সরকারি কলেজ — সাতকানিয়া পৌরসভা (কাঞ্চনা ইউনিয়ন নয়)। EIIN: 105061।",
     fields: { institutionType: "সরকারি কলেজ", eiin: "105061" },
   },
   {
     id: "sk-bus",
-    name: "সাতকানিয়া মহাসড়ক / বাস যোগাযোগ",
+    name: "সাতকানিয়া মহাসড়ক / বাস",
     category: "transport",
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
-    area: "চট্টগ্রাম–কক্সবাজার মহাসড়ক",
+    union: "সাতকানিয়া (উপজেলা)",
+    area: "চট্টগ্রাম–কক্সবাজার মহাসড়ক (সাতকানিয়া অংশ)",
     phone: "",
     verified: true,
-    description: "কাঞ্চনা থেকে সিএনজি/রিক্সা/বাসযোগে উপজেলা সদর ও চট্টগ্রাম।",
+    description: "উপজেলা যোগাযোগ। কাঞ্চনা থেকে সিএনজি/বাসযোগে সদর ও চট্টগ্রাম।",
     fields: {
-      route: "কাঞ্চনা – সাতকানিয়া – চট্টগ্রাম",
+      route: "সাতকানিয়া – চট্টগ্রাম",
       departure: "সারা দিন",
-      counter: "স্থানীয় স্ট্যান্ড",
+      counter: "মহাসড়ক স্ট্যান্ড",
     },
+  },
+
+  // ========== জাতীয় / উপজেলা-ব্যাপী (কোনো এক ইউনিয়নের নয়) ==========
+  {
+    id: "bd-999",
+    name: "জাতীয় জরুরি সেবা — ৯৯৯",
+    category: "emergency",
+    district: "চট্টগ্রাম",
+    upazila: "সাতকানিয়া",
+    union: "সাতকানিয়া (উপজেলা)",
+    area: "সারা বাংলাদেশ",
+    phone: "999",
+    verified: true,
+    description: "পুলিশ, ফায়ার, অ্যাম্বুলেন্স — জাতীয় হটলাইন (কোনো নির্দিষ্ট ইউনিয়ন নয়)।",
+    fields: { emergencyType: "পুলিশ / ফায়ার / অ্যাম্বুলেন্স", hotline: "999" },
+  },
+  {
+    id: "bd-102",
+    name: "ফায়ার সার্ভিস হটলাইন — ১০২",
+    category: "emergency",
+    district: "চট্টগ্রাম",
+    upazila: "সাতকানিয়া",
+    union: "সাতকানিয়া (উপজেলা)",
+    area: "সারা বাংলাদেশ",
+    phone: "102",
+    verified: true,
+    description: "ফায়ার সার্ভিস জাতীয় হটলাইন।",
+    fields: { emergencyType: "ফায়ার সার্ভিস", hotline: "102" },
+  },
+  {
+    id: "bd-109",
+    name: "নারী ও শিশু হেল্পলাইন — ১০৯",
+    category: "emergency",
+    district: "চট্টগ্রাম",
+    upazila: "সাতকানিয়া",
+    union: "সাতকানিয়া (উপজেলা)",
+    area: "সারা বাংলাদেশ",
+    phone: "109",
+    verified: true,
+    description: "জাতীয় হেল্পলাইন।",
+    fields: { emergencyType: "নারী ও শিশু সহায়তা", hotline: "109" },
   },
 ];
 
@@ -350,17 +371,14 @@ export function countByCategory(categoryId: string) {
 }
 
 export function servicesInPilot() {
-  return services.filter(
-    (s) => s.district === "চট্টগ্রাম" && s.upazila === "সাতকানিয়া"
-  );
+  return services.filter((s) => s.upazila === "সাতকানিয়া");
 }
 
+/** শুধু কাঞ্চনা ইউনিয়ন — সদর/পৌর/জাতীয় মিশবে না */
 export function servicesInKanchana() {
-  return services.filter(
-    (s) =>
-      s.area.includes("কাঞ্চনা") ||
-      s.id.startsWith("kn-") ||
-      s.area.includes("মনু ফকির") ||
-      s.area.includes("জোট পুকুরি")
-  );
+  return services.filter((s) => s.union === "কাঞ্চনা");
+}
+
+export function servicesInSatkaniaSadar() {
+  return services.filter((s) => s.union === "সাতকানিয়া পৌরসভা");
 }

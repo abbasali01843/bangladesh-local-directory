@@ -18,17 +18,20 @@ export default async function ServiceDetails({
     <main className="ps-page">
       <TopBar
         title="বিস্তারিত"
-        subtitle={c?.name || "সেবা"}
-        backHref={`/services?category=${s.category}`}
+        subtitle={s.union}
+        backHref={s.union === "কাঞ্চনা" ? "/area" : "/"}
       />
 
       <div className="ps-content">
         <div className="ps-detail">
           <div className="ps-detail-icon">{c?.icon || "📋"}</div>
           <h1 className="ps-detail-title">{s.name}</h1>
-          {s.verified && <span className="ps-badge">✓ Verified Profile</span>}
+          {s.verified && <span className="ps-badge">✓ যাচাইকৃত সূত্র</span>}
           <p className="ps-list-loc" style={{ marginTop: 10 }}>
-            📍 {s.area}, {s.upazila}, {s.district}
+            📍 {s.area}
+          </p>
+          <p className="ps-list-loc">
+            ইউনিয়ন/এলাকা: <strong>{s.union}</strong> · {s.upazila}, {s.district}
           </p>
           <p className="ps-detail-desc">{s.description}</p>
 
@@ -45,34 +48,9 @@ export default async function ServiceDetails({
 
           {s.phone && (
             <a href={`tel:${s.phone}`} className="ps-btn-primary ps-btn-block">
-              📞 কল করুন — {s.phone}
+              📞 কল — {s.phone}
             </a>
           )}
-
-          <div className="ps-admin-actions" style={{ marginTop: 10 }}>
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `${s.name} ${s.area} ${s.upazila} ${s.district}`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ps-btn-primary"
-              style={{ flex: 1, textAlign: "center" }}
-            >
-              🗺️ ম্যাপ
-            </a>
-            <a
-              href={`https://wa.me/88${s.phone.replace(/\D/g, "").replace(/^88/, "")}?text=${encodeURIComponent(
-                `Local Hub: ${s.name}`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ps-btn-primary"
-              style={{ flex: 1, textAlign: "center", background: "#128C7E" }}
-            >
-              WhatsApp
-            </a>
-          </div>
         </div>
       </div>
 
