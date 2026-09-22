@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 const links = [
   { href: "/", label: "হোম", icon: "🏠" },
+  { href: "/area", label: "আপনার এলাকা (সাতকানিয়া)", icon: "📍" },
   { href: "/categories", label: "ক্যাটাগরি", icon: "📂" },
   { href: "/search", label: "খুঁজুন", icon: "🔍" },
   { href: "/notices", label: "নোটিশ", icon: "📢" },
@@ -40,8 +41,8 @@ export default function SideMenu() {
               <div className="ps-brand">
                 <span className="ps-logo">🇧🇩</span>
                 <div>
-                  <div className="ps-brand-title">Local Hub</div>
-                  <div className="ps-brand-sub">তথ্যই হোক সংযোগ</div>
+                  <div className="ps-brand-title">BD Local Directory</div>
+                  <div className="ps-brand-sub">সাতকানিয়া · কাঞ্চনা</div>
                 </div>
               </div>
               <button type="button" className="ps-iconbtn" aria-label="Close" onClick={() => setOpen(false)}>
@@ -59,8 +60,8 @@ export default function SideMenu() {
             </nav>
 
             <div className="ps-drawer-foot">
-              <p>Local Hub Bangladesh</p>
-              <p className="ps-drawer-foot-sub">স্থানীয় তথ্য এক জায়গায়</p>
+              <p>Bangladesh Local Directory</p>
+              <p className="ps-drawer-foot-sub">পাইলট: সাতকানিয়া, চট্টগ্রাম</p>
             </div>
           </aside>
         </div>

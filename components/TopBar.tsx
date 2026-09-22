@@ -10,10 +10,10 @@ type Props = {
 };
 
 export default function TopBar({
-  title = "Local Hub",
-  subtitle = "তথ্যই হোক সংযোগ",
+  title = "Bangladesh Local Directory",
+  subtitle = "সাতকানিয়া, চট্টগ্রাম",
   backHref,
-  rightHref = "/login",
+  rightHref = "/notices",
   rightLabel = "🔔",
   showMenu = true,
 }: Props) {
@@ -33,7 +33,9 @@ export default function TopBar({
         <div className="ps-brand">
           <span className="ps-logo">🇧🇩</span>
           <div>
-            <div className="ps-brand-title">{title}</div>
+            <div className="ps-brand-title" style={{ fontSize: 13 }}>
+              {title.length > 22 ? "BD Local Directory" : title}
+            </div>
             <div className="ps-brand-sub">{subtitle}</div>
           </div>
         </div>
