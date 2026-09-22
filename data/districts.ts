@@ -1,10 +1,27 @@
-export const districts = [
-  {id:"dhaka",name:"ঢাকা",division:"ঢাকা"},{id:"faridpur",name:"ফরিদপুর",division:"ঢাকা"},{id:"gazipur",name:"গাজীপুর",division:"ঢাকা"},{id:"gopalganj",name:"গোপালগঞ্জ",division:"ঢাকা"},{id:"kishoreganj",name:"কিশোরগঞ্জ",division:"ঢাকা"},{id:"madaripur",name:"মাদারীপুর",division:"ঢাকা"},{id:"manikganj",name:"মানিকগঞ্জ",division:"ঢাকা"},{id:"munshiganj",name:"মুন্সীগঞ্জ",division:"ঢাকা"},{id:"narayanganj",name:"নারায়ণগঞ্জ",division:"ঢাকা"},{id:"narsingdi",name:"নরসিংদী",division:"ঢাকা"},{id:"rajbari",name:"রাজবাড়ী",division:"ঢাকা"},{id:"shariatpur",name:"শরীয়তপুর",division:"ঢাকা"},{id:"tangail",name:"টাঙ্গাইল",division:"ঢাকা"},
-  {id:"bagerhat",name:"বাগেরহাট",division:"খুলনা"},{id:"chuadanga",name:"চুয়াডাঙ্গা",division:"খুলনা"},{id:"jashore",name:"যশোর",division:"খুলনা"},{id:"jhenaidah",name:"ঝিনাইদহ",division:"খুলনা"},{id:"khulna",name:"খুলনা",division:"খুলনা"},{id:"kushtia",name:"কুষ্টিয়া",division:"খুলনা"},{id:"magura",name:"মাগুরা",division:"খুলনা"},{id:"meherpur",name:"মেহেরপুর",division:"খুলনা"},{id:"narail",name:"নড়াইল",division:"খুলনা"},{id:"satkhira",name:"সাতক্ষীরা",division:"খুলনা"},
-  {id:"bandarban",name:"বান্দরবান",division:"চট্টগ্রাম"},{id:"brahmanbaria",name:"ব্রাহ্মণবাড়িয়া",division:"চট্টগ্রাম"},{id:"chandpur",name:"চাঁদপুর",division:"চট্টগ্রাম"},{id:"chattogram",name:"চট্টগ্রাম",division:"চট্টগ্রাম"},{id:"cumilla",name:"কুমিল্লা",division:"চট্টগ্রাম"},{id:"coxsbazar",name:"কক্সবাজার",division:"চট্টগ্রাম"},{id:"feni",name:"ফেনী",division:"চট্টগ্রাম"},{id:"khagrachhari",name:"খাগড়াছড়ি",division:"চট্টগ্রাম"},{id:"lakshmipur",name:"লক্ষ্মীপুর",division:"চট্টগ্রাম"},{id:"noakhali",name:"নোয়াখালী",division:"চট্টগ্রাম"},{id:"rangamati",name:"রাঙ্গামাটি",division:"চট্টগ্রাম"},
-  {id:"bogura",name:"বগুড়া",division:"রাজশাহী"},{id:"joypurhat",name:"জয়পুরহাট",division:"রাজশাহী"},{id:"naogaon",name:"নওগাঁ",division:"রাজশাহী"},{id:"natore",name:"নাটোর",division:"রাজশাহী"},{id:"chapainawabganj",name:"চাঁপাইনবাবগঞ্জ",division:"রাজশাহী"},{id:"pabna",name:"পাবনা",division:"রাজশাহী"},{id:"rajshahi",name:"রাজশাহী",division:"রাজশাহী"},{id:"sirajganj",name:"সিরাজগঞ্জ",division:"রাজশাহী"},
-  {id:"habiganj",name:"হবিগঞ্জ",division:"সিলেট"},{id:"moulvibazar",name:"মৌলভীবাজার",division:"সিলেট"},{id:"sunamganj",name:"সুনামগঞ্জ",division:"সিলেট"},{id:"sylhet",name:"সিলেট",division:"সিলেট"},
-  {id:"dinajpur",name:"দিনাজপুর",division:"রংপুর"},{id:"gaibandha",name:"গাইবান্ধা",division:"রংপুর"},{id:"kurigram",name:"কুড়িগ্রাম",division:"রংপুর"},{id:"lalmonirhat",name:"লালমনিরহাট",division:"রংপুর"},{id:"nilphamari",name:"নীলফামারী",division:"রংপুর"},{id:"panchagarh",name:"পঞ্চগড়",division:"রংপুর"},{id:"rangpur",name:"রংপুর",division:"রংপুর"},{id:"thakurgaon",name:"ঠাকুরগাঁও",division:"রংপুর"},
-  {id:"jamalpur",name:"জামালপুর",division:"ময়মনসিংহ"},{id:"mymensingh",name:"ময়মনসিংহ",division:"ময়মনসিংহ"},{id:"netrokona",name:"নেত্রকোণা",division:"ময়মনসিংহ"},{id:"sherpur",name:"শেরপুর",division:"ময়মনসিংহ"},
-  {id:"barguna",name:"বরগুনা",division:"বরিশাল"},{id:"barishal",name:"বরিশাল",division:"বরিশাল"},{id:"bhola",name:"ভোলা",division:"বরিশাল"},{id:"jhalokathi",name:"ঝালকাঠি",division:"বরিশাল"},{id:"patukhali",name:"পটুয়াখালী",division:"বরিশাল"},{id:"pirojpur",name:"পিরোজপুর",division:"বরিশাল"}
-] as const;
+import type { District } from '@/lib/types';
+
+// সারা বাংলাদেশের ৬৪ জেলা
+export const districts: District[] = [
+  { slug: 'dhaka', name: 'ঢাকা' }, { slug: 'gazipur', name: 'গাজীপুর' }, { slug: 'narayanganj', name: 'নারায়ণগঞ্জ' },
+  { slug: 'tangail', name: 'টাঙ্গাইল' }, { slug: 'kishoreganj', name: 'কিশোরগঞ্জ' }, { slug: 'manikganj', name: 'মানিকগঞ্জ' },
+  { slug: 'munshiganj', name: 'মুন্সিগঞ্জ' }, { slug: 'narsingdi', name: 'নরসিংদী' }, { slug: 'faridpur', name: 'ফরিদপুর' },
+  { slug: 'gopalganj', name: 'গোপালগঞ্জ' }, { slug: 'madaripur', name: 'মাদারীপুর' }, { slug: 'rajbari', name: 'রাজবাড়ী' },
+  { slug: 'shariatpur', name: 'শরীয়তপুর' }, { slug: 'chattogram', name: 'চট্টগ্রাম' }, { slug: 'coxs-bazar', name: 'কক্সবাজার' },
+  { slug: 'cumilla', name: 'কুমিল্লা' }, { slug: 'brahmanbaria', name: 'ব্রাহ্মণবাড়িয়া' }, { slug: 'chandpur', name: 'চাঁদপুর' },
+  { slug: 'feni', name: 'ফেনী' }, { slug: 'lakshmipur', name: 'লক্ষ্মীপুর' }, { slug: 'noakhali', name: 'নোয়াখালী' },
+  { slug: 'khagrachhari', name: 'খাগড়াছড়ি' }, { slug: 'rangamati', name: 'রাঙামাটি' }, { slug: 'bandarban', name: 'বান্দরবান' },
+  { slug: 'sylhet', name: 'সিলেট' }, { slug: 'moulvibazar', name: 'মৌলভীবাজার' }, { slug: 'habiganj', name: 'হবিগঞ্জ' },
+  { slug: 'sunamganj', name: 'সুনামগঞ্জ' }, { slug: 'rajshahi', name: 'রাজশাহী' }, { slug: 'bogura', name: 'বগুড়া' },
+  { slug: 'pabna', name: 'পাবনা' }, { slug: 'sirajganj', name: 'সিরাজগঞ্জ' }, { slug: 'natore', name: 'নাটোর' },
+  { slug: 'naogaon', name: 'নওগাঁ' }, { slug: 'joypurhat', name: 'জয়পুরহাট' }, { slug: 'chapainawabganj', name: 'চাঁপাইনবাবগঞ্জ' },
+  { slug: 'rangpur', name: 'রংপুর' }, { slug: 'dinajpur', name: 'দিনাজপুর' }, { slug: 'thakurgaon', name: 'ঠাকুরগাঁও' },
+  { slug: 'panchagarh', name: 'পঞ্চগড়' }, { slug: 'nilphamari', name: 'নীলফামারী' }, { slug: 'kurigram', name: 'কুড়িগ্রাম' },
+  { slug: 'gaibandha', name: 'গাইবান্ধা' }, { slug: 'lalmonirhat', name: 'লালমনিরহাট' }, { slug: 'khulna', name: 'খুলনা' },
+  { slug: 'jashore', name: 'যশোর' }, { slug: 'satkhira', name: 'সাতক্ষীরা' }, { slug: 'magura', name: 'মাগুরা' },
+  { slug: 'narail', name: 'নড়াইল' }, { slug: 'kushtia', name: 'কুষ্টিয়া' }, { slug: 'jhenaidah', name: 'ঝিনাইদহ' },
+  { slug: 'bagerhat', name: 'বাগেরহাট' }, { slug: 'chuadanga', name: 'চুয়াডাঙ্গা' }, { slug: 'meharpur', name: 'মেহেরপুর' },
+  { slug: 'barishal', name: 'বরিশাল' }, { slug: 'bhola', name: 'ভোলা' }, { slug: 'pirojpur', name: 'পিরোজপুর' },
+  { slug: 'jhalokathi', name: 'ঝালকাঠি' }, { slug: 'patuakhali', name: 'পটুয়াখালী' }, { slug: 'barguna', name: 'বরগুনা' },
+  { slug: 'mymensingh', name: 'ময়মনসিংহ' }, { slug: 'jamalpur', name: 'জামালপুর' }, { slug: 'netrokona', name: 'নেত্রকোণা' },
+  { slug: 'sherpur', name: 'শেরপুর' },
+];
