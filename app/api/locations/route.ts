@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import locations from "@/data/bangladesh-locations.bn.json";
 
 type Item = { value: string | number; title: string };
@@ -29,10 +28,5 @@ function staticLocations() {
 }
 
 export async function GET() {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    return NextResponse.json({ data: staticLocations(), source: "db" });
-  } catch {
-    return NextResponse.json({ data: staticLocations(), source: "static" });
-  }
+  return NextResponse.json({ data: staticLocations(), source: "static" });
 }
