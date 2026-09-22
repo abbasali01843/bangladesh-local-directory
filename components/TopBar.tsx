@@ -1,9 +1,12 @@
+import SideMenu from "@/components/SideMenu";
+
 type Props = {
   title?: string;
   subtitle?: string;
   backHref?: string;
   rightHref?: string;
   rightLabel?: string;
+  showMenu?: boolean;
 };
 
 export default function TopBar({
@@ -12,6 +15,7 @@ export default function TopBar({
   backHref,
   rightHref = "/login",
   rightLabel = "🔔",
+  showMenu = true,
 }: Props) {
   return (
     <div className="ps-topwrap">
@@ -20,11 +24,12 @@ export default function TopBar({
           <a href={backHref} className="ps-iconbtn" aria-label="Back">
             ←
           </a>
+        ) : showMenu ? (
+          <SideMenu />
         ) : (
-          <button type="button" className="ps-iconbtn" aria-label="Menu">
-            ☰
-          </button>
+          <span className="ps-iconbtn" aria-hidden="true" />
         )}
+
         <div className="ps-brand">
           <span className="ps-logo">🇧🇩</span>
           <div>
@@ -32,6 +37,7 @@ export default function TopBar({
             <div className="ps-brand-sub">{subtitle}</div>
           </div>
         </div>
+
         <a href={rightHref} className="ps-iconbtn" aria-label="Action">
           {rightLabel}
         </a>
