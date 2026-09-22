@@ -12,13 +12,14 @@ export default function AddListing(){
  useEffect(()=>{fetch("/api/locations").then(r=>r.json()).then(j=>{setLoc(j.data||[]);setStaticMode(j.source==="static");}).catch(()=>setStaticMode(true));},[]);
  const v=loc.find(x=>x.id===division),d=v?.districts?.find(x=>x.id===district),u=d?.upazilas?.find(x=>x.id===upazila),n=u?.unions?.find(x=>x.id===union);
  async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setMessage("");setOk(false);const f=new FormData(e.currentTarget);
-  if(staticMode){setMessage("ডাটাবেস এখনো সেট নেই। লোকেশন নির্বাচন ঠিক আছে; তথ্য সেভ করতে DB চালু করতে হবে।");setBusy(false);return;}
   if(!district||!upazila){setMessage("জেলা ও উপজেলা নির্বাচন করুন।");setBusy(false);return;}
-  const r=await fetch("/api/services",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:f.get("name"),categoryId:f.get("category"),districtId:district,upazilaId:upazila,unionId:union||null,areaId:area||null,phone:f.get("phone"),description:f.get("description")})});
-  const j=await r.json(); if(r.ok){setOk(true);setMessage("তথ্য সফলভাবে জমা হয়েছে। Admin approval-এর অপেক্ষায়।");e.currentTarget.reset();setDivision("");setDistrict("");setUpazila("");setUnion("");setArea("");}else setMessage(j.message||j.error||"জমা দেওয়া যায়নি");setBusy(false);
+  const listing={id:"local-"+Date.now(),name:String(f.get("name")||""),category:String(f.get("category")||""),district:district,upazila:upazila,union:union||"",area:area||"",phone:String(f.get("phone")||""),description:String(f.get("description")||""),verified:false};
+  const saved=JSON.parse(localStorage.getItem("bdld_listings")||"[]");
+  localStorage.setItem("bdld_listings",JSON.stringify([listing,...saved]));
+  setOk(true);setMessage("তথ্য এই ডিভাইসে অফলাইনে সংরক্ষণ হয়েছে।");e.currentTarget.reset();setDivision("");setDistrict("");setUpazila("");setUnion("");setArea("");setBusy(false);
  }
  return <main className="ps-page"><TopBar title="তথ্য যোগ করুন" subtitle="সারা বাংলাদেশ" backHref="/"/><div className="ps-content">
- {staticMode&&<div className="ps-msg-err" style={{marginBottom:12}}>ডেমো মোড: লোকেশন ও ফর্ম কাজ করছে; DB সংযুক্ত হলে তথ্য সংরক্ষণ চালু হবে।</div>}
+ {staticMode&&<div className="ps-msg-err" style={{marginBottom:12}}>অফলাইন মোড: আপনার যোগ করা তথ্য এই ডিভাইসেই সংরক্ষণ হবে।</div>}
  <form onSubmit={submit} className="ps-form">
  <label className="ps-label">নাম *<input required name="name" className="ps-input" placeholder="যেমন: ডা. করিম চেম্বার"/></label>
  <label className="ps-label">ক্যাটাগরি *<select name="category" className="ps-input" required>{categories.map(c=><option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}</select></label>
@@ -30,6 +31,6 @@ export default function AddListing(){
  <label className="ps-label">মোবাইল<input name="phone" type="tel" className="ps-input" placeholder="01XXXXXXXXX"/></label>
  <label className="ps-label">বিস্তারিত<textarea name="description" rows={4} className="ps-input" placeholder="সংক্ষিপ্ত বিবরণ..."/></label>
  {message&&<div className={ok?"ps-msg-ok":"ps-msg-err"}>{message}</div>}
- <button disabled={busy||!upazila} className="ps-btn-primary ps-btn-block">{busy?"জমা হচ্ছে...":staticMode?"চেক করুন (ডেমো)":"জমা দিন — Admin Review"}</button>
+ <button disabled={busy||!upazila} className="ps-btn-primary ps-btn-block">{busy?"সংরক্ষণ হচ্ছে...":"অফলাইনে সংরক্ষণ করুন"}</button>
  </form></div><BottomNav active="add"/></main>;
 }
