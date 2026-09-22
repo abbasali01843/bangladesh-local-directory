@@ -6,11 +6,14 @@ const links = [
   { href: "/", label: "হোম", icon: "🏠" },
   { href: "/categories", label: "ক্যাটাগরি", icon: "📂" },
   { href: "/search", label: "খুঁজুন", icon: "🔍" },
+  { href: "/notices", label: "নোটিশ", icon: "📢" },
   { href: "/add-listing", label: "তথ্য যোগ করুন", icon: "➕" },
-  { href: "/login", label: "লগইন", icon: "👤" },
+  { href: "/profile", label: "প্রোফাইল", icon: "👤" },
+  { href: "/login", label: "লগইন", icon: "🔑" },
   { href: "/register", label: "রেজিস্টার", icon: "📝" },
   { href: "/owner", label: "ওনার ড্যাশবোর্ড", icon: "🏪" },
   { href: "/admin", label: "অ্যাডমিন", icon: "🛡️" },
+  { href: "/about", label: "পরিচিতি", icon: "ℹ️" },
 ];
 
 export default function SideMenu() {
@@ -25,12 +28,7 @@ export default function SideMenu() {
 
   return (
     <>
-      <button
-        type="button"
-        className="ps-iconbtn"
-        aria-label="Menu"
-        onClick={() => setOpen(true)}
-      >
+      <button type="button" className="ps-iconbtn" aria-label="Menu" onClick={() => setOpen(true)}>
         ☰
       </button>
 
@@ -46,24 +44,14 @@ export default function SideMenu() {
                   <div className="ps-brand-sub">তথ্যই হোক সংযোগ</div>
                 </div>
               </div>
-              <button
-                type="button"
-                className="ps-iconbtn"
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
-              >
+              <button type="button" className="ps-iconbtn" aria-label="Close" onClick={() => setOpen(false)}>
                 ✕
               </button>
             </div>
 
             <nav className="ps-drawer-nav">
               {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  className="ps-drawer-link"
-                  onClick={() => setOpen(false)}
-                >
+                <a key={l.href} href={l.href} className="ps-drawer-link" onClick={() => setOpen(false)}>
                   <span className="ps-drawer-ico">{l.icon}</span>
                   <span>{l.label}</span>
                 </a>

@@ -6,98 +6,41 @@
 
 ## Features
 
-- 🔍 সার্চ (নাম + বিবরণ)
-- 📂 ক্যাটাগরি ভিত্তিক ব্রাউজ
-- 📍 জেলা → উপজেলা → ইউনিয়ন → এলাকা লোকেশন সিস্টেম
-- ➕ তথ্য যোগ করা (মডারেশন সহ)
-- 👤 ইউজার রেজিস্ট্রেশন / লগইন
-- 🏢 ব্যবসায়ী ক্লেইম সিস্টেম
-- 🛡️ অ্যাডমিন প্যানেল (অনুমোদন / প্রত্যাখ্যান)
-- ⭐ রিভিউ, রিপোর্ট, ফেভারিট (মডেল রেডি)
+- 🔍 সার্চ (ডেমো + DB)
+- 📂 ২১টি ক্যাটাগরি + আসল কাউন্ট
+- 📍 জেলা চিপস + লোকেশন ফিল্টার
+- 📢 নোটিশ সিস্টেম
+- ➕ তথ্য যোগ (DB থাকলে সেভ)
+- 👤 প্রোফাইল / লগইন / রেজিস্টার
+- 🛡️ অ্যাডমিন + ওনার ড্যাশবোর্ড
+- 📞 কল / WhatsApp / ম্যাপ
+- 📱 মোবাইল-ফার্স্ট UI (Priyo Sherpur style)
 
-## Tech Stack
+## Mode
 
-- **Frontend:** Next.js 16 (App Router) + React 19 + TypeScript
-- **Styling:** Tailwind CSS 4 + Custom CSS
-- **Database:** PostgreSQL + Prisma 6
-- **Auth:** Custom session (scrypt + httpOnly cookie)
-- **Deploy:** Vercel
+| Mode | কখন |
+|------|------|
+| **Static (ডেমো)** | `DATABASE_URL` না থাকলে — ব্রাউজ/সার্চ কাজ করে |
+| **Full (DB)** | Postgres সেট থাকলে — লগইন, সেভ, মডারেশন |
 
-## Getting Started
+## Tech
 
-### 1. Clone & Install
+Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
 
-```bash
-git clone https://github.com/abbasali01843/bangladesh-local-directory.git
-cd bangladesh-local-directory
-npm install
-```
+## Roadmap status
 
-### 2. Environment
+- [x] Phase 0 — Stabilization (UI, menu, admin/owner style)
+- [x] Phase 1 — Data foundation (demo services, counts, fallback APIs)
+- [x] Phase 2 — Security basics (rate limit login/register, validation)
+- [x] Phase 3 — Core UX (detail call/map/wa, search fallback)
+- [x] Phase 4 — Engagement (notices, profile, about, SEO)
+- [ ] Phase 5 — Real DB + images + PWA polish (needs your Postgres)
 
-`.env` ফাইল তৈরি করুন:
+## Optional: Database
 
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
-```
-
-### 3. Database Setup
+When ready, add Vercel Postgres or Neon and set `DATABASE_URL`, then:
 
 ```bash
-npm run db:generate
-npm run db:push
-npm run db:seed   # (যদি seed থাকে)
+npx prisma db push
+npm run db:seed
 ```
-
-### 4. Run
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-## Project Structure
-
-```
-app/                  # Next.js App Router pages & API routes
-  api/                # Backend API (auth, services, admin, owner)
-  add-listing/        # নতুন লিস্টিং যোগ
-  admin/              # অ্যাডমিন প্যানেল
-  search/             # সার্চ পেজ
-  services/           # সার্ভিস লিস্ট ও ডিটেইল
-components/           # রিইউজেবল কম্পোনেন্ট
-data/                 # স্ট্যাটিক ক্যাটাগরি ও লোকেশন ডেটা
-lib/                  # auth.ts, prisma.ts
-prisma/               # schema.prisma + seed
-```
-
-## Roles
-
-| Role | Access |
-|------|--------|
-| `USER` | সার্চ, রিভিউ, ফেভারিট, লিস্টিং সাজেস্ট |
-| `BUSINESS_OWNER` | নিজের লিস্টিং ম্যানেজ, ক্লেইম |
-| `ADMIN` | সব অনুমোদন/প্রত্যাখ্যান, ইউজার ম্যানেজ |
-
-## Roadmap (Priyo Sherpur style)
-
-- [x] Basic structure + Auth + Admin
-- [x] Homepage UI improvement
-- [ ] More categories + item counts
-- [ ] Location selector on homepage
-- [ ] Mobile bottom navigation
-- [ ] Demo data / better empty states
-- [ ] Notice / Announcement system
-- [ ] Owner dashboard polish
-- [ ] Rate limiting + stronger validation
-- [ ] Image upload
-- [ ] PWA / App-like experience
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first.
-
-## License
-
-Private / All rights reserved (for now).

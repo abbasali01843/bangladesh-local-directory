@@ -16,20 +16,28 @@ export default async function ServiceDetails({
 
   return (
     <main className="ps-page">
-      <TopBar title="বিস্তারিত" subtitle={c?.name || "সেবা"} backHref={`/services?category=${s.category}`} />
+      <TopBar
+        title="বিস্তারিত"
+        subtitle={c?.name || "সেবা"}
+        backHref={`/services?category=${s.category}`}
+      />
 
       <div className="ps-content">
         <div className="ps-detail">
           <div className="ps-detail-icon">{c?.icon || "📋"}</div>
           <h1 className="ps-detail-title">{s.name}</h1>
           {s.verified && <span className="ps-badge">✓ Verified Profile</span>}
-          <p className="ps-list-loc" style={{ marginTop: 10 }}>📍 {s.area}, {s.upazila}, {s.district}</p>
+          <p className="ps-list-loc" style={{ marginTop: 10 }}>
+            📍 {s.area}, {s.upazila}, {s.district}
+          </p>
           <p className="ps-detail-desc">{s.description}</p>
 
           <div className="ps-detail-fields">
             {Object.entries(s.fields).map(([key, value]) => (
               <div key={key} className="ps-field-row">
-                <span className="ps-field-label">{c?.fields.find((f) => f.key === key)?.label || key}</span>
+                <span className="ps-field-label">
+                  {c?.fields.find((f) => f.key === key)?.label || key}
+                </span>
                 <span className="ps-field-value">{value}</span>
               </div>
             ))}
@@ -40,6 +48,31 @@ export default async function ServiceDetails({
               📞 কল করুন — {s.phone}
             </a>
           )}
+
+          <div className="ps-admin-actions" style={{ marginTop: 10 }}>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${s.name} ${s.area} ${s.upazila} ${s.district}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ps-btn-primary"
+              style={{ flex: 1, textAlign: "center" }}
+            >
+              🗺️ ম্যাপ
+            </a>
+            <a
+              href={`https://wa.me/88${s.phone.replace(/\D/g, "").replace(/^88/, "")}?text=${encodeURIComponent(
+                `Local Hub: ${s.name}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ps-btn-primary"
+              style={{ flex: 1, textAlign: "center", background: "#128C7E" }}
+            >
+              WhatsApp
+            </a>
+          </div>
         </div>
       </div>
 

@@ -19,7 +19,7 @@ export default function BottomNav({ active = "home" }: Props) {
         <span className="ps-nav-ico">🔍</span>
         <span>খুঁজুন</span>
       </a>
-      <a href="/login" className={active === "account" ? "ps-nav-item active" : "ps-nav-item"}>
+      <a href="/profile" className={active === "account" ? "ps-nav-item active" : "ps-nav-item"}>
         <span className="ps-nav-ico">👤</span>
         <span>অ্যাকাউন্ট</span>
       </a>
