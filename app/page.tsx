@@ -1,6 +1,22 @@
 import { categories } from "@/data/categories";
 
+// Homepage shows first 8 popular categories
+const popularIds = [
+  "doctor",
+  "business",
+  "education",
+  "mistri",
+  "transport",
+  "lawyer",
+  "food",
+  "emergency",
+];
+
 export default function Home() {
+  const popular = popularIds
+    .map((id) => categories.find((c) => c.id === id))
+    .filter(Boolean) as typeof categories;
+
   return (
     <main className="pb-24">
       {/* Header */}
@@ -11,7 +27,9 @@ export default function Home() {
             <strong className="text-lg font-bold text-teal-800">Local Hub</strong>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <a href="/login" className="text-teal-700 font-medium">লগইন</a>
+            <a href="/login" className="text-teal-700 font-medium">
+              লগইন
+            </a>
             <a
               href="/add-listing"
               className="bg-teal-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium"
@@ -27,7 +45,8 @@ export default function Home() {
         <div className="container py-10 md:py-14">
           <p className="text-teal-100 text-sm mb-1">আপনার এলাকার প্রয়োজনীয় তথ্য</p>
           <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
-            সবকিছু খুঁজুন<br className="md:hidden" /> এক জায়গায়
+            সবকিছু খুঁজুন
+            <br className="md:hidden" /> এক জায়গায়
           </h1>
 
           <form action="/search" className="flex gap-2 max-w-2xl">
@@ -52,12 +71,12 @@ export default function Home() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-800">জনপ্রিয় ক্যাটাগরি</h2>
           <a href="/categories" className="text-teal-700 text-sm font-medium">
-            সবগুলো →
+            সবগুলো ({categories.length}) →
           </a>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-          {categories.map((c) => (
+          {popular.map((c) => (
             <a
               key={c.id}
               href={`/services?category=${c.id}`}
@@ -102,10 +121,7 @@ export default function Home() {
             <span className="text-xl">📂</span>
             <span>ক্যাটাগরি</span>
           </a>
-          <a
-            href="/add-listing"
-            className="flex flex-col items-center -mt-5"
-          >
+          <a href="/add-listing" className="flex flex-col items-center -mt-5">
             <span className="bg-teal-700 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg">
               +
             </span>
