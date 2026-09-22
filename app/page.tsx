@@ -1,115 +1,66 @@
-import { categories } from "@/data/categories";
-import { services, countByCategory, servicesInKanchana } from "@/data/services";
-import { notices } from "@/data/notices";
-import { pilot, satkaniaUnions } from "@/data/pilot";
-import TopBar from "@/components/TopBar";
-import BottomNav from "@/components/BottomNav";
+import Link from 'next/link';
+import SearchBar from '@/components/SearchBar';
+import CategoryCard from '@/components/CategoryCard';
+import { getCategories, getDistricts, getNotices, getServices, getServiceCount } from '@/lib/data';
+import { Megaphone, MapPin } from 'lucide-react';
 
-export default function Home() {
-  const kanchana = servicesInKanchana().slice(0, 8);
-
+export default function HomePage() {
+  const categories = getCategories();
+  const districts = getDistricts();
+  const notices = getNotices();
+  const all = getServices();
   return (
-    <main className="ps-page">
-      <TopBar title="Bangladesh Local Directory" subtitle={pilot.shortLabel} />
+    <div>
+      {/* হিরো + সার্চ */}
+      <section className="bg-gradient-to-b from-green-700 to-green-600 text-white py-14 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">সারা বাংলাদেশের স্থানীয় তথ্য এক জায়গায়</h1>
+          <p className="text-green-100 mb-6">ব্যবসা · সেবা · জরুরি যোগাযোগ — ৬৪ জেলা, ২১ ক্যাটাগরি</p>
+          <SearchBar />
+          <div className="mt-6 flex justify-center gap-6 text-sm">
+            <span>📋 {all.length}+ তথ্য</span>
+            <span>📂 {categories.length} ক্যাটাগরি</span>
+            <span>📍 {districts.length} জেলা</span>
+          </div>
+        </div>
+      </section>
 
-      <div className="ps-content">
-        <div className="ps-hero">
-          <div className="ps-hero-inner">
-            <div className="ps-hero-overlay">
-              <p className="ps-hero-tag">{pilot.label}</p>
-              <h1 className="ps-hero-title">কাঞ্চনা ইউনিয়নের তথ্য আলাদা করে সাজানো</h1>
+      {/* নোটিশ টিকার */}
+      <div className="bg-amber-50 border-y border-amber-200 text-amber-900 py-2 px-4 overflow-hidden">
+        <div className="max-w-6xl mx-auto flex items-center gap-2 text-sm">
+          <Megaphone size={16} className="shrink-0" />
+          <div className="overflow-hidden flex-1">
+            <div className="animate-ticker">
+              {notices.map((n) => (
+                <Link key={n.id} href="/notice" className="mx-8 hover:underline">📌 {n.title}</Link>
+              ))}
+              {notices.map((n) => (
+                <Link key={'r' + n.id} href="/notice" className="mx-8 hover:underline">📌 {n.title}</Link>
+              ))}
             </div>
           </div>
         </div>
-
-        <a href="/area" className="ps-promo">
-          <span className="ps-promo-pill">কাঞ্চনা</span>
-          <span className="ps-promo-text">ইউনিয়ন প্রোফাইল · স্কুল · হাট · মসজিদ</span>
-          <span className="ps-promo-arrow">›</span>
-        </a>
-
-        <form action="/search" className="ps-search">
-          <span className="ps-search-icon">🔍</span>
-          <input name="q" type="search" placeholder="কাঞ্চনায় খুঁজুন..." aria-label="Search" />
-        </form>
-
-        <div className="ps-section-head">
-          <span className="ps-section-icon">📢</span>
-          <h2>নোটিশ</h2>
-          <a href="/notices" className="ps-section-more">সব ›</a>
-        </div>
-        <div className="ps-list" style={{ marginBottom: 16 }}>
-          {notices.slice(0, 2).map((n) => (
-            <a key={n.id} href="/notices" className="ps-list-card">
-              <div className="ps-list-top">
-                <strong>{n.title}</strong>
-                <span className="ps-badge">{n.date}</span>
-              </div>
-              <p className="ps-list-desc">{n.body.slice(0, 90)}…</p>
-            </a>
-          ))}
-        </div>
-
-        <div className="ps-section-head">
-          <span className="ps-section-icon">🏘️</span>
-          <h2>সাতকানিয়া ইউনিয়ন</h2>
-        </div>
-        <div className="ps-chips">
-          {satkaniaUnions.map((u) => (
-            <a
-              key={u.id}
-              href={u.id === "kanchana" ? "/area" : `/search?q=${encodeURIComponent(u.name)}`}
-              className="ps-chip"
-              style={
-                u.id === "kanchana"
-                  ? { borderColor: "#0a7a3e", color: "#0a7a3e", fontWeight: 800 }
-                  : undefined
-              }
-            >
-              {u.name}
-            </a>
-          ))}
-        </div>
-
-        <div className="ps-section-head">
-          <span className="ps-section-icon">📂</span>
-          <h2>ক্যাটাগরি</h2>
-          <a href="/categories" className="ps-section-more">সব ›</a>
-        </div>
-        <div className="ps-cat-grid">
-          {categories.map((c) => {
-            const n = countByCategory(c.id);
-            return (
-              <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
-                <div className="ps-cat-icon-wrap">
-                  <span className="ps-cat-icon">{c.icon}</span>
-                </div>
-                <div className="ps-cat-name">{c.name}</div>
-                <div className="ps-cat-count">{n} টি</div>
-              </a>
-            );
-          })}
-        </div>
-
-        <div className="ps-section-head">
-          <span className="ps-section-icon">⭐</span>
-          <h2>শুধু কাঞ্চনা ইউনিয়ন</h2>
-          <a href="/area" className="ps-section-more">সব ›</a>
-        </div>
-        <div className="ps-list">
-          {kanchana.map((s) => (
-            <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
-              <div className="ps-list-top">
-                <strong>{s.name}</strong>
-                <span className="ps-badge">কাঞ্চনা</span>
-              </div>
-              <p className="ps-list-loc">📍 {s.area}</p>
-            </a>
-          ))}
-        </div>
       </div>
 
-      <BottomNav active="home" />
-    </main>
+      {/* ক্যাটাগরি */}
+      <section id="categories" className="max-w-6xl mx-auto px-4 py-10">
+        <h2 className="text-xl font-bold mb-4">📂 ক্যাটাগরি সমূহ</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {categories.map((c) => (
+            <CategoryCard key={c.slug} slug={c.slug} name={c.name} emoji={c.emoji} description={c.description} count={getServiceCount(c.slug)} />
+          ))}
+        </div>
+      </section>
+
+      {/* জেলা */}
+      <section className="max-w-6xl mx-auto px-4 pb-10">
+        <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><MapPin size={20} /> জেলা সমূহ</h2>
+        <div className="flex flex-wrap gap-2">
+          {districts.map((d) => (
+            <Link key={d.slug} href={'/district/' + d.slug} className="bg-white border border-green-200 text-green-800 text-sm px-3 py-1 rounded-full hover:bg-green-50">{d.name}</Link>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
