@@ -5,15 +5,14 @@ import locations from "@/data/bangladesh-locations.bn.json";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
-type LocationItem = { value: string; title: string };
-
-const districtsByDivision = locations.districts_bn as Record<string, LocationItem[]>;
+const locationData = locations as any;
+const districtsByDivision = locationData.districts_bn as Record<string, any[]>;
 const districts = Object.values(districtsByDivision).flat();
-const upazilas = Object.values(locations.upazilas_bn).flat() as LocationItem[];
-const unions = Object.values(locations.unions_bn).flat() as LocationItem[];
+const upazilas = Object.values(locationData.upazilas_bn).flat() as any[];
+const unions = Object.values(locationData.unions_bn).flat() as any[];
 
 export default function Home() {
-  const divisionStats = locations.divisions_bn.map((d) => ({
+  const divisionStats = locationData.divisions_bn.map((d: any) => ({
     ...d,
     districtCount: (districtsByDivision[d.value] || []).length,
   }));
@@ -49,7 +48,7 @@ export default function Home() {
           <span className="ps-section-icon">📍</span><h2>বাংলাদেশের লোকেশন</h2>
         </div>
         <div className="ps-chips">
-          {divisionStats.map((d) => (
+          {divisionStats.map((d: any) => (
             <a key={d.value} href={"/search?q=" + encodeURIComponent(d.title)} className="ps-chip">
               {d.title} · {d.districtCount} জেলা
             </a>
