@@ -30,7 +30,7 @@ function staticLocations() {
 
 export async function GET() {
   try {
-    await prisma.$queryRaw("SELECT 1");
+    await prisma.$queryRaw`SELECT 1`;
     return NextResponse.json({ data: staticLocations(), source: "db" });
   } catch {
     return NextResponse.json({ data: staticLocations(), source: "static" });
