@@ -13,7 +13,7 @@ export default function AddListing(){
  const v=loc.find(x=>x.id===division),d=v?.districts?.find(x=>x.id===district),u=d?.upazilas?.find(x=>x.id===upazila),n=u?.unions?.find(x=>x.id===union);
  async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setMessage("");setOk(false);const f=new FormData(e.currentTarget);
   if(!district||!upazila){setMessage("জেলা ও উপজেলা নির্বাচন করুন।");setBusy(false);return;}
-  const listing={id:"local-"+Date.now(),name:String(f.get("name")||""),category:String(f.get("category")||""),district:d?.name||district,upazila:u?.name||upazila,union:n?.name||"",area:area||"",phone:String(f.get("phone")||""),description:String(f.get("description")||""),verified:false};
+  const listing={id:"local-"+Date.now(),name:String(f.get("name")||""),category:String(f.get("category")||""),divisionId:division,division:v?.name||"",districtId:district,district:d?.name||"",upazilaId:upazila,upazila:u?.name||"",unionId:union,union:n?.name||"",area:area||"",phone:String(f.get("phone")||""),description:String(f.get("description")||""),verified:false,createdAt:new Date().toISOString()};
   const saved=JSON.parse(localStorage.getItem("bdld_listings")||"[]");
   localStorage.setItem("bdld_listings",JSON.stringify([listing,...saved]));
   setOk(true);setMessage("তথ্য এই ডিভাইসে অফলাইনে সংরক্ষণ হয়েছে।");e.currentTarget.reset();setDivision("");setDistrict("");setUpazila("");setUnion("");setArea("");setBusy(false);
