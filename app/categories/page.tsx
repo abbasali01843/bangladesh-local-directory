@@ -1,41 +1,17 @@
 import { categories } from "@/data/categories";
+import TopBar from "@/components/TopBar";
+import BottomNav from "@/components/BottomNav";
 
 export default function CategoriesPage() {
   return (
     <main className="ps-page">
-      <div className="ps-topwrap">
-        <header className="ps-topbar">
-          <a href="/" className="ps-iconbtn" aria-label="Back">
-            ←
-          </a>
-          <div className="ps-brand">
-            <span className="ps-logo">🇧🇩</span>
-            <div>
-              <div className="ps-brand-title">ক্যাটাগরি</div>
-              <div className="ps-brand-sub">{categories.length}টি বিভাগ</div>
-            </div>
-          </div>
-          <a href="/add-listing" className="ps-iconbtn" aria-label="Add">
-            +
-          </a>
-        </header>
-      </div>
+      <TopBar title="ক্যাটাগরি" subtitle={`${categories.length}টি বিভাগ`} backHref="/" />
 
       <div className="ps-content">
         <form action="/search" className="ps-search">
           <span className="ps-search-icon">🔍</span>
-          <input
-            name="q"
-            type="search"
-            placeholder="ক্যাটাগরি খুঁজুন..."
-            aria-label="Search categories"
-          />
+          <input name="q" type="search" placeholder="ক্যাটাগরি খুঁজুন..." aria-label="Search" />
         </form>
-
-        <div className="ps-section-head">
-          <span className="ps-section-icon">📂</span>
-          <h2>সকল ক্যাটাগরি</h2>
-        </div>
 
         <div className="ps-cat-grid">
           {categories.map((c) => (
@@ -44,34 +20,13 @@ export default function CategoriesPage() {
                 <span className="ps-cat-icon">{c.icon}</span>
               </div>
               <div className="ps-cat-name">{c.name}</div>
-              <div className="ps-cat-count">তথ্য দেখুন</div>
+              <div className="ps-cat-count">{c.count} টি তথ্য</div>
             </a>
           ))}
         </div>
       </div>
 
-      <nav className="ps-bottom">
-        <a href="/" className="ps-nav-item">
-          <span className="ps-nav-ico">🏠</span>
-          <span>হোম</span>
-        </a>
-        <a href="/categories" className="ps-nav-item active">
-          <span className="ps-nav-ico">🔔</span>
-          <span>ক্যাটাগরি</span>
-        </a>
-        <a href="/add-listing" className="ps-nav-center">
-          <span className="ps-nav-center-btn">🇧🇩</span>
-          <span className="ps-nav-center-label">যোগ করুন</span>
-        </a>
-        <a href="/search" className="ps-nav-item">
-          <span className="ps-nav-ico">💬</span>
-          <span>খুঁজুন</span>
-        </a>
-        <a href="/login" className="ps-nav-item">
-          <span className="ps-nav-ico">ℹ️</span>
-          <span>অ্যাকাউন্ট</span>
-        </a>
-      </nav>
+      <BottomNav active="categories" />
     </main>
   );
 }

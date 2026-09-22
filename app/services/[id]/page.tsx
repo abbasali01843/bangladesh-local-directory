@@ -1,2 +1,49 @@
-import {notFound} from "next/navigation"; import {services} from "@/data/services"; import {categories} from "@/data/categories";
-export default async function ServiceDetails({params}:{params:Promise<{id:string}>}){const {id}=await params;const s=services.find(x=>x.id===id);if(!s)notFound();const c=categories.find(x=>x.id===s.category);return <main className="container" style={{padding:"32px 0"}}><a href="/services">← সব সেবা</a><section style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:20,padding:24,marginTop:16}}><div style={{fontSize:38}}>{c?.icon}</div><h1>{s.name}</h1><div style={{color:"#667085"}}>📍 {s.area}, {s.upazila}, {s.district}</div>{s.verified&&<p style={{color:"#087443",fontWeight:700}}>✓ Verified Profile</p>}<p style={{lineHeight:1.8}}>{s.description}</p>{Object.entries(s.fields).map(([key,value])=><div key={key} style={{padding:"12px 0",borderTop:"1px solid #eee"}}><strong>{c?.fields.find(f=>f.key===key)?.label||key}:</strong> {value}</div>)}{s.phone&&<a href={"tel:"+s.phone} style={{display:"inline-block",marginTop:18,padding:"12px 18px",borderRadius:10,background:"#0f766e",color:"#fff",textDecoration:"none"}}>📞 কল করুন</a>}</section></main>}
+import { notFound } from "next/navigation";
+import { services } from "@/data/services";
+import { categories } from "@/data/categories";
+import TopBar from "@/components/TopBar";
+import BottomNav from "@/components/BottomNav";
+
+export default async function ServiceDetails({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const s = services.find((x) => x.id === id);
+  if (!s) notFound();
+  const c = categories.find((x) => x.id === s.category);
+
+  return (
+    <main className="ps-page">
+      <TopBar title="বিস্তারিত" subtitle={c?.name || "সেবা"} backHref={`/services?category=${s.category}`} />
+
+      <div className="ps-content">
+        <div className="ps-detail">
+          <div className="ps-detail-icon">{c?.icon || "📋"}</div>
+          <h1 className="ps-detail-title">{s.name}</h1>
+          {s.verified && <span className="ps-badge">✓ Verified Profile</span>}
+          <p className="ps-list-loc" style={{ marginTop: 10 }}>📍 {s.area}, {s.upazila}, {s.district}</p>
+          <p className="ps-detail-desc">{s.description}</p>
+
+          <div className="ps-detail-fields">
+            {Object.entries(s.fields).map(([key, value]) => (
+              <div key={key} className="ps-field-row">
+                <span className="ps-field-label">{c?.fields.find((f) => f.key === key)?.label || key}</span>
+                <span className="ps-field-value">{value}</span>
+              </div>
+            ))}
+          </div>
+
+          {s.phone && (
+            <a href={`tel:${s.phone}`} className="ps-btn-primary ps-btn-block">
+              📞 কল করুন — {s.phone}
+            </a>
+          )}
+        </div>
+      </div>
+
+      <BottomNav />
+    </main>
+  );
+}

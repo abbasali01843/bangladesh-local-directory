@@ -1,29 +1,19 @@
 import { categories } from "@/data/categories";
+import TopBar from "@/components/TopBar";
+import BottomNav from "@/components/BottomNav";
+
+const districts = [
+  "ঢাকা", "চট্টগ্রাম", "রাজশাহী", "খুলনা", "বরিশাল",
+  "সিলেট", "রংপুর", "ময়মনসিংহ", "শেরপুর", "কুমিল্লা",
+];
 
 export default function Home() {
   return (
     <main className="ps-page">
-      {/* Top floating bar */}
-      <div className="ps-topwrap">
-        <header className="ps-topbar">
-          <button type="button" className="ps-iconbtn" aria-label="Menu">
-            ☰
-          </button>
-          <div className="ps-brand">
-            <span className="ps-logo">🇧🇩</span>
-            <div>
-              <div className="ps-brand-title">Local Hub</div>
-              <div className="ps-brand-sub">তথ্যই হোক সংযোগ</div>
-            </div>
-          </div>
-          <a href="/login" className="ps-iconbtn" aria-label="Notifications">
-            🔔
-          </a>
-        </header>
-      </div>
+      <TopBar />
 
       <div className="ps-content">
-        {/* Hero image card */}
+        {/* Hero */}
         <div className="ps-hero">
           <div className="ps-hero-inner">
             <div className="ps-hero-overlay">
@@ -38,31 +28,38 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Promo banner */}
-        <div className="ps-promo">
+        {/* Promo */}
+        <a href="/add-listing" className="ps-promo">
           <span className="ps-promo-pill">প্রিয় তথ্য</span>
           <span className="ps-promo-text">আপনার এলাকার সেবা খুঁজুন ও যোগ করুন</span>
           <span className="ps-promo-arrow">›</span>
-        </div>
+        </a>
 
         {/* Search */}
         <form action="/search" className="ps-search">
           <span className="ps-search-icon">🔍</span>
-          <input
-            name="q"
-            type="search"
-            placeholder="সেবা, ক্যাটাগরি বা সাবক্যাটাগরি খুঁজুন..."
-            aria-label="Search"
-          />
+          <input name="q" type="search" placeholder="সেবা, ক্যাটাগরি বা সাবক্যাটাগরি খুঁজুন..." aria-label="Search" />
         </form>
 
-        {/* Section title */}
+        {/* District chips */}
         <div className="ps-section-head">
           <span className="ps-section-icon">📍</span>
-          <h2>জনপ্রিয় ক্যাটাগরি</h2>
+          <h2>জেলা সমূহ</h2>
+        </div>
+        <div className="ps-chips">
+          {districts.map((d) => (
+            <a key={d} href={`/search?q=${encodeURIComponent(d)}`} className="ps-chip">
+              {d}
+            </a>
+          ))}
         </div>
 
-        {/* Category grid - 3 cols like Priyo Sherpur */}
+        {/* Categories */}
+        <div className="ps-section-head" style={{ marginTop: 8 }}>
+          <span className="ps-section-icon">📂</span>
+          <h2>ক্যাটাগরি সমূহ</h2>
+        </div>
+
         <div className="ps-cat-grid">
           {categories.map((c) => (
             <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
@@ -70,44 +67,13 @@ export default function Home() {
                 <span className="ps-cat-icon">{c.icon}</span>
               </div>
               <div className="ps-cat-name">{c.name}</div>
-              <div className="ps-cat-count">তথ্য দেখুন</div>
+              <div className="ps-cat-count">{c.count} টি তথ্য</div>
             </a>
           ))}
         </div>
-
-        {/* Add listing CTA */}
-        <a href="/add-listing" className="ps-cta">
-          <div>
-            <strong>তথ্য যোগ করুন</strong>
-            <p>বিনামূল্যে তালিকাভুক্ত হোন</p>
-          </div>
-          <span className="ps-cta-btn">+</span>
-        </a>
       </div>
 
-      {/* Bottom nav - floating pill */}
-      <nav className="ps-bottom">
-        <a href="/" className="ps-nav-item active">
-          <span className="ps-nav-ico">🏠</span>
-          <span>হোম</span>
-        </a>
-        <a href="/categories" className="ps-nav-item">
-          <span className="ps-nav-ico">🔔</span>
-          <span>ক্যাটাগরি</span>
-        </a>
-        <a href="/add-listing" className="ps-nav-center">
-          <span className="ps-nav-center-btn">🇧🇩</span>
-          <span className="ps-nav-center-label">যোগ করুন</span>
-        </a>
-        <a href="/search" className="ps-nav-item">
-          <span className="ps-nav-ico">💬</span>
-          <span>খুঁজুন</span>
-        </a>
-        <a href="/login" className="ps-nav-item">
-          <span className="ps-nav-ico">ℹ️</span>
-          <span>অ্যাকাউন্ট</span>
-        </a>
-      </nav>
+      <BottomNav active="home" />
     </main>
   );
 }
