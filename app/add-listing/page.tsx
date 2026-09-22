@@ -19,17 +19,22 @@ export default function AddListing() {
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [staticMode, setStaticMode] = useState(false);
 
   useEffect(() => {
     fetch("/api/locations")
       .then((r) => r.json())
-      .then((j) => setLoc(j.data || []))
-      .catch(() => {});
+      .then((j) => {
+        setLoc(j.data || []);
+        setStaticMode(j.source === "static");
+      })
+      .catch(() => setStaticMode(true));
   }, []);
 
   const d = loc.find((x) => x.id === district);
   const u = d?.upazilas?.find((x) => x.id === upazila);
   const n = u?.unions?.find((x) => x.id === union);
+  const hasUpazilas = (d?.upazilas?.length || 0) > 0;
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,6 +42,16 @@ export default function AddListing() {
     setMessage("");
     setOk(false);
     const f = new FormData(e.currentTarget);
+
+    if (staticMode) {
+      setOk(false);
+      setMessage(
+        "ডাটাবেস এখনো সেট নেই। দেখার জন্য ডেমো তথ্য কাজ করছে; নতুন তথ্য সেভ করতে পরে DB লাগবে। এখন শুধু ফর্ম চেক করতে পারেন।"
+      );
+      setBusy(false);
+      return;
+    }
+
     const r = await fetch("/api/services", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,7 +59,7 @@ export default function AddListing() {
         name: f.get("name"),
         categoryId: f.get("category"),
         districtId: district,
-        upazilaId: upazila,
+        upazilaId: upazila || "pending",
         unionId: union || null,
         areaId: area || null,
         phone: f.get("phone"),
@@ -71,6 +86,12 @@ export default function AddListing() {
       <TopBar title="তথ্য যোগ করুন" subtitle="নতুন তালিকা" backHref="/" />
 
       <div className="ps-content">
+        {staticMode && (
+          <div className="ps-msg-err" style={{ marginBottom: 12 }}>
+            ডেমো মোড: ডাটাবেস ছাড়াই সাইট চলছে। তথ্য দেখা যাবে, নতুন সেভ পরে DB সেট করলে চালু হবে।
+          </div>
+        )}
+
         <form onSubmit={submit} className="ps-form">
           <label className="ps-label">
             নাম *
@@ -103,58 +124,75 @@ export default function AddListing() {
             >
               <option value="">জেলা নির্বাচন করুন</option>
               {loc.map((x) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
+                <option key={x.id} value={x.id}>
+                  {x.name}
+                </option>
               ))}
             </select>
           </label>
 
-          <label className="ps-label">
-            উপজেলা *
-            <select
-              required
-              disabled={!district}
-              value={upazila}
-              onChange={(e) => {
-                setUpazila(e.target.value);
-                setUnion("");
-                setArea("");
-              }}
-              className="ps-input"
-            >
-              <option value="">উপজেলা নির্বাচন করুন</option>
-              {d?.upazilas?.map((x) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
-              ))}
-            </select>
-          </label>
+          {hasUpazilas && (
+            <>
+              <label className="ps-label">
+                উপজেলা *
+                <select
+                  required
+                  disabled={!district}
+                  value={upazila}
+                  onChange={(e) => {
+                    setUpazila(e.target.value);
+                    setUnion("");
+                    setArea("");
+                  }}
+                  className="ps-input"
+                >
+                  <option value="">উপজেলা নির্বাচন করুন</option>
+                  {d?.upazilas?.map((x) => (
+                    <option key={x.id} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-          <label className="ps-label">
-            ইউনিয়ন
-            <select
-              disabled={!upazila}
-              value={union}
-              onChange={(e) => {
-                setUnion(e.target.value);
-                setArea("");
-              }}
-              className="ps-input"
-            >
-              <option value="">ইউনিয়ন নির্বাচন করুন</option>
-              {u?.unions?.map((x) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
-              ))}
-            </select>
-          </label>
+              <label className="ps-label">
+                ইউনিয়ন
+                <select
+                  disabled={!upazila}
+                  value={union}
+                  onChange={(e) => {
+                    setUnion(e.target.value);
+                    setArea("");
+                  }}
+                  className="ps-input"
+                >
+                  <option value="">ইউনিয়ন নির্বাচন করুন</option>
+                  {u?.unions?.map((x) => (
+                    <option key={x.id} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-          <label className="ps-label">
-            এলাকা
-            <select disabled={!union} value={area} onChange={(e) => setArea(e.target.value)} className="ps-input">
-              <option value="">এলাকা নির্বাচন করুন</option>
-              {n?.areas?.map((x) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
-              ))}
-            </select>
-          </label>
+              <label className="ps-label">
+                এলাকা
+                <select
+                  disabled={!union}
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  className="ps-input"
+                >
+                  <option value="">এলাকা নির্বাচন করুন</option>
+                  {n?.areas?.map((x) => (
+                    <option key={x.id} value={x.id}>
+                      {x.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
 
           <label className="ps-label">
             মোবাইল
@@ -168,8 +206,8 @@ export default function AddListing() {
 
           {message && <div className={ok ? "ps-msg-ok" : "ps-msg-err"}>{message}</div>}
 
-          <button disabled={busy || !district || !upazila} className="ps-btn-primary ps-btn-block">
-            {busy ? "জমা হচ্ছে..." : "জমা দিন — Admin Review"}
+          <button disabled={busy || !district} className="ps-btn-primary ps-btn-block">
+            {busy ? "জমা হচ্ছে..." : staticMode ? "চেক করুন (ডেমো)" : "জমা দিন — Admin Review"}
           </button>
         </form>
       </div>
