@@ -3,11 +3,11 @@ type Props = { active?: "home" | "categories" | "add" | "search" | "account" };
 export default function BottomNav({ active = "home" }: Props) {
   return (
     <nav className="ps-bottom">
-      <a href="/" className={`ps-nav-item${active === "home" ? " active" : ""}`}>
+      <a href="/" className={active === "home" ? "ps-nav-item active" : "ps-nav-item"}>
         <span className="ps-nav-ico">🏠</span>
         <span>হোম</span>
       </a>
-      <a href="/categories" className={`ps-nav-item${active === "categories" ? " active" : ""}`}>
+      <a href="/categories" className={active === "categories" ? "ps-nav-item active" : "ps-nav-item"}>
         <span className="ps-nav-ico">📂</span>
         <span>ক্যাটাগরি</span>
       </a>
@@ -15,11 +15,11 @@ export default function BottomNav({ active = "home" }: Props) {
         <span className="ps-nav-center-btn">🇧🇩</span>
         <span className="ps-nav-center-label">যোগ করুন</span>
       </a>
-      <a href="/search" className={`ps-nav-item${active === "search" ? " active" : ""}`}>
+      <a href="/search" className={active === "search" ? "ps-nav-item active" : "ps-nav-item"}>
         <span className="ps-nav-ico">🔍</span>
         <span>খুঁজুন</span>
       </a>
-      <a href="/login" className={`ps-nav-item${active === "account" ? " active" : ""`}>
+      <a href="/login" className={active === "account" ? "ps-nav-item active" : "ps-nav-item"}>
         <span className="ps-nav-ico">👤</span>
         <span>অ্যাকাউন্ট</span>
       </a>
