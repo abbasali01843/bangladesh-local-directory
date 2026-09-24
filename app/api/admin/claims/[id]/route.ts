@@ -6,7 +6,7 @@ export async function POST(request:Request,{params}:{params:Promise<{id:string}>
  const {id}=await params; const body=await request.json().catch(()=>({})); const approve=body.action==="approve";
  try{
   const claim=await prisma.claim.findUnique({where:{id}}); if(!claim)return NextResponse.json({error:"NOT_FOUND"},{status:404});
-  const data=await prisma.$transaction(async tx=>{
+  const data=await prisma.$transaction(async (tx:typeof prisma)=>{
    const c=await tx.claim.update({where:{id},data:{status:approve?"APPROVED":"REJECTED",reviewedAt:new Date()}});
    if(approve)await tx.service.update({where:{id:claim.serviceId},data:{claimedById:claim.userId,verificationStatus:"OWNER_CLAIMED"}});
    return c;

@@ -3,23 +3,25 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Bangladesh Local Directory — সাতকানিয়া, চট্টগ্রাম",
-    template: "%s | Bangladesh Local Directory",
+    default: "প্রিয় সাতকানিয়া — সাতকানিয়ার সব তথ্য এক জায়গায়",
+    template: "%s | প্রিয় সাতকানিয়া",
   },
   description:
-    "চট্টগ্রামের সাতকানিয়া ও কাঞ্চনাসহ বাংলাদেশের স্থানীয় ডাক্তার, দোকান, মিস্ত্রি, পরিবহন ও জরুরি সেবা এক জায়গায়।",
+    "সাতকানিয়া ও কাঞ্চনা ইউনিয়নসহ স্থানীয় ডাক্তার, ব্যবসা, মিস্ত্রি, পরিবহন, জরুরি সেবা — সব প্রয়োজনীয় তথ্য এক জায়গায়। Bangladesh Local Directory-র অংশ।",
   keywords: [
+    "প্রিয় সাতকানিয়া",
+    "Priyo Satkania",
     "Bangladesh Local Directory",
-    "সাতকানিয়া",
+    "সাতকানিয়া",
     "কাঞ্চনা",
     "চট্টগ্রাম",
-    "স্থানীয় তথ্য",
+    "স্থানীয় তথ্য",
     "ডাক্তার",
     "মিস্ত্রি",
   ],
   openGraph: {
-    title: "Bangladesh Local Directory",
-    description: "সাতকানিয়া · কাঞ্চনা থেকে শুরু — সারা বাংলাদেশের স্থানীয় তথ্য",
+    title: "প্রিয় সাতকানিয়া",
+    description: "সাতকানিয়া · কাঞ্চনা থেকে শুরু — সারা বাংলাদেশের স্থানীয় তথ্য",
     locale: "bn_BD",
     type: "website",
   },

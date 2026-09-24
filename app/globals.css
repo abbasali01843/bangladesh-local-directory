@@ -209,3 +209,135 @@ a { color: inherit; text-decoration: none; }
   .ps-hero-inner { height: 240px; }
   .ps-hero-title { font-size: 26px; }
 }
+
+/* ================= হিরো স্লাইডার (priyosherpur ব্যানার ক্যারোসেল) ================= */
+.ps-slider {
+  position: relative; border-radius: 20px; overflow: hidden;
+  height: 190px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.10);
+}
+.ps-slide {
+  position: absolute; inset: 0; padding: 18px 18px 34px; color: #fff;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  opacity: 0; transform: scale(1.03); transition: opacity .55s ease, transform .55s ease;
+  pointer-events: none;
+}
+.ps-slide.active { opacity: 1; transform: none; pointer-events: auto; }
+.ps-slide-deco {
+  position: absolute; top: 16px; right: 18px; font-size: 54px; opacity: .35;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
+}
+.ps-slide::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(255,255,255,.18), transparent 45%),
+    radial-gradient(circle at 10% 95%, rgba(0,0,0,.18), transparent 40%);
+  pointer-events: none;
+}
+.ps-slide-eyebrow { font-size: 12px; font-weight: 700; opacity: .9; margin-bottom: 4px; }
+.ps-slide-title { font-size: 20px; font-weight: 800; line-height: 1.25; margin-bottom: 4px; padding-right: 60px; }
+.ps-slide-desc { font-size: 12.5px; opacity: .92; margin-bottom: 10px; }
+.ps-slide-cta {
+  align-self: flex-start; background: rgba(255,255,255,.95); color: #065f2e;
+  font-size: 12px; font-weight: 800; padding: 8px 14px; border-radius: 999px;
+}
+.ps-slider-dots {
+  position: absolute; left: 0; right: 0; bottom: 12px;
+  display: flex; justify-content: center; gap: 6px; z-index: 2;
+}
+.ps-slider-dot {
+  width: 18px; height: 5px; border-radius: 999px; border: 0; padding: 0;
+  background: rgba(255,255,255,.45); cursor: pointer; transition: all .25s ease;
+}
+.ps-slider-dot.active { background: #fff; width: 30px; }
+
+/* ================= নোটিশ টিকার (স্ক্রলিং বিজ্ঞপ্তি) ================= */
+.ps-ticker {
+  display: flex; align-items: center; gap: 8px; background: #fff;
+  border-radius: 999px; padding: 8px 12px; margin-bottom: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.04); overflow: hidden;
+}
+.ps-ticker-badge {
+  flex-shrink: 0; background: #fef2f2; color: #b91c1c;
+  font-size: 11px; font-weight: 800; padding: 6px 10px; border-radius: 999px;
+}
+.ps-ticker-window { flex: 1; overflow: hidden; }
+.ps-ticker-track {
+  display: inline-block; white-space: nowrap; font-size: 13px; color: #374151;
+  animation: ps-marquee 28s linear infinite;
+}
+.ps-ticker:hover .ps-ticker-track, .ps-ticker:active .ps-ticker-track { animation-play-state: paused; }
+@keyframes ps-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ps-ticker-track { animation: none; } }
+
+/* ================= ইউনিয়ন গ্রিড (উপজেলা সেকশনের মতো) ================= */
+.ps-union-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.ps-union-card {
+  display: flex; align-items: center; gap: 10px; background: #fff;
+  border: 1px solid transparent; border-radius: 16px; padding: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.04); transition: transform .15s ease;
+}
+.ps-union-card:active { transform: scale(.97); }
+.ps-union-card.hot { border-color: #0a7a3e; background: linear-gradient(180deg, #f4fbf7, #fff); }
+.ps-union-pin { font-size: 18px; }
+.ps-union-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ps-union-name { font-size: 13px; font-weight: 700; }
+.ps-union-count { font-size: 10.5px; color: #0a7a3e; font-weight: 600; }
+.ps-union-card .ps-promo-arrow { font-size: 16px; }
+
+/* ================= ক্যাটাগরি অ্যাক্টিভ/ডিজেবল ================= */
+.ps-cat-card.active { outline: 2px solid #0a7a3e; outline-offset: -2px; }
+.ps-cat-card.ps-cat-disabled { opacity: .75; }
+.ps-soon { background: #fef3c7 !important; color: #92400e !important; }
+
+/* ================= তালিকা কার্ড ================= */
+.ps-list-sub { margin: 4px 0 0; font-size: 12px; color: #0a7a3e; font-weight: 600; }
+.ps-list-phone { margin: 6px 0 0; font-size: 13px; font-weight: 700; color: #0a7a3e; }
+
+/* ================= পারসন কার্ড (ডোনার / উপদেষ্টা / সহযোদ্ধা) ================= */
+.ps-person-grid { display: grid; gap: 10px; }
+.ps-person {
+  display: flex; align-items: center; gap: 12px; background: #fff;
+  border-radius: 16px; padding: 12px 14px; box-shadow: 0 1px 6px rgba(0,0,0,.04);
+}
+.ps-person-avatar {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #e6f5ec, #d1ecdd); color: #0a7a3e;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.ps-person-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ps-person-name { font-size: 15px; font-weight: 800; }
+.ps-person-role { font-size: 12.5px; color: #6b7280; line-height: 1.35; }
+.ps-person-amount { font-size: 16px; font-weight: 800; color: #0a7a3e; white-space: nowrap; }
+
+/* ================= যোগাযোগ ================= */
+.ps-contact-row {
+  display: flex; align-items: center; gap: 12px; background: #fff;
+  border-radius: 16px; padding: 14px; box-shadow: 0 1px 6px rgba(0,0,0,.04);
+}
+.ps-contact-ico {
+  width: 46px; height: 46px; border-radius: 14px; background: #eef8f1;
+  display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+}
+.ps-contact-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ps-contact-sub { font-size: 12.5px; color: #6b7280; }
+
+/* ================= ফুটার কার্ড ================= */
+.ps-footer-card {
+  margin-top: 20px; background: #fff; border-radius: 20px; padding: 18px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.04); display: grid; gap: 12px; text-align: center;
+}
+.ps-footer-brand { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.ps-footer-links { font-size: 12.5px; color: #6b7280; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.ps-footer-links a { color: #0a7a3e; font-weight: 600; }
+.ps-footer-copy { margin: 0; font-size: 11.5px; color: #9ca3af; }
+.ps-footer-copy strong { color: #6b7280; }
+
+/* ================= ড্রয়ার সেকশন ================= */
+.ps-drawer-sec {
+  margin: 14px 8px 4px; font-size: 11px; font-weight: 800;
+  color: #9ca3af; letter-spacing: .5px;
+}
+
+.ps-muted-note { margin: 14px 4px 0; font-size: 12px; color: #9ca3af; text-align: center; }

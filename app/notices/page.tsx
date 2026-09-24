@@ -5,7 +5,7 @@ import BottomNav from "@/components/BottomNav";
 export default function NoticesPage() {
   return (
     <main className="ps-page">
-      <TopBar title="নোটিশ" subtitle="ঘোষণা ও আপডেট" backHref="/" />
+      <TopBar title="বিজ্ঞপ্তি" subtitle="ঘোষণা ও আপডেট" backHref="/" />
       <div className="ps-content">
         <div className="ps-list">
           {notices.map((n) => (

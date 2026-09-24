@@ -16,10 +16,15 @@ export default function AddListing() {
   const [upazila, setUpazila] = useState("");
   const [union, setUnion] = useState("");
   const [area, setArea] = useState("");
+  const [categoryId, setCategoryId] = useState(categories[0]?.id || "");
+  const [subId, setSubId] = useState("");
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState(false);
   const [busy, setBusy] = useState(false);
   const [staticMode, setStaticMode] = useState(false);
+
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+  const hasSubs = (selectedCategory?.subcategories?.length || 0) > 0;
 
   useEffect(() => {
     fetch("/api/locations")
@@ -52,18 +57,24 @@ export default function AddListing() {
       return;
     }
 
+    const subName = selectedCategory?.subcategories?.find((s) => s.id === subId)?.name;
+    const descRaw = (f.get("description") as string) || "";
+    const description = subName
+      ? `[সাব-ক্যাটাগরি: ${subName}]${descRaw ? ` ${descRaw}` : ""}`
+      : descRaw;
+
     const r = await fetch("/api/services", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: f.get("name"),
-        categoryId: f.get("category"),
+        categoryId: categoryId,
         districtId: district,
         upazilaId: upazila || "pending",
         unionId: union || null,
         areaId: area || null,
         phone: f.get("phone"),
-        description: f.get("description"),
+        description,
       }),
     });
     const j = await r.json();
@@ -100,7 +111,16 @@ export default function AddListing() {
 
           <label className="ps-label">
             ক্যাটাগরি *
-            <select name="category" className="ps-input" required>
+            <select
+              name="category"
+              className="ps-input"
+              required
+              value={categoryId}
+              onChange={(e) => {
+                setCategoryId(e.target.value);
+                setSubId("");
+              }}
+            >
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.icon} {c.name}
@@ -108,6 +128,20 @@ export default function AddListing() {
               ))}
             </select>
           </label>
+
+          {hasSubs && (
+            <label className="ps-label">
+              সাব-ক্যাটাগরি
+              <select className="ps-input" value={subId} onChange={(e) => setSubId(e.target.value)}>
+                <option value="">সাব-ক্যাটাগরি নির্বাচন করুন (ঐচ্ছিক)</option>
+                {selectedCategory?.subcategories?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <label className="ps-label">
             জেলা *
