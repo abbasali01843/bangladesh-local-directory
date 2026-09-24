@@ -10,6 +10,7 @@ const STATIC_PAGES = [
   "/services",
   "/search",
   "/area",
+  "/institutes",
   "/add-listing",
   "/notices",
   "/about",

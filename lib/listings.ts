@@ -23,6 +23,9 @@ export type ListingView = {
   latitude: number | null;
   longitude: number | null;
   source: "db" | "static";
+  photos: { id: string; url: string }[];
+  rating: { avg: number; count: number };
+  reviews: { id: string; rating: number; body: string | null; userName: string; createdAt: string }[];
 };
 
 function staticToView(
@@ -52,6 +55,9 @@ function staticToView(
     latitude: null,
     longitude: null,
     source: "static",
+    photos: [],
+    rating: { avg: 0, count: 0 },
+    reviews: [],
   };
 }
 
@@ -73,10 +79,14 @@ type DbService = {
   union: { name: string } | null;
   area: { name: string } | null;
   fields: { value: string; field: { key: string; label: string } }[];
+  photos: { id: string; url: string }[];
+  reviews: { id: string; rating: number; body: string | null; createdAt: Date; user: { name: string } }[];
 };
 
 function dbToView(s: DbService): ListingView {
   const c = categories.find((x) => x.id === s.categoryId);
+  const ratings = s.reviews.map((r) => r.rating);
+  const avg = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
   return {
     id: s.id,
     name: s.name,
@@ -97,6 +107,15 @@ function dbToView(s: DbService): ListingView {
     latitude: s.latitude,
     longitude: s.longitude,
     source: "db",
+    photos: s.photos.map((p) => ({ id: p.id, url: p.url })),
+    rating: { avg: Math.round(avg * 10) / 10, count: ratings.length },
+    reviews: s.reviews.map((r) => ({
+      id: r.id,
+      rating: r.rating,
+      body: r.body,
+      userName: r.user.name,
+      createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt),
+    })),
   };
 }
 
@@ -107,6 +126,13 @@ const dbInclude = {
   union: true,
   area: true,
   fields: { include: { field: true } },
+  photos: { orderBy: { sortOrder: "asc" } },
+  reviews: {
+    where: { status: "APPROVED" },
+    include: { user: { select: { name: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 20,
+  },
 } as const;
 
 /** তালিকা — DB আগে, না থাকলে static। */

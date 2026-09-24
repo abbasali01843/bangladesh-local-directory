@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
 export type Slide = {
   id: string;
   eyebrow: string;
@@ -23,19 +24,28 @@ const tones: Record<Slide["tone"], string> = {
 
 export default function HeroSlider({ slides }: { slides: Slide[] }) {
   const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (slides.length < 2) return;
+    if (slides.length < 2 || paused) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     const t = setInterval(() => setI((v) => (v + 1) % slides.length), 4500);
     return () => clearInterval(t);
-  }, [slides.length]);
+  }, [slides.length, paused]);
 
   if (!slides.length) return null;
 
   return (
-    <div className="ps-slider" aria-roledescription="carousel">
+    <div
+      className="ps-slider"
+      aria-roledescription="carousel"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       {slides.map((s, idx) => (
-        <a
+        <Link
           key={s.id}
           href={s.href}
           className={`ps-slide${idx === i ? " active" : ""}`}
@@ -50,7 +60,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           <span className="ps-slide-title">{s.title}</span>
           <span className="ps-slide-desc">{s.desc}</span>
           <span className="ps-slide-cta">{s.cta} ›</span>
-        </a>
+        </Link>
       ))}
 
       {slides.length > 1 && (

@@ -32,12 +32,21 @@ type AdminUser = {
   createdAt: string;
 };
 
-type Tab = "listings" | "claims" | "users";
+type Review = {
+  id: string;
+  rating: number;
+  body?: string;
+  service?: { id: string; name: string };
+  user?: { name: string };
+};
+
+type Tab = "listings" | "claims" | "reviews" | "users";
 
 export default function Admin() {
   const [tab, setTab] = useState<Tab>("listings");
   const [items, setItems] = useState<Listing[]>([]);
   const [claims, setClaims] = useState<Claim[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -65,6 +74,16 @@ export default function Admin() {
         } else {
           setOk(false);
           setMessage(j.message || j.error || "Claims load হয়নি");
+        }
+      } else if (nextTab === "reviews") {
+        const r = await fetch("/api/admin/reviews");
+        const j = await r.json();
+        if (r.ok) {
+          setReviews(j.data || []);
+          setMessage("");
+        } else {
+          setOk(false);
+          setMessage(j.message || j.error || "Reviews load হয়নি");
         }
       } else {
         const r = await fetch("/api/admin/users");
@@ -130,6 +149,23 @@ export default function Admin() {
     }
   }
 
+  async function reviewReview(id: string, action: "approve" | "reject") {
+    const r = await fetch("/api/admin/reviews/" + id, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action }),
+    });
+    const j = await r.json();
+    if (r.ok) {
+      setReviews((x) => x.filter((c) => c.id !== id));
+      setOk(true);
+      setMessage(action === "approve" ? "রিভিউ প্রকাশিত হয়েছে" : "রিভিউ বাতিল হয়েছে");
+    } else {
+      setOk(false);
+      setMessage(j.message || j.error || "কাজটি সম্পন্ন হয়নি");
+    }
+  }
+
   async function changeRole(id: string, role: string) {
     const r = await fetch("/api/admin/users/" + id, {
       method: "PATCH",
@@ -176,6 +212,15 @@ export default function Admin() {
             onClick={() => switchTab("claims")}
           >
             🏪 দাবি ({claims.length})
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "reviews"}
+            className={tab === "reviews" ? "ps-tab active" : "ps-tab"}
+            onClick={() => switchTab("reviews")}
+          >
+            ⭐ রিভিউ ({reviews.length})
           </button>
           <button
             type="button"
@@ -270,6 +315,46 @@ export default function Admin() {
                       type="button"
                       className="ps-btn-ghost"
                       onClick={() => reviewClaim(c.id, "reject")}
+                    >
+                      বাতিল
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        ) : tab === "reviews" ? (
+          reviews.length === 0 ? (
+            <div className="ps-empty">
+              <div className="ps-empty-icon">✅</div>
+              <h2>কোনো পেন্ডিং রিভিউ নেই</h2>
+              <p>নতুন রিভিউ এলে এখানে দেখাবে।</p>
+              <button type="button" className="ps-btn-primary" onClick={() => load()}>
+                রিফ্রেশ
+              </button>
+            </div>
+          ) : (
+            <div className="ps-list">
+              {reviews.map((r) => (
+                <div key={r.id} className="ps-list-card">
+                  <div className="ps-list-top">
+                    <strong>{r.service?.name || "—"}</strong>
+                    <span className="ps-badge">{"★".repeat(r.rating)}</span>
+                  </div>
+                  <p className="ps-list-loc">👤 {r.user?.name || "—"}</p>
+                  {r.body && <p className="ps-list-desc">{r.body}</p>}
+                  <div className="ps-admin-actions">
+                    <button
+                      type="button"
+                      className="ps-btn-primary"
+                      onClick={() => reviewReview(r.id, "approve")}
+                    >
+                      প্রকাশ
+                    </button>
+                    <button
+                      type="button"
+                      className="ps-btn-ghost"
+                      onClick={() => reviewReview(r.id, "reject")}
                     >
                       বাতিল
                     </button>

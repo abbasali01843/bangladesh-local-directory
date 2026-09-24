@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { site, hasSocial, hasSupport } from "@/data/site";
 
+import Link from "next/link";
 /** priyosherpur.com-এর মেনুর মতো — সেকশনভেদে সাজানো লিংক */
 const accountLinks = [
   { href: "/login", label: "লগইন", icon: "🔑" },
@@ -49,10 +50,10 @@ function NavSection({
     <>
       <div className="ps-drawer-sec">{title}</div>
       {items.map((l) => (
-        <a key={l.href} href={l.href} className="ps-drawer-link" onClick={onNavigate}>
+        <Link key={l.href} href={l.href} className="ps-drawer-link" onClick={onNavigate}>
           <span className="ps-drawer-ico">{l.icon}</span>
           <span>{l.label}</span>
-        </a>
+        </Link>
       ))}
     </>
   );
@@ -63,8 +64,16 @@ export default function SideMenu() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return () => {
+      document.body.style.overflow = "";
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
     };
   }, [open]);
 

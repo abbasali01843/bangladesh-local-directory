@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 type S = {
   id: string;
   name: string;
@@ -42,9 +43,9 @@ function ListingCard({ x }: { x: S }) {
     </>
   );
   return approved ? (
-    <a href={`/services/${x.id}`} className="ps-list-card">
+    <Link href={`/services/${x.id}`} className="ps-list-card">
       {inner}
-    </a>
+    </Link>
   ) : (
     <div className="ps-list-card">{inner}</div>
   );
@@ -88,9 +89,9 @@ export default function OwnerDashboard() {
             {msg}
             {needLogin && (
               <div style={{ marginTop: 10 }}>
-                <a href="/login" className="ps-btn-primary">
+                <Link href="/login" className="ps-btn-primary">
                   লগইন করুন
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -158,13 +159,13 @@ export default function OwnerDashboard() {
         )}
 
         {!needLogin && (
-          <a
+          <Link
             href="/add-listing"
             className="ps-btn-primary ps-btn-block"
             style={{ marginTop: 16 }}
           >
             + নতুন তথ্য যোগ করুন
-          </a>
+          </Link>
         )}
       </div>
 

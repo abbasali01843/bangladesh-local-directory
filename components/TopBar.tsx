@@ -1,6 +1,7 @@
 import SideMenu from "@/components/SideMenu";
 import { site } from "@/data/site";
 
+import Link from "next/link";
 type Props = {
   title?: string;
   subtitle?: string;
@@ -22,9 +23,9 @@ export default function TopBar({
     <div className="ps-topwrap">
       <header className="ps-topbar">
         {backHref ? (
-          <a href={backHref} className="ps-iconbtn" aria-label="Back">
+          <Link href={backHref} className="ps-iconbtn" aria-label="Back">
             ←
-          </a>
+          </Link>
         ) : showMenu ? (
           <SideMenu />
         ) : (
@@ -39,9 +40,9 @@ export default function TopBar({
           </div>
         </div>
 
-        <a href={rightHref} className="ps-iconbtn" aria-label="Action">
+        <Link href={rightHref} className="ps-iconbtn" aria-label="Action">
           {rightLabel}
-        </a>
+        </Link>
       </header>
     </div>
   );

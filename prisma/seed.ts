@@ -50,13 +50,20 @@ async function seedLocations() {
       });
       upCount++;
       const unions = unionsByUpazila[String(u.value)] || [];
-      for (const x of unions) {
-        await prisma.union.upsert({
-          where: { upazilaId_slug: { upazilaId: up.id, slug: slug(x.title) } },
-          update: { name: x.title },
-          create: { name: x.title, slug: slug(x.title), upazilaId: up.id },
-        });
-        unCount++;
+      // Concurrent chunks — একটা একটা করে ~৫০০০ upsert অনেক ধীর
+      const CHUNK = 10;
+      for (let i = 0; i < unions.length; i += CHUNK) {
+        const batch = unions.slice(i, i + CHUNK);
+        await Promise.all(
+          batch.map((x) =>
+            prisma.union.upsert({
+              where: { upazilaId_slug: { upazilaId: up.id, slug: slug(x.title) } },
+              update: { name: x.title },
+              create: { name: x.title, slug: slug(x.title), upazilaId: up.id },
+            })
+          )
+        );
+        unCount += batch.length;
       }
     }
   }

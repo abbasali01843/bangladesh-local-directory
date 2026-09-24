@@ -4,6 +4,7 @@ import { getListings } from "@/lib/listings";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 type Params = { category?: string; sub?: string; union?: string };
 
 export async function generateMetadata({
@@ -71,7 +72,7 @@ export default async function ServicesPage({
               <h2>{category.name}</h2>
             </div>
             <div className="ps-cat-grid" style={{ marginBottom: 14 }}>
-              <a
+              <Link
                 href={hrefWith({ category: category.id, union: p.union }, {})}
                 className={`ps-cat-card${!sub ? " active" : ""}`}
               >
@@ -82,11 +83,11 @@ export default async function ServicesPage({
                 <div className="ps-cat-count">
                   {category.subcategories.reduce((n, s) => n + countIn(s.id), 0)} টি
                 </div>
-              </a>
+              </Link>
               {category.subcategories.map((s) => {
                 const n = countIn(s.id);
                 return (
-                  <a
+                  <Link
                     key={s.id}
                     href={hrefWith(
                       { category: category.id, sub: sub?.id === s.id ? undefined : s.id, union: p.union },
@@ -101,7 +102,7 @@ export default async function ServicesPage({
                     <div className="ps-cat-count">
                       {n > 0 ? `${n} টি তথ্য` : "কোনো তথ্য নেই"}
                     </div>
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -116,25 +117,25 @@ export default async function ServicesPage({
               <h2>এলাকা ফিল্টার</h2>
             </div>
             <div className="ps-chips">
-              <a
+              <Link
                 href={hrefWith(p, { union: undefined })}
                 className="ps-chip"
                 style={!p.union ? { borderColor: "#0a7a3e", color: "#0a7a3e", fontWeight: 800 } : undefined}
               >
                 সকল এলাকা
-              </a>
+              </Link>
               {unions.map((u) => {
                 const n = countIn(sub?.id, u);
                 const active = p.union === u;
                 return (
-                  <a
+                  <Link
                     key={u}
                     href={hrefWith(p, { union: active ? undefined : u })}
                     className="ps-chip"
                     style={active ? { borderColor: "#0a7a3e", color: "#0a7a3e", fontWeight: 800 } : undefined}
                   >
                     {u} ({n})
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -147,12 +148,12 @@ export default async function ServicesPage({
             <div className="ps-empty-icon">{category?.icon || "📋"}</div>
             <h2>কোনো তথ্য নেই</h2>
             <p>এই ফিল্টারে এখনো তথ্য নেই। আপনিই প্রথম যোগ করতে পারেন।</p>
-            <a href="/add-listing" className="ps-btn-primary">+ তথ্য যোগ করুন</a>
+            <Link href="/add-listing" className="ps-btn-primary">+ তথ্য যোগ করুন</Link>
           </div>
         ) : (
           <div className="ps-list">
             {list.map((s) => (
-              <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
+              <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
                 <div className="ps-list-top">
                   <strong>{s.name}</strong>
                   {s.verified && <span className="ps-badge">✓ Verified</span>}
@@ -167,7 +168,7 @@ export default async function ServicesPage({
                 </p>
                 {s.description && <p className="ps-list-desc">{s.description}</p>}
                 {s.phone && <p className="ps-list-phone">📞 {s.phone}</p>}
-              </a>
+              </Link>
             ))}
           </div>
         )}

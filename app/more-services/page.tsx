@@ -1,6 +1,7 @@
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 type Item = {
   icon: string;
   label: string;
@@ -16,6 +17,7 @@ const items: Item[] = [
   { icon: "📢", label: "বিজ্ঞপ্তি", desc: "সর্বশেষ আপডেট ও ঘোষণা", href: "/notices" },
   { icon: "🔍", label: "খুঁজুন", desc: "নাম, এলাকা বা ফোন দিয়ে", href: "/search" },
   { icon: "📂", label: "সব ক্যাটাগরি", desc: "২১টি সার্ভিস বিভাগ", href: "/categories" },
+  { icon: "🏫", label: "EIIN ডিরেক্টরি", desc: "সাতকানিয়ার স্কুল-কলেজ-মাদ্রাসা", href: "/institutes" },
   { icon: "🎬", label: "ভিডিও", desc: "স্থানীয় ভিডিও ও প্রচারণা", soon: true },
   { icon: "💬", label: "চ্যাট", desc: "কমিউনিটি চ্যাট রুম", soon: true },
   { icon: "💼", label: "চাকরির বিজ্ঞপ্তি", desc: "স্থানীয় চাকরি খোঁজ", soon: true },
@@ -39,13 +41,13 @@ export default function MoreServicesPage() {
                 <div className="ps-cat-count ps-soon">শীঘ্রই আসছে</div>
               </div>
             ) : (
-              <a key={it.label} href={it.href} className="ps-cat-card">
+              <Link key={it.label} href={it.href || "#"} className="ps-cat-card">
                 <div className="ps-cat-icon-wrap">
                   <span className="ps-cat-icon">{it.icon}</span>
                 </div>
                 <div className="ps-cat-name">{it.label}</div>
                 <div className="ps-cat-count">{it.desc}</div>
-              </a>
+              </Link>
             )
           )}
         </div>

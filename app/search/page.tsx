@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 type S = {
   id: string;
   name: string;
@@ -135,7 +136,7 @@ function SearchInner() {
         ) : (
           <div className="ps-list">
             {items.map((s) => (
-              <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
+              <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
                 <div className="ps-list-top">
                   <strong>{s.name}</strong>
                   {s.verificationStatus !== "UNVERIFIED" && (
@@ -147,7 +148,7 @@ function SearchInner() {
                   {s.category?.name ? ` · ${s.category.name}` : ""}
                 </p>
                 {s.description && <p className="ps-list-desc">{s.description}</p>}
-              </a>
+              </Link>
             ))}
           </div>
         )}

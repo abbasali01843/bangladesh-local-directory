@@ -49,7 +49,8 @@ Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
 - [x] Phase 4 — Engagement (notices, profile, about, SEO)
 - [x] Sprint 1 — DB-mode hardening (P0 fixes: category seed, admin bootstrap, DB-first pages, search `?q`, claims/users admin UI, my submissions, ESLint 9, CI on PR)
 - [x] Sprint 2 — Production hardening + SEO/PWA (security headers, Upstash-ready rate limit, auth validation, sitemap/robots/JSON-LD/OG, PWA icons + service worker)
-- [ ] Phase 5 — Real DB + listing photos + scale (needs your Postgres; see below)
+- [x] Sprint 3 — Depth (EIIN directory, listing photos, reviews+moderation, next/link, error/404 pages, cron cleanup, A11y, vitest)
+- [ ] Phase 5 — Real DB live + scale (needs your Postgres; see below)
 
 ## Optional: Database
 
@@ -77,4 +78,11 @@ npm run db:promote -- 01XXXXXXXXX
 | `npm run dev` | Dev সার্ভার |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint 9 (flat config) |
+| `npm run test` | Vitest ইউনিট টেস্ট |
 | `npm run db:push` / `db:seed` / `db:promote` | Schema push / seed / make admin |
+
+### Photos, reviews & cron (DB mode)
+
+- Listing photos need Vercel Blob: set `BLOB_READ_WRITE_TOKEN` (else upload API returns 503).
+- Reviews are PENDING by default; moderate in Admin → ⭐ রিভিউ ট্যাব.
+- Expired sessions are cleaned by `GET /api/cron/cleanup` (daily Vercel Cron, needs `CRON_SECRET`).

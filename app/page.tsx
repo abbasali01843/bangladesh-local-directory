@@ -10,6 +10,7 @@ import BottomNav from "@/components/BottomNav";
 import HeroSlider, { type Slide } from "@/components/HeroSlider";
 import NoticeTicker from "@/components/NoticeTicker";
 
+import Link from "next/link";
 export default function Home() {
   const kanchana = servicesInKanchana().slice(0, 6);
 
@@ -73,11 +74,11 @@ export default function Home() {
 
         <NoticeTicker />
 
-        <a href="/area" className="ps-promo">
+        <Link href="/area" className="ps-promo">
           <span className="ps-promo-pill">{pilot.union.name}</span>
           <span className="ps-promo-text">ইউনিয়ন প্রোফাইল · স্কুল · হাট · মসজিদ</span>
           <span className="ps-promo-arrow">›</span>
-        </a>
+        </Link>
 
         <form action="/search" className="ps-search">
           <span className="ps-search-icon">🔍</span>
@@ -118,7 +119,7 @@ export default function Home() {
           {satkaniaUnions.map((u) => {
             const hot = u.id === pilot.union.id;
             return (
-              <a
+              <Link
                 key={u.id}
                 href={hot ? "/area" : `/search?q=${encodeURIComponent(u.name)}`}
                 className={`ps-union-card${hot ? " hot" : " soon"}`}
@@ -131,7 +132,7 @@ export default function Home() {
                   </span>
                 </span>
                 <span className="ps-promo-arrow">›</span>
-              </a>
+              </Link>
             );
           })}
         </div>
@@ -140,13 +141,13 @@ export default function Home() {
         <div className="ps-section-head">
           <span className="ps-section-icon">📂</span>
           <h2>ক্যাটাগরি</h2>
-          <a href="/categories" className="ps-section-more">সব ›</a>
+          <Link href="/categories" className="ps-section-more">সব ›</Link>
         </div>
         <div className="ps-cat-grid">
           {categories.map((c) => {
             const n = countByCategory(c.id);
             return (
-              <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
+              <Link key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
                 <div className="ps-cat-icon-wrap">
                   <span className="ps-cat-icon">{c.icon}</span>
                 </div>
@@ -154,7 +155,7 @@ export default function Home() {
                 <div className="ps-cat-count">
                   {n > 0 ? `${n} টি তথ্য` : "কোনো তথ্য নেই"}
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>
@@ -163,17 +164,17 @@ export default function Home() {
         <div className="ps-section-head">
           <span className="ps-section-icon">📢</span>
           <h2>সর্বশেষ বিজ্ঞপ্তি</h2>
-          <a href="/notices" className="ps-section-more">সব ›</a>
+          <Link href="/notices" className="ps-section-more">সব ›</Link>
         </div>
         <div className="ps-list" style={{ marginBottom: 16 }}>
           {notices.slice(0, 2).map((n) => (
-            <a key={n.id} href="/notices" className="ps-list-card">
+            <Link key={n.id} href="/notices" className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{n.title}</strong>
                 <span className="ps-badge">{n.date}</span>
               </div>
               <p className="ps-list-desc">{n.body.slice(0, 90)}…</p>
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -181,17 +182,17 @@ export default function Home() {
         <div className="ps-section-head">
           <span className="ps-section-icon">⭐</span>
           <h2>শুধু {pilot.union.name} ইউনিয়ন</h2>
-          <a href="/area" className="ps-section-more">সব ›</a>
+          <Link href="/area" className="ps-section-more">সব ›</Link>
         </div>
         <div className="ps-list">
           {kanchana.map((s) => (
-            <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
+            <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{s.name}</strong>
                 <span className="ps-badge">{s.union}</span>
               </div>
               <p className="ps-list-loc">📍 {s.area}</p>
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -199,7 +200,7 @@ export default function Home() {
         <div className="ps-section-head" style={{ marginTop: 16 }}>
           <span className="ps-section-icon">💝</span>
           <h2>সম্মানিত ডোনারবৃন্দ</h2>
-          <a href="/donors" className="ps-section-more">সম্পূর্ণ তালিকা ›</a>
+          <Link href="/donors" className="ps-section-more">সম্পূর্ণ তালিকা ›</Link>
         </div>
         <div className="ps-person-grid">
           {donors.slice(0, 2).map((d) => (
@@ -223,17 +224,17 @@ export default function Home() {
               <div className="ps-brand-sub">{site.tagline}</div>
             </div>
           </div>
-          <a href="/contact" className="ps-btn-primary ps-btn-block">
+          <Link href="/contact" className="ps-btn-primary ps-btn-block">
             ☎️ যোগাযোগ করুন
-          </a>
+          </Link>
           <div className="ps-footer-links">
-            <a href="/about">আমাদের সম্পর্কে</a>
+            <Link href="/about">আমাদের সম্পর্কে</Link>
             <span>·</span>
-            <a href="/advisory">উপদেষ্টা পরিষদ</a>
+            <Link href="/advisory">উপদেষ্টা পরিষদ</Link>
             <span>·</span>
-            <a href="/partners">প্রিয় সহযোদ্ধা</a>
+            <Link href="/partners">প্রিয় সহযোদ্ধা</Link>
             <span>·</span>
-            <a href="/privacy">প্রাইভেসি পলিসি</a>
+            <Link href="/privacy">প্রাইভেসি পলিসি</Link>
           </div>
           <p className="ps-footer-copy">
             © {site.copyrightYear} {site.name} · ALL RIGHTS RESERVED

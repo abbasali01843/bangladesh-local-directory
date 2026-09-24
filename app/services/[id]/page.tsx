@@ -6,6 +6,8 @@ import { listingJsonLd } from "@/lib/seo";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import ClaimButton from "@/components/ClaimButton";
+import PhotoUploader from "@/components/PhotoUploader";
+import ReviewSection from "@/components/ReviewSection";
 
 export async function generateMetadata({
   params,
@@ -14,7 +16,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const s = await getListing(id);
-  if (!s) return { title: "তথ্য পাওয়া যায়নি" };
+  // loading.tsx স্ট্রিম শুরুর আগেই 404 — না হলে স্ট্যাটাস 200 থেকে যায়
+  if (!s) notFound();
   const loc = [s.area, s.union, s.upazila, s.district].filter(Boolean).join(", ");
   const desc = s.description || `${s.categoryName} — ${loc}`;
   return {
@@ -63,6 +66,21 @@ export default async function ServiceDetails({
             {subName ? ` — ${subName}` : ""}
           </p>
           {s.verified && <span className="ps-badge">✓ যাচাইকৃত</span>}
+          {s.rating.count > 0 && (
+            <span className="ps-badge" style={{ marginLeft: 6 }}>
+              ⭐ {s.rating.avg} ({s.rating.count})
+            </span>
+          )}
+          {s.photos.length > 0 && (
+            <div className="ps-photo-grid" style={{ marginTop: 12 }}>
+              {s.photos.map((p) => (
+                <a key={p.id} href={p.url} target="_blank" rel="noopener noreferrer" className="ps-photo-cell">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.url} alt={`${s.name}-এর ছবি`} loading="lazy" />
+                </a>
+              ))}
+            </div>
+          )}
           <p className="ps-list-loc" style={{ marginTop: 10 }}>
             📍 {[s.area, s.union].filter(Boolean).join(", ") || `${s.upazila}, ${s.district}`}
           </p>
@@ -116,6 +134,13 @@ export default async function ServiceDetails({
 
           {s.source === "db" && <ClaimButton id={s.id} />}
         </div>
+
+        {s.source === "db" && (
+          <div className="ps-detail" style={{ marginTop: 12 }}>
+            <PhotoUploader serviceId={s.id} initial={s.photos} />
+            <ReviewSection serviceId={s.id} initial={s.reviews} />
+          </div>
+        )}
       </div>
 
       <BottomNav />
