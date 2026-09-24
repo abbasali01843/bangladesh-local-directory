@@ -269,6 +269,29 @@ a { color: inherit; text-decoration: none; }
 @keyframes ps-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .ps-ticker-track { animation: none; } }
 
+/* ================= কভারেজ রোডম্যাপ ================= */
+.ps-roadmap {
+  display: flex; align-items: stretch; gap: 4px;
+  background: #fff; border-radius: 16px; padding: 12px 8px;
+  margin-bottom: 16px; box-shadow: 0 1px 6px rgba(0,0,0,.04);
+}
+.ps-roadmap-step {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: 4px;
+}
+.ps-roadmap-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; background: #e5e7eb; color: #6b7280;
+}
+.ps-roadmap-step.active .ps-roadmap-dot { background: #0a7a3e; color: #fff; }
+.ps-roadmap-step.soon .ps-roadmap-dot { background: #fef3c7; color: #92400e; }
+.ps-roadmap-name { font-size: 12px; font-weight: 800; line-height: 1.2; }
+.ps-roadmap-status { font-size: 10px; color: #6b7280; font-weight: 600; }
+.ps-roadmap-step.active .ps-roadmap-status { color: #0a7a3e; }
+.ps-roadmap-step.soon .ps-roadmap-status { color: #92400e; }
+.ps-roadmap-arrow { color: #9ca3af; font-size: 16px; align-self: center; padding-bottom: 16px; }
+
 /* ================= ইউনিয়ন গ্রিড (উপজেলা সেকশনের মতো) ================= */
 .ps-union-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
 .ps-union-card {
@@ -278,6 +301,7 @@ a { color: inherit; text-decoration: none; }
 }
 .ps-union-card:active { transform: scale(.97); }
 .ps-union-card.hot { border-color: #0a7a3e; background: linear-gradient(180deg, #f4fbf7, #fff); }
+.ps-union-card.soon .ps-union-count { color: #92400e; }
 .ps-union-pin { font-size: 18px; }
 .ps-union-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .ps-union-name { font-size: 13px; font-weight: 700; }

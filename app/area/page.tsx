@@ -7,6 +7,7 @@ import {
   kanchanaMosques,
 } from "@/data/kanchana";
 import { servicesInKanchana, servicesInSatkaniaSadar } from "@/data/services";
+import { directorySources } from "@/data/satkania";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
@@ -159,6 +160,31 @@ export default function AreaPage() {
               <p className="ps-list-loc">📍 {s.area}</p>
             </a>
           ))}
+        </div>
+
+        <div className="ps-section-head" style={{ marginTop: 16 }}>
+          <span className="ps-section-icon">📚</span>
+          <h2>তথ্যসূত্র</h2>
+        </div>
+        <div className="ps-list-card">
+          <p className="ps-list-desc">
+            স্কুল-মাদ্রাসার EIIN ও ইউনিয়ন প্রোফাইল নিচের সরকারি/সংকলিত উৎস থেকে নেওয়া।
+          </p>
+          <div className="ps-source-list">
+            {directorySources.map((src) => (
+              <div key={src.url}>
+                <a
+                  href={src.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ps-source-link"
+                >
+                  {src.title} ↗
+                </a>
+                <p className="ps-source-credit">{src.credit}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

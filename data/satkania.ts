@@ -1,0 +1,597 @@
+/**
+ * সাতকানিয়া উপজেলা — শিক্ষা প্রতিষ্ঠানের EIIN তালিকা (প্রস্তুতি ডেটা)।
+ *
+ * ইউনিয়ন ট্যাগ শুধু তখনই দেওয়া হয়েছে যখন প্রতিষ্ঠানের নামেই
+ * ইউনিয়নের নাম স্পষ্ট (যেমন কাঞ্চনা, ছদাহা, কেঁওচিয়া)।
+ * «সাতকানিয়া» নাম উপজেলা/পৌরসভা দুটোতেই থাকে বলে ইউনিয়ন ধরা হয়নি।
+ *
+ * সূত্র: BANBEIS ২০২৩, পাঁচমিশালী সংকলন —
+ * https://panchmishalibd.wordpress.com/2024/06/11/list-of-eiin-of-satkania-upazila-bangla/
+ */
+
+export const directorySources = [
+  {
+    title: "সাতকানিয়া উপজেলার শিক্ষা প্রতিষ্ঠান ও EIIN",
+    url: "https://panchmishalibd.wordpress.com/2024/06/11/list-of-eiin-of-satkania-upazila-bangla/",
+    credit: "বাংলাদেশ শিক্ষাতথ্য ও পরিসংখ্যান ব্যুরো (BANBEIS), ২০২৩",
+  },
+  {
+    title: "কাঞ্চনা ইউনিয়ন পরিষদ",
+    url: "https://kanchanaup.chittagong.gov.bd",
+    credit: "চট্টগ্রাম জেলা প্রশাসন / ইউনিয়ন পরিষদ পোর্টাল",
+  },
+] as const;
+
+export type SatkaniaInstitute = {
+  eiin: string;
+  name: string;
+  nameEn: string;
+  type: string;
+  /** নামে ইউনিয়ন নিশ্চিত হলেই */
+  union?: string;
+  area?: string;
+  note?: string;
+};
+
+export const satkaniaInstitutes: SatkaniaInstitute[] = [
+  {
+    eiin: "105061",
+    name: "সাতকানিয়া সরকারি কলেজ",
+    nameEn: "Satkania Govt. College",
+    type: "কলেজ",
+  },
+  {
+    eiin: "105059",
+    name: "সাতকানিয়া আদর্শ মহিলা কলেজ",
+    nameEn: "Satkania Adarsha Mahila College",
+    type: "কলেজ",
+  },
+  {
+    eiin: "136602",
+    name: "চিব্বাড়ী এম.এ. মোতালেব কলেজ",
+    nameEn: "Chibbari M.A. Motaleb College",
+    type: "কলেজ",
+  },
+  {
+    eiin: "105057",
+    name: "উত্তর সাতকানিয়া জাফর আহমদ চৌধুরী কলেজ",
+    nameEn: "Uttar Satkania Zafar Ahmed Chy College",
+    type: "কলেজ",
+  },
+  {
+    eiin: "105060",
+    name: "কর্ণেল অব অলি আহমদ বীর বিক্রম কলেজ",
+    nameEn: "Colonel (Rtd) Oli Ahmed Bir Bikrom College",
+    type: "কলেজ",
+  },
+  {
+    eiin: "105058",
+    name: "আল হেলাল আদর্শ ডিগ্রি কলেজ",
+    nameEn: "Al Helal Adarsha Degree College",
+    type: "কলেজ",
+  },
+  {
+    eiin: "105015",
+    name: "ছদাহা কেফায়েত উল্লাহ্ কবির আহমদ উচ্চ বিদ্যালয় এন্ড কলেজ",
+    nameEn: "Chadaha Kefayet Ullah Kabir Ahmed High School & College",
+    type: "উচ্চ বিদ্যালয় ও কলেজ",
+    union: "ছদাহা",
+  },
+  {
+    eiin: "104992",
+    name: "মির্জাখীল উচ্চ বিদ্যালয় এন্ড কলেজ",
+    nameEn: "Mirzakhil High School & College",
+    type: "উচ্চ বিদ্যালয় ও কলেজ",
+  },
+  {
+    eiin: "105020",
+    name: "বারদোনা শাহ্ মজিদিয়া মৌলানা আবদুল বারী বালিকা উচ্চ বিদ্যালয় এন্ড কলেজ",
+    nameEn: "Baradona Shah Majidia M.A.Bari Girls High School & College",
+    type: "উচ্চ বিদ্যালয় ও কলেজ",
+  },
+  {
+    eiin: "104987",
+    name: "শেরে বাংলা উচ্চ বিদ্যালয়",
+    nameEn: "Sher-E- Bangla High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104989",
+    name: "মরফলা আর. এম. এন. উচ্চ বিদ্যালয়",
+    nameEn: "Morfala Rasulabad Moishamura Nalua High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104990",
+    name: "ইছামতি এয়াকুব মরিয়ম উচ্চ বিদ্যালয়",
+    nameEn: "Ichamati Yakub Morium High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105006",
+    name: "চরতী দুরদুরী উচ্চ বিদ্যালয়",
+    nameEn: "Charati Durduri High School",
+    type: "মাধ্যমিক",
+    union: "চরতী",
+  },
+  {
+    eiin: "138337",
+    name: "বাজালিয়া প্রসন্ন গুহ সরকারি প্রাথমিক বিদ্যালয়",
+    nameEn: "Bajalia Prasannaguha Govt Primary School",
+    type: "প্রাথমিক",
+    union: "বাজালিয়া",
+  },
+  {
+    eiin: "105000",
+    name: "পুরানগড় শাহ সরফুদ্দীন উচ্চ বিদ্যালয়",
+    nameEn: "Purangar Shah Sarfuddin High School",
+    type: "মাধ্যমিক",
+    union: "পুরানগড়",
+  },
+  {
+    eiin: "137566",
+    name: "উত্তর ব্রাহ্মণ ডেঙ্গা সরকারি প্রাথমিক বিদ্যালয়",
+    nameEn: "Uttar Brahmmon Denga Govt. Primary School",
+    type: "প্রাথমিক",
+  },
+  {
+    eiin: "105021",
+    name: "এওচিয়া বালিকা উচ্চ বিদ্যালয়",
+    nameEn: "Aochia Girls High School",
+    type: "মাধ্যমিক",
+    union: "এওচিয়া",
+  },
+  {
+    eiin: "105003",
+    name: "চিব্বাড়ী আদর্শ উচ্চ বিদ্যালয়",
+    nameEn: "Chibbari Model High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105010",
+    name: "খাগরিয়া বহুমুখী উচ্চ বিদ্যালয়",
+    nameEn: "Khagaria M.L. High School",
+    type: "মাধ্যমিক",
+    union: "খাগরিয়া",
+  },
+  {
+    eiin: "105002",
+    name: "ইউনাইটেড আইডিয়েল ইনস্টিটিউট",
+    nameEn: "United Ideal Institute",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104999",
+    name: "ঢেমশা উচ্চ বিদ্যালয়",
+    nameEn: "Dhemsha High School",
+    type: "মাধ্যমিক",
+    union: "ঢেমশা",
+  },
+  {
+    eiin: "131467",
+    name: "ছদাহা-কেঁওচিয়া উচ্চ বিদ্যালয়",
+    nameEn: "Sadaha Keochia High School",
+    type: "মাধ্যমিক",
+    note: "নামে ছদাহা ও কেঁওচিয়া দুই ইউনিয়ন — সীমান্ত/যৌথ নাম",
+  },
+  {
+    eiin: "105001",
+    name: "করাইয়া নগর বহুমুখী উচ্চ বিদ্যালয়",
+    nameEn: "Karaiya Nagar Ml. High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104993",
+    name: "জনকল্যাণ আদর্শ উচ্চ বিদ্যালয়",
+    nameEn: "Janakallayan Model High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105022",
+    name: "লায়লা মছউদ উচ্চ বিদ্যালয়",
+    nameEn: "Layla Mosud (Jr.) School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "136957",
+    name: "ড.কর্নেল অলি আহমদ বীর বিক্রম উচ্চ বিদ্যালয়",
+    nameEn: "Dr. Cornel Oli Ahamed Bir Bikram Junior School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105025",
+    name: "দক্ষিণ ঢেমশা চৌমুহনী আদর্শ উচ্চ বিদ্যালয়",
+    nameEn: "South Dhemsha Chow Mohani High School",
+    type: "মাধ্যমিক",
+    union: "ঢেমশা",
+  },
+  {
+    eiin: "139204",
+    name: "আশ্-শেফা স্কুল এন্ড কলেজ",
+    nameEn: "Ashshefa School And College",
+    type: "উচ্চ বিদ্যালয় ও কলেজ",
+  },
+  {
+    eiin: "104995",
+    name: "সাতকানিয়া মডেল হাই স্কুল",
+    nameEn: "Satkania Model High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104997",
+    name: "বাজালিয়া উচ্চ বিদ্যালয়",
+    nameEn: "Bajalia High School",
+    type: "মাধ্যমিক",
+    union: "বাজালিয়া",
+  },
+  {
+    eiin: "104991",
+    name: "গারাংগিয়া সোনাকানিয়া আদর্শ জুনিয়র স্কুল",
+    nameEn: "Garangia Sonakania Model Junior School",
+    type: "জুনিয়র",
+    union: "সোনাকানিয়া",
+  },
+  {
+    eiin: "138758",
+    name: "বর্ডার গার্ড ইংলিশ স্কুল",
+    nameEn: "Border Guard English School",
+    type: "ইংরেজি মাধ্যম",
+  },
+  {
+    eiin: "104985",
+    name: "দেওদীঘি কে.এম. উচ্চ বিদ্যালয়",
+    nameEn: "Deodighi K.M. High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104986",
+    name: "নলুয়া দ্বিজেন্দ্র লাল কারণ উচ্চ বিদ্যালয়",
+    nameEn: "Nalua Dijendra Lal Karan High School",
+    type: "মাধ্যমিক",
+    union: "নলুয়া",
+  },
+  {
+    eiin: "105017",
+    name: "বায়তুল ইজ্জত বর্ডার গার্ড পাবলিক স্কুল",
+    nameEn: "Baitul Izzat Border Guard Public School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105018",
+    name: "পূর্ব গাটিয়াডেঙ্গা উচ্চ বিদ্যালয়",
+    nameEn: "East Gatiadenga High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105008",
+    name: "উত্তর সাতকানিয়া আলি আহমদ প্রানহরি উচ্চ বিদ্যালয়",
+    nameEn: "North Satkania Ali Ahmed P. Hori High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104996",
+    name: "আমিলাইশ কাঞ্চনা বঙ্গ চন্দ্র ঘোষ ইনস্টিটিউট",
+    nameEn: "Amilaish Kanchana Banga Chandra Ghose Institute",
+    type: "মাধ্যমিক",
+    note: "নামে আমিলাইশ ও কাঞ্চনা দুই ইউনিয়ন; অবস্থান সীমান্তবর্তী",
+  },
+  {
+    eiin: "105024",
+    name: "জনার কেঁওচিয়া আদর্শ উচ্চ বিদ্যালয়",
+    nameEn: "Janar Keochia Adarsha High School",
+    type: "মাধ্যমিক",
+    union: "কেঁওচিয়া",
+  },
+  {
+    eiin: "105014",
+    name: "পশ্চিম ঢেমশা উচ্চ বিদ্যালয়",
+    nameEn: "West Dhemsha High School",
+    type: "মাধ্যমিক",
+    union: "পশ্চিম ঢেমশা",
+  },
+  {
+    eiin: "105005",
+    name: "চরখাগরিয়া খাদিম আলী চৌধুরী উচ্চ বিদ্যালয়",
+    nameEn: "Charkhagaria Khadim Ali Chow High School",
+    type: "মাধ্যমিক",
+    union: "খাগরিয়া",
+  },
+  {
+    eiin: "104983",
+    name: "গাটিয়াডেঙ্গা আলহাজ সফিয়া মমতাজুল হক উচচ বিদ্যালয়",
+    nameEn: "Gatiadenga Alhaj Shafia Mamtajul Hoque High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105013",
+    name: "কেঁওচিয়া উচ্চ বিদ্যালয়",
+    nameEn: "Keochia High School",
+    type: "মাধ্যমিক",
+    union: "কেঁওচিয়া",
+  },
+  {
+    eiin: "105011",
+    name: "দক্ষিণ কাঞ্চনা নুর আহমদ চৌধুরী উচ্চ বিদ্যালয়",
+    nameEn: "South Kanchana N A Chy High School",
+    type: "মাধ্যমিক",
+    union: "কাঞ্চনা",
+    area: "দক্ষিণ কাঞ্চনা",
+  },
+  {
+    eiin: "105007",
+    name: "ছমদর পাড়া বহুমুখী উচ্চ বিদ্যালয়",
+    nameEn: "Samadar Para Multi Lateral High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104998",
+    name: "কাঞ্চনা বালিকা উচ্চ বিদ্যালয়",
+    nameEn: "Kanchana Girls High School",
+    type: "মাধ্যমিক",
+    union: "কাঞ্চনা",
+  },
+  {
+    eiin: "104994",
+    name: "সাতকানিয়া সরকারি বালিকা উচ্চ বিদ্যালয়",
+    nameEn: "Satkania Govt. Girls High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105019",
+    name: "পশ্চিম গাটিয়া ডেঙ্গা উচ্চ বিদ্যালয়",
+    nameEn: "West Gatiadenga High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105004",
+    name: "বারদোনা হক মেমোরিয়াল উচ্চ বিদ্যালয়",
+    nameEn: "Baradona Hoque Memorial High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104984",
+    name: "মির্জাখীল আদর্শ বালিকা উচ্চ বিদ্যালয়",
+    nameEn: "Mirzakhil Model Girls High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "104988",
+    name: "গারাঙ্গিয়া উচ্চ বিদ্যালয়",
+    nameEn: "Garangia High School",
+    type: "মাধ্যমিক",
+  },
+  {
+    eiin: "105012",
+    name: "আমিলাইষ আদর্শ উচ্চ বিদ্যালয়",
+    nameEn: "Amilaish Adarsha Uccha Biddaya Laya",
+    type: "মাধ্যমিক",
+    union: "আমিলাইশ",
+  },
+  {
+    eiin: "105036",
+    name: "বাজালিয়া হেদায়তুল ইসলাম ফাজিল মাদ্রাসা",
+    nameEn: "Bazalia Hedayatul Islam Fazil Madrasha",
+    type: "ফাজিল মাদ্রাসা",
+    union: "বাজালিয়া",
+  },
+  {
+    eiin: "105037",
+    name: "রসুলাবাদ ইসলামিয়া সিনিয়র ফাজিল মাদ্রাসা",
+    nameEn: "Rasulabad Islamia Senior Fazil Madrasa",
+    type: "ফাজিল মাদ্রাসা",
+  },
+  {
+    eiin: "105111",
+    name: "দক্ষিণ গারাংগিয়া আদর্শ মহিলা দাখিল মাদরাসা",
+    nameEn: "South Garangia Model Mohila Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105028",
+    name: "দক্ষিন চরতী মজিদিয়া দাখিল মাদ্রাসা",
+    nameEn: "South Charati Mazidia Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+    union: "চরতী",
+  },
+  {
+    eiin: "105050",
+    name: "দক্ষিণ চিব্বাড়ী মহিলা দাখিল মাদ্রাসা",
+    nameEn: "Dakkhin Chibbari Mahila Dakhil Madrasa",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105052",
+    name: "কেওচিয়া মুজহেরুল হক ইসলামিয়া দাখিল মাদ্রাসা",
+    nameEn: "Keochia Muzherul Hoque Islamia Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+    union: "কেঁওচিয়া",
+  },
+  {
+    eiin: "105031",
+    name: "পশ্চিম গাটিয়া ডেঙ্গা ইসলা্মিয়া দাখিল মাদ্রাসা",
+    nameEn: "Paschim Gatia Danga Islamia Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105038",
+    name: "সোনাকানিয়া মজিদিয়া দাখিল মাদ্রাসা",
+    nameEn: "Sonakania Mazidia Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+    union: "সোনাকানিয়া",
+  },
+  {
+    eiin: "105029",
+    name: "শাহ মজিদিয়া ইসলামিয়া দাখিল মাদ্রাসা",
+    nameEn: "Shah Mazidia Islamia Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105108",
+    name: "চরখাগরিয়া রসুলপুর আলহাজ্ব নুর আহমদ জেবুন্নিছা দাখিল মাদ্রাসা",
+    nameEn: "Char Khagaria Rasulpur Al.N.J. Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+    union: "খাগরিয়া",
+  },
+  {
+    eiin: "105048",
+    name: "ইছামতি মুহাম্মদীয়া আদশ দাখিল মাদ্রাসা",
+    nameEn: "Ichamati Muhammadia Adarsha Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "134038",
+    name: "দ্বীপচরতী দারুল ইসলাম দাখিল মাদরাসা",
+    nameEn: "Dwipcharati Darul Islam Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+    union: "চরতী",
+  },
+  {
+    eiin: "105030",
+    name: "ছদাহা আদর্শ মহিলা দাখিল মাদ্রাসা",
+    nameEn: "Sadaha Adarsha Mohila Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+    union: "ছদাহা",
+  },
+  {
+    eiin: "105033",
+    name: "কেরানীহাট জামেউল উলুম ইসলামীয়া ফাজিল মাদ্রাসা",
+    nameEn: "Keranihat Jameul Uloom Islamia Fazil Madrasa",
+    type: "ফাজিল মাদ্রাসা",
+  },
+  {
+    eiin: "105040",
+    name: "ছদাহা মোহাম্মদীয়া খাইরিয়া আলিম মাদ্রাসা",
+    nameEn: "Sadaha Mohammadia Khairia Alim Madrasha",
+    type: "আলিম মাদ্রাসা",
+    union: "ছদাহা",
+  },
+  {
+    eiin: "105039",
+    name: "কাঞ্চনা আনওয়ারুল উলুম ইসলামিয়া সিনিয়র আলিম মাদ্রাসা",
+    nameEn: "Kanchana Anwarul Ulum Islamia Senior (Alim) Madrasha",
+    type: "আলিম মাদ্রাসা",
+    union: "কাঞ্চনা",
+  },
+  {
+    eiin: "131836",
+    name: "খাগরিয়া ইসলামিয়া সুন্নিয়া দাখিল মাদ্রাসা",
+    nameEn: "Khagoria Islamia Sunnia Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+    union: "খাগরিয়া",
+  },
+  {
+    eiin: "105042",
+    name: "চরতী মোহাম্মদীয়া (দঃ) দাখিল মাদ্রাসা",
+    nameEn: "Charati Mohammadia (Sm) Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+    union: "চরতী",
+  },
+  {
+    eiin: "105055",
+    name: "দারুল ইহসান মহিলা দাখিল মাদরাসা",
+    nameEn: "Darul Ihsan Mohila Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+    union: "কাঞ্চনা",
+    area: "মধ্য কাঞ্চনা",
+  },
+  {
+    eiin: "105044",
+    name: "পূর্ব গাটিয়াডেঙ্গা হাবিবুল উলুম ইসলামিয়া দাখিল মাদ্রাসা",
+    nameEn: "East Gatia Denga Habibul Ulum Islamia Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105047",
+    name: "দক্ষিণ কাঞ্চনা শাহ্ রশিদিয়া ইসলামী দাখিল মাদ্রাসা",
+    nameEn: "South Kanchana Shah Rashidia Islamia Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+    union: "কাঞ্চনা",
+    area: "দক্ষিণ কাঞ্চনা",
+  },
+  {
+    eiin: "105026",
+    name: "রূপকানিয়া আহমদিয়া দাখিল মাদ্রাসা",
+    nameEn: "Rupkania Ahmadia Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105043",
+    name: "রেফাঈয়া শাহ অকবরিয়া ইসলামিয়া মাদরাসা",
+    nameEn: "Baradona Refaiya Sha Akbaria Islamia Madrasha",
+    type: "মাদ্রাসা",
+  },
+  {
+    eiin: "105045",
+    name: "বারদোনা আল আমিন আদর্শ মহিলা দাখিল মাদ্রাসা",
+    nameEn: "Bradona Al-Amin Adarsha Mohila Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "131793",
+    name: "সাতকানিয়া আদর্শ মাহিলা মাদ্রাসা",
+    nameEn: "Satkania Adarsha Mohila Madrasha",
+    type: "মাদ্রাসা",
+  },
+  {
+    eiin: "105041",
+    name: "ছৈয়দাবাদ এমদাদুল উলুম দুদু ফকির আহমদিয়া সিনিয়র আলিম মাদ্রাসা",
+    nameEn: "Sayedbad Emdadul Ulum Dudu Fokir Ahmadia Sinior Alim Madrasah",
+    type: "আলিম মাদ্রাসা",
+  },
+  {
+    eiin: "105053",
+    name: "মাদরাসা-ই-আবু হুরাইরা (রাঃ) দাখিল",
+    nameEn: "Madrasah E- Abu Hurairah (R) Dakhil",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105056",
+    name: "বায়তুশ শরফ জব্বারিয়া আদর্শ মাদ্রাসা",
+    nameEn: "Baitush Sharaf Jabbaria Adarsha Madrasah",
+    type: "মাদ্রাসা",
+  },
+  {
+    eiin: "105046",
+    name: "বায়তুশ শরফ আখতারিয়া আদর্শ আলিম মাদ্রাসা",
+    nameEn: "Baitus Sharaf Akhtaria Adarsha Alim Madrasha",
+    type: "আলিম মাদ্রাসা",
+  },
+  {
+    eiin: "138244",
+    name: "আঞ্জুমানে ইসলামিয়া আদর্শ মহিলা দাখিল মাদ্রাসা",
+    nameEn: "Anjomane Islamia Adarsha Mohila Madrasha",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105034",
+    name: "সাতকানিয়া আলিয়া এম. ইউ. ফাযিল মাদ্রাসা",
+    nameEn: "Satkania Mahmudul Ulum Fazil Madrasha",
+    type: "ফাজিল মাদ্রাসা",
+  },
+  {
+    eiin: "105027",
+    name: "মির্জাখীল আনোয়ারে রহমানিয়া আদর্শ দাখিল মাদ্রাসা",
+    nameEn: "Mirzakhil Anowaray Rahmania Ideal Dakhil Madrasha",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "139065",
+    name: "ছিদ্দিকীয়া মহিলা দাখিল মাদরাসা",
+    nameEn: "Siddiqueia Mohila Dakhil Madrasah",
+    type: "দাখিল মাদ্রাসা",
+  },
+  {
+    eiin: "105035",
+    name: "গারাংগিয়া ইসলামিয়া কামিল (অনার্স-মাস্টার্স) মাদ্রাসা",
+    nameEn: "Garangia Islamia Kamil Madrasah",
+    type: "কামিল মাদ্রাসা",
+  },
+  {
+    eiin: "105049",
+    name: "গারাংগিয়া ইসলামিয়া রব্বানী মহিলা ফাজিল মাদ্রাসা",
+    nameEn: "Garangia Islamia Rabbani Mohila Fazil Madrasha",
+    type: "ফাজিল মাদ্রাসা",
+  },
+];
+
+export const satkaniaInstituteCount = satkaniaInstitutes.length;
