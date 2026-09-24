@@ -1,4 +1,5 @@
 import { categories } from "@/data/categories";
+import { countByCategory } from "@/data/services";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
@@ -14,15 +15,18 @@ export default function CategoriesPage() {
         </form>
 
         <div className="ps-cat-grid">
-          {categories.map((c) => (
-            <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
-              <div className="ps-cat-icon-wrap">
-                <span className="ps-cat-icon">{c.icon}</span>
-              </div>
-              <div className="ps-cat-name">{c.name}</div>
-              <div className="ps-cat-count">{c.count} টি তথ্য</div>
-            </a>
-          ))}
+          {categories.map((c) => {
+            const n = countByCategory(c.id);
+            return (
+              <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
+                <div className="ps-cat-icon-wrap">
+                  <span className="ps-cat-icon">{c.icon}</span>
+                </div>
+                <div className="ps-cat-name">{c.name}</div>
+                <div className="ps-cat-count">{n > 0 ? `${n} টি তথ্য` : "কোনো তথ্য নেই"}</div>
+              </a>
+            );
+          })}
         </div>
       </div>
 

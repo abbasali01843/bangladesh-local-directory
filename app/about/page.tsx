@@ -5,14 +5,21 @@ import { pilot } from "@/data/pilot";
 export default function AboutPage() {
   return (
     <main className="ps-page">
-      <TopBar title="পরিচিতি" subtitle="Bangladesh Local Directory" backHref="/" />
+      <TopBar title="আমাদের সম্পর্কে" subtitle="প্রিয় সাতকানিয়া" backHref="/" />
       <div className="ps-content">
         <div className="ps-detail">
-          <div className="ps-detail-icon">🇧🇩</div>
-          <h1 className="ps-detail-title">Bangladesh Local Directory</h1>
+          <div className="ps-detail-icon">📍</div>
+          <h1 className="ps-detail-title">প্রিয় সাতকানিয়া</h1>
           <p className="ps-detail-desc">
-            সারা বাংলাদেশের স্থানীয় ব্যবসা ও সেবার ডিরেক্টরি। শুরু হয়েছে{" "}
-            <strong>{pilot.label}</strong> থেকে — ধাপে ধাপে সব জেলায় বিস্তার হবে।
+            সাতকানিয়ার মানুষের জন্য একটি স্বাধীন লোকাল ডিরেক্টরি প্ল্যাটফর্ম —
+            এখানে স্থানীয় ব্যবসা, স্বাস্থ্যসেবা, শিক্ষা প্রতিষ্ঠান, মিস্ত্রি ও
+            জরুরি সেবার তথ্য সাজিয়ে দেওয়া হয়। শুরু হয়েছে{" "}
+            <strong>{pilot.label}</strong> থেকে — ধাপে ধাপে সারা বাংলাদেশে বিস্তার হবে।
+            এটি <strong>Bangladesh Local Directory</strong> প্রকল্পের অংশ।
+          </p>
+          <p className="ps-list-loc" style={{ marginTop: 8 }}>
+            ⚠️ এটি কোনো সরকারি প্রতিষ্ঠানের অ্যাপ নয় এবং সরকারি সেবা প্রদান করে না;
+            তথ্য শুধুমাত্র সাধারণ তথ্যভান্ডার হিসেবে দেওয়া হয়।
           </p>
           <div className="ps-detail-fields">
             <div className="ps-field-row">

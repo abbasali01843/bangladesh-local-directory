@@ -12,7 +12,7 @@ export default function BottomNav({ active = "home" }: Props) {
         <span>ক্যাটাগরি</span>
       </a>
       <a href="/add-listing" className="ps-nav-center">
-        <span className="ps-nav-center-btn">🇧🇩</span>
+        <span className="ps-nav-center-btn">➕</span>
         <span className="ps-nav-center-label">যোগ করুন</span>
       </a>
       <a href="/search" className={active === "search" ? "ps-nav-item active" : "ps-nav-item"}>
