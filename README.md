@@ -47,6 +47,7 @@ Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
 - [x] Phase 2 — Security basics (rate limit login/register, validation)
 - [x] Phase 3 — Core UX (detail call/map/wa, search fallback)
 - [x] Phase 4 — Engagement (notices, profile, about, SEO)
+- [x] Sprint 1 — DB-mode hardening (P0 fixes: category seed, admin bootstrap, DB-first pages, search `?q`, claims/users admin UI, my submissions, ESLint 9, CI on PR)
 - [ ] Phase 5 — Real DB + images + PWA polish (needs your Postgres)
 
 ## Optional: Database
@@ -55,5 +56,24 @@ When ready, add Vercel Postgres or Neon and set `DATABASE_URL`, then:
 
 ```bash
 npx prisma db push
-npm run db:seed
+npm run db:seed   # seeds 21 categories + locations (+ admin if ADMIN_* set)
 ```
+
+### First admin (pick one)
+
+```bash
+# A. Seed-time (before db:seed):
+ADMIN_PHONE="01XXXXXXXXX" ADMIN_PASSWORD="change-me-123" npm run db:seed
+
+# B. Promote an existing registered user:
+npm run db:promote -- 01XXXXXXXXX
+```
+
+### Useful scripts
+
+| Script | কাজ |
+|---|---|
+| `npm run dev` | Dev সার্ভার |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint 9 (flat config) |
+| `npm run db:push` / `db:seed` / `db:promote` | Schema push / seed / make admin |

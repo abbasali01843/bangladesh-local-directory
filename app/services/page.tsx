@@ -1,5 +1,5 @@
-import { services, countInSub, unionsInCategory } from "@/data/services";
 import { categories, subOf } from "@/data/categories";
+import { getListings } from "@/lib/listings";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
@@ -23,11 +23,18 @@ export default async function ServicesPage({
   const category = p.category ? categories.find((c) => c.id === p.category) : undefined;
   const sub = category && p.sub ? subOf(category.id, p.sub as string) : undefined;
 
-  let list = p.category ? services.filter((s) => s.category === p.category) : services;
+  // DB-first (APPROVED), DB না থাকলে static — ফিল্টার দুটোতেই চলে
+  const { list: catList } = await getListings({ category: p.category });
+  let list = catList;
   if (sub) list = list.filter((s) => s.subcategory === sub.id);
   if (p.union) list = list.filter((s) => s.union === p.union);
 
-  const unions = category ? unionsInCategory(category.id) : [];
+  const unions = [...new Set(catList.map((s) => s.union).filter(Boolean))];
+  const countIn = (subId?: string, union?: string) =>
+    catList.filter(
+      (s) => (!subId || s.subcategory === subId) && (!union || s.union === union)
+    ).length;
+
   const title = category ? (sub ? `${category.name} — ${sub.name}` : category.name) : "সকল সেবা";
 
   return (
@@ -56,11 +63,11 @@ export default async function ServicesPage({
                 </div>
                 <div className="ps-cat-name">সকল</div>
                 <div className="ps-cat-count">
-                  {category.subcategories.reduce((n, s) => n + countInSub(category.id, s.id), 0)} টি
+                  {category.subcategories.reduce((n, s) => n + countIn(s.id), 0)} টি
                 </div>
               </a>
               {category.subcategories.map((s) => {
-                const n = countInSub(category.id, s.id);
+                const n = countIn(s.id);
                 return (
                   <a
                     key={s.id}
@@ -100,12 +107,7 @@ export default async function ServicesPage({
                 সকল এলাকা
               </a>
               {unions.map((u) => {
-                const n = services.filter(
-                  (s) =>
-                    s.category === category.id &&
-                    (!sub || s.subcategory === sub.id) &&
-                    s.union === u
-                ).length;
+                const n = countIn(sub?.id, u);
                 const active = p.union === u;
                 return (
                   <a
@@ -144,7 +146,7 @@ export default async function ServicesPage({
                   </p>
                 )}
                 <p className="ps-list-loc">
-                  📍 {s.union} · {s.area}
+                  📍 {[s.union, s.area].filter(Boolean).join(" · ") || `${s.upazila}, ${s.district}`}
                 </p>
                 {s.description && <p className="ps-list-desc">{s.description}</p>}
                 {s.phone && <p className="ps-list-phone">📞 {s.phone}</p>}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
@@ -9,6 +10,7 @@ type Me = { id: string; name: string; role: string } | null;
 export default function ProfilePage() {
   const [me, setMe] = useState<Me>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -24,7 +26,7 @@ export default function ProfilePage() {
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     setMe(null);
-    window.location.href = "/";
+    router.push("/");
   }
 
   return (

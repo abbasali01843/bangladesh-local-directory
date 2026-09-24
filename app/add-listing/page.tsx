@@ -57,11 +57,13 @@ export default function AddListing() {
       return;
     }
 
-    const subName = selectedCategory?.subcategories?.find((s) => s.id === subId)?.name;
-    const descRaw = (f.get("description") as string) || "";
-    const description = subName
-      ? `[সাব-ক্যাটাগরি: ${subName}]${descRaw ? ` ${descRaw}` : ""}`
-      : descRaw;
+    if (!upazila) {
+      setOk(false);
+      setMessage("উপজেলা নির্বাচন করুন।");
+      setBusy(false);
+      return;
+    }
+    const description = ((f.get("description") as string) || "").trim();
 
     const r = await fetch("/api/services", {
       method: "POST",
@@ -69,8 +71,9 @@ export default function AddListing() {
       body: JSON.stringify({
         name: f.get("name"),
         categoryId: categoryId,
+        subcategory: subId || null,
         districtId: district,
-        upazilaId: upazila || "pending",
+        upazilaId: upazila,
         unionId: union || null,
         areaId: area || null,
         phone: f.get("phone"),

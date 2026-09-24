@@ -23,6 +23,7 @@ export async function GET(request: Request) {
                 { name: { contains: q, mode: "insensitive" } },
                 { description: { contains: q, mode: "insensitive" } },
                 { address: { contains: q, mode: "insensitive" } },
+                { phone: { contains: q } },
               ],
             }
           : {}),
@@ -43,13 +44,15 @@ export async function GET(request: Request) {
     let list = services;
     if (categoryId) list = list.filter((s) => s.category === categoryId);
     if (q) {
+      const qd = q.replace(/\D/g, "").replace(/^880/, "").replace(/^0/, "");
       list = list.filter(
         (s) =>
           s.name.toLowerCase().includes(q) ||
           s.description.toLowerCase().includes(q) ||
           s.district.includes(q) ||
           s.upazila.includes(q) ||
-          s.area.includes(q)
+          s.area.includes(q) ||
+          (s.phone && (s.phone.includes(q) || (qd.length >= 3 && s.phone.replace(/\D/g, "").includes(qd))))
       );
     }
     const data = list.map((s) => {

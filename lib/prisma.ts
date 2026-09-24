@@ -19,7 +19,7 @@ function createClient(): PrismaClient {
  * আসল ক্লায়েন্ট প্রথম DB কলে তৈরি হয়।
  */
 export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
-  get(_target, prop, _receiver) {
+  get(_target, prop) {
     const client = createClient() as unknown as Record<PropertyKey, unknown>;
     const value = client[prop];
     return typeof value === "function" ? (value as (...a: unknown[]) => unknown).bind(client) : value;
