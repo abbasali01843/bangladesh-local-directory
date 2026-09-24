@@ -1,5 +1,5 @@
 import { categories } from "@/data/categories";
-import { services, countByCategory, countByUnion, servicesInKanchana } from "@/data/services";
+import { countByCategory, servicesInKanchana } from "@/data/services";
 import { notices } from "@/data/notices";
 import { pilot, satkaniaUnions } from "@/data/pilot";
 import { donors, initialOf } from "@/data/community";
@@ -79,6 +79,31 @@ export default function Home() {
           <input name="q" type="search" placeholder="কি খুঁজছেন? নাম, এলাকা বা ফোন..." aria-label="Search" />
         </form>
 
+        {/* ===== রোডম্যাপ: কাঞ্চনা → সাতকানিয়া → বাংলাদেশ ===== */}
+        <div className="ps-roadmap" aria-label="কভারেজ রোডম্যাপ">
+          <div className="ps-roadmap-step active">
+            <span className="ps-roadmap-dot">✓</span>
+            <span className="ps-roadmap-name">কাঞ্চনা</span>
+            <span className="ps-roadmap-status">✓ সক্রিয় বিভাগ</span>
+          </div>
+          <span className="ps-roadmap-arrow" aria-hidden>
+            →
+          </span>
+          <div className="ps-roadmap-step soon">
+            <span className="ps-roadmap-dot">২</span>
+            <span className="ps-roadmap-name">সাতকানিয়া</span>
+            <span className="ps-roadmap-status">শীঘ্রই</span>
+          </div>
+          <span className="ps-roadmap-arrow" aria-hidden>
+            →
+          </span>
+          <div className="ps-roadmap-step">
+            <span className="ps-roadmap-dot">৩</span>
+            <span className="ps-roadmap-name">বাংলাদেশ</span>
+            <span className="ps-roadmap-status">পরবর্তী ধাপ</span>
+          </div>
+        </div>
+
         {/* ===== ইউনিয়ন সমূহ — priyosherpur-এর উপজেলা সেকশনের মতো ===== */}
         <div className="ps-section-head">
           <span className="ps-section-icon">🏘️</span>
@@ -86,19 +111,18 @@ export default function Home() {
         </div>
         <div className="ps-union-grid">
           {satkaniaUnions.map((u) => {
-            const n = countByUnion(u.name);
             const hot = u.id === pilot.union.id;
             return (
               <a
                 key={u.id}
                 href={hot ? "/area" : `/search?q=${encodeURIComponent(u.name)}`}
-                className={`ps-union-card${hot ? " hot" : ""}`}
+                className={`ps-union-card${hot ? " hot" : " soon"}`}
               >
                 <span className="ps-union-pin">📍</span>
                 <span className="ps-union-body">
                   <span className="ps-union-name">{u.name}</span>
                   <span className="ps-union-count">
-                    {hot ? "বিশেষ বিভাগ" : n > 0 ? `${n} টি তথ্য` : "তথ্য যোগ করা হচ্ছে"}
+                    {hot ? "✓ সক্রিয় বিভাগ" : "শীঘ্রই আসছে"}
                   </span>
                 </span>
                 <span className="ps-promo-arrow">›</span>

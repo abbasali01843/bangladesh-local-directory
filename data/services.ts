@@ -107,8 +107,9 @@ export const services: Service[] = [
     area: "দক্ষিণ কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "দাখিল মাদ্রাসা — দক্ষিণ কাঞ্চনা, কাঞ্চনা ইউনিয়ন।",
-    fields: { institutionType: "দাখিল মাদ্রাসা", eiin: "—" },
+    description:
+      "দাখিল মাদ্রাসা। EIIN: 105047। দক্ষিণ কাঞ্চনা, কাঞ্চনা ইউনিয়ন। সূত্র: BANBEIS ২০২৩।",
+    fields: { institutionType: "দাখিল মাদ্রাসা", eiin: "105047" },
   },
   {
     id: "kn-darul-ihsan",
@@ -118,11 +119,12 @@ export const services: Service[] = [
     district: "চট্টগ্রাম",
     upazila: "সাতকানিয়া",
     union: "কাঞ্চনা",
-    area: "কাঞ্চনা ইউনিয়ন",
+    area: "মধ্য কাঞ্চনা",
     phone: "",
     verified: true,
-    description: "মহিলা দাখিল মাদ্রাসা — কাঞ্চনা, সাতকানিয়া (স্থানীয়/উইকি)।",
-    fields: { institutionType: "মহিলা দাখিল মাদ্রাসা", eiin: "—" },
+    description:
+      "মহিলা দাখিল মাদ্রাসা। EIIN: 105055। মধ্য কাঞ্চনা, কাঞ্চনা ইউনিয়ন। সূত্র: BANBEIS ২০২৩।",
+    fields: { institutionType: "মহিলা দাখিল মাদ্রাসা", eiin: "105055" },
   },
   {
     id: "kn-gps-main",
