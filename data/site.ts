@@ -25,5 +25,10 @@ export const site = {
   copyrightYear: "২০২৬",
 } as const;
 
+/** Canonical সাইট URL — OG/sitemap/canonical-এ ব্যবহৃত। */
+export const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+  "https://bangladesh-local-directory.vercel.app";
+
 export const hasSocial = Boolean(site.fbPageUrl || site.fbGroupUrl);
 export const hasSupport = Boolean(site.supportPhone || site.supportEmail);

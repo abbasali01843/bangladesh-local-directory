@@ -1,11 +1,10 @@
-/** Simple in-memory rate limiter (per serverless instance). */
+/** Rate limiter — Upstash Redis (REST) থাকলে distributed, না থাকলে in-memory।
+ * Vercel-এ KV/Upstash বসালে env (`UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`)
+ * দিলেই স্বয়ংক্রিয়ভাবে শক্তিশালী মোডে যাবে; কোড বদলাতে হবে না।
+ */
 const buckets = new Map<string, { count: number; resetAt: number }>();
 
-export function rateLimit(
-  key: string,
-  limit = 20,
-  windowMs = 60_000
-): { ok: boolean; remaining: number } {
+function memoryLimit(key: string, limit: number, windowMs: number) {
   const now = Date.now();
   const cur = buckets.get(key);
   if (!cur || cur.resetAt < now) {
@@ -15,6 +14,42 @@ export function rateLimit(
   if (cur.count >= limit) return { ok: false, remaining: 0 };
   cur.count += 1;
   return { ok: true, remaining: limit - cur.count };
+}
+
+async function redisLimit(key: string, limit: number, windowMs: number) {
+  const url = process.env.UPSTASH_REDIS_REST_URL?.replace(/\/$/, "");
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  const res = await fetch(`${url}/incr/${encodeURIComponent("rl:" + key)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  const j = (await res.json()) as { result?: number };
+  const count = Number(j.result) || 1;
+  if (count === 1) {
+    await fetch(
+      `${url}/expire/${encodeURIComponent("rl:" + key)}/${Math.ceil(windowMs / 1000)}`,
+      { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" }
+    ).catch(() => undefined);
+  }
+  return count > limit
+    ? { ok: false, remaining: 0 }
+    : { ok: true, remaining: limit - count };
+}
+
+export async function rateLimit(
+  key: string,
+  limit = 20,
+  windowMs = 60_000
+): Promise<{ ok: boolean; remaining: number }> {
+  try {
+    const r = await redisLimit(key, limit, windowMs);
+    if (r) return r;
+  } catch {
+    // Redis ব্যর্থ হলে memory fallback
+  }
+  return memoryLimit(key, limit, windowMs);
 }
 
 export function clientIp(request: Request): string {

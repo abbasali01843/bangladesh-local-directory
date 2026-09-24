@@ -3,6 +3,7 @@ import { countByCategory } from "@/data/services";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 export default function CategoriesPage() {
   return (
     <main className="ps-page">
@@ -18,13 +19,13 @@ export default function CategoriesPage() {
           {categories.map((c) => {
             const n = countByCategory(c.id);
             return (
-              <a key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
+              <Link key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
                 <div className="ps-cat-icon-wrap">
                   <span className="ps-cat-icon">{c.icon}</span>
                 </div>
                 <div className="ps-cat-name">{c.name}</div>
                 <div className="ps-cat-count">{n > 0 ? `${n} টি তথ্য` : "কোনো তথ্য নেই"}</div>
-              </a>
+              </Link>
             );
           })}
         </div>

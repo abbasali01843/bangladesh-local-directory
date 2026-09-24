@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 type S = {
   id: string;
   name: string;
@@ -14,8 +15,46 @@ type S = {
   upazila?: { name: string };
 };
 
+type C = {
+  id: string;
+  status: string;
+  service?: { id: string; name: string };
+};
+
+const statusBn: Record<string, string> = {
+  PENDING: "⏳ রিভিউতে",
+  APPROVED: "✅ প্রকাশিত",
+  REJECTED: "❌ বাতিল",
+  SUSPENDED: "⛔ স্থগিত",
+};
+
+function ListingCard({ x }: { x: S }) {
+  const approved = x.status === "APPROVED";
+  const inner = (
+    <>
+      <div className="ps-list-top">
+        <strong>{x.name}</strong>
+        <span className="ps-badge">{statusBn[x.status] || x.status}</span>
+      </div>
+      <p className="ps-list-loc">
+        📍 {x.upazila?.name || "—"}, {x.district?.name || "—"}
+        {x.category?.name ? ` · ${x.category.name}` : ""}
+      </p>
+    </>
+  );
+  return approved ? (
+    <Link href={`/services/${x.id}`} className="ps-list-card">
+      {inner}
+    </Link>
+  ) : (
+    <div className="ps-list-card">{inner}</div>
+  );
+}
+
 export default function OwnerDashboard() {
-  const [data, setData] = useState<S[]>([]);
+  const [mine, setMine] = useState<S[]>([]);
+  const [claimed, setClaimed] = useState<S[]>([]);
+  const [claims, setClaims] = useState<C[]>([]);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [needLogin, setNeedLogin] = useState(false);
@@ -25,13 +64,15 @@ export default function OwnerDashboard() {
       .then(async (r) => {
         const j = await r.json();
         if (r.ok) {
-          setData(j.data || []);
+          setMine(j.data?.mine || []);
+          setClaimed(j.data?.claimed || []);
+          setClaims(j.data?.claims || []);
           setMsg("");
         } else if (j.error === "UNAUTHORIZED") {
           setNeedLogin(true);
-          setMsg("লগইন প্রয়োজন");
+          setMsg("লগইন প্রয়োজন");
         } else {
-          setMsg(j.message || "Database unavailable");
+          setMsg(j.message || "ডাটাবেস এখনো সেট হয়নি");
         }
       })
       .catch(() => setMsg("সার্ভারে সংযোগ করা যাচ্ছে না"))
@@ -44,64 +85,87 @@ export default function OwnerDashboard() {
 
       <div className="ps-content">
         {msg && (
-          <div className={needLogin ? "ps-msg-err" : "ps-msg-err"} style={{ marginBottom: 12 }}>
+          <div className="ps-msg-err" style={{ marginBottom: 12 }}>
             {msg}
             {needLogin && (
               <div style={{ marginTop: 10 }}>
-                <a href="/login" className="ps-btn-primary">
+                <Link href="/login" className="ps-btn-primary">
                   লগইন করুন
-                </a>
+                </Link>
               </div>
             )}
           </div>
         )}
 
-        <div className="ps-section-head">
-          <span className="ps-section-icon">🏪</span>
-          <h2>আমার লিস্টিং</h2>
-        </div>
-
         {loading ? (
           <div className="ps-empty">
             <p>লোড হচ্ছে...</p>
           </div>
-        ) : data.length === 0 && !needLogin ? (
-          <div className="ps-empty">
-            <div className="ps-empty-icon">📋</div>
-            <h2>এখনো কোনো তালিকা নেই</h2>
-            <p>আপনার ব্যবসা বা সেবা যোগ করুন।</p>
-            <a href="/add-listing" className="ps-btn-primary">
-              + তথ্য যোগ করুন
-            </a>
-          </div>
         ) : (
-          <div className="ps-list">
-            {data.map((x) => (
-              <a key={x.id} href={`/services/${x.id}`} className="ps-list-card">
-                <div className="ps-list-top">
-                  <strong>{x.name}</strong>
-                  <span className="ps-badge">{x.status}</span>
-                </div>
-                <p className="ps-list-loc">
-                  📍 {x.upazila?.name || "—"}, {x.district?.name || "—"}
-                  {x.category?.name ? ` · ${x.category.name}` : ""}
-                </p>
+          <>
+            <div className="ps-section-head">
+              <span className="ps-section-icon">📤</span>
+              <h2>আমার জমা ({mine.length})</h2>
+            </div>
+            {mine.length === 0 ? (
+              <div className="ps-list-card" style={{ marginBottom: 14 }}>
+                <p className="ps-list-desc">এখনো কিছু জমা দেননি। নিচের বাটনে তথ্য যোগ করুন।</p>
+              </div>
+            ) : (
+              <div className="ps-list" style={{ marginBottom: 14 }}>
+                {mine.map((x) => (
+                  <ListingCard key={x.id} x={x} />
+                ))}
+              </div>
+            )}
+
+            <div className="ps-section-head">
+              <span className="ps-section-icon">🏪</span>
+              <h2>আমার মালিকানাধীন ({claimed.length})</h2>
+            </div>
+            {claimed.length === 0 ? (
+              <div className="ps-list-card" style={{ marginBottom: 14 }}>
                 <p className="ps-list-desc">
-                  যাচাই: {x.verificationStatus}
+                  কোনো তালিকার মালিকানা নেননি। তালিকার পেজ থেকে “দাবি করুন” চাপুন।
                 </p>
-              </a>
-            ))}
-          </div>
+              </div>
+            ) : (
+              <div className="ps-list" style={{ marginBottom: 14 }}>
+                {claimed.map((x) => (
+                  <ListingCard key={x.id} x={x} />
+                ))}
+              </div>
+            )}
+
+            {claims.length > 0 && (
+              <>
+                <div className="ps-section-head">
+                  <span className="ps-section-icon">📝</span>
+                  <h2>আমার দাবি ({claims.length})</h2>
+                </div>
+                <div className="ps-list" style={{ marginBottom: 14 }}>
+                  {claims.map((c) => (
+                    <div key={c.id} className="ps-list-card">
+                      <div className="ps-list-top">
+                        <strong>{c.service?.name || "—"}</strong>
+                        <span className="ps-badge">{statusBn[c.status] || c.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         )}
 
         {!needLogin && (
-          <a
+          <Link
             href="/add-listing"
             className="ps-btn-primary ps-btn-block"
             style={{ marginTop: 16 }}
           >
             + নতুন তথ্য যোগ করুন
-          </a>
+          </Link>
         )}
       </div>
 

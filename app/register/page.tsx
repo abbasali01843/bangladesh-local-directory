@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 export default function Register() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -66,7 +67,7 @@ export default function Register() {
           </button>
 
           <p className="ps-form-footer">
-            ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="/login">লগইন করুন</a>
+            ইতিমধ্যে অ্যাকাউন্ট আছে? <Link href="/login">লগইন করুন</Link>
           </p>
         </form>
       </div>

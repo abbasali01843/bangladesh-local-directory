@@ -2,6 +2,7 @@ import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import { site } from "@/data/site";
 
+import Link from "next/link";
 const sections: { title: string; body: string }[] = [
   {
     title: "আমরা যে তথ্য সংগ্রহ করি",
@@ -59,9 +60,9 @@ export default function PrivacyPage() {
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <a href="/contact" className="ps-btn-primary ps-btn-block">
+          <Link href="/contact" className="ps-btn-primary ps-btn-block">
             ☎️ প্রশ্ন থাকলে যোগাযোগ করুন
-          </a>
+          </Link>
         </div>
       </div>
 

@@ -109,6 +109,8 @@ model Service {
   name String
   slug String @unique
   categoryId String
+  // data/categories.ts-এর subcategory id (যেমন "medicine") — ঐচ্ছিক
+  subcategory String?
   districtId String
   upazilaId String
   unionId String?

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   kanchanaProfile,
   kanchanaSchools,
@@ -136,13 +137,13 @@ export default function AreaPage() {
         </div>
         <div className="ps-list" style={{ marginBottom: 16 }}>
           {knList.map((s) => (
-            <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
+            <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{s.name}</strong>
                 <span className="ps-badge">কাঞ্চনা</span>
               </div>
               <p className="ps-list-loc">📍 {s.area}</p>
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -152,15 +153,19 @@ export default function AreaPage() {
         </div>
         <div className="ps-list">
           {sadarList.map((s) => (
-            <a key={s.id} href={`/services/${s.id}`} className="ps-list-card">
+            <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{s.name}</strong>
                 <span className="ps-badge">সদর</span>
               </div>
               <p className="ps-list-loc">📍 {s.area}</p>
-            </a>
+            </Link>
           ))}
         </div>
+
+        <Link href="/institutes" className="ps-btn-primary ps-btn-block" style={{ marginTop: 16 }}>
+          🏫 সাতকানিয়ার সব শিক্ষা প্রতিষ্ঠান (EIIN-সহ)
+        </Link>
 
         <div className="ps-section-head" style={{ marginTop: 16 }}>
           <span className="ps-section-icon">📚</span>

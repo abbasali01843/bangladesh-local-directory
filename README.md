@@ -47,7 +47,10 @@ Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
 - [x] Phase 2 — Security basics (rate limit login/register, validation)
 - [x] Phase 3 — Core UX (detail call/map/wa, search fallback)
 - [x] Phase 4 — Engagement (notices, profile, about, SEO)
-- [ ] Phase 5 — Real DB + images + PWA polish (needs your Postgres)
+- [x] Sprint 1 — DB-mode hardening (P0 fixes: category seed, admin bootstrap, DB-first pages, search `?q`, claims/users admin UI, my submissions, ESLint 9, CI on PR)
+- [x] Sprint 2 — Production hardening + SEO/PWA (security headers, Upstash-ready rate limit, auth validation, sitemap/robots/JSON-LD/OG, PWA icons + service worker)
+- [x] Sprint 3 — Depth (EIIN directory, listing photos, reviews+moderation, next/link, error/404 pages, cron cleanup, A11y, vitest)
+- [ ] Phase 5 — Real DB live + scale (needs your Postgres; see below)
 
 ## Optional: Database
 
@@ -55,5 +58,31 @@ When ready, add Vercel Postgres or Neon and set `DATABASE_URL`, then:
 
 ```bash
 npx prisma db push
-npm run db:seed
+npm run db:seed   # seeds 21 categories + locations (+ admin if ADMIN_* set)
 ```
+
+### First admin (pick one)
+
+```bash
+# A. Seed-time (before db:seed):
+ADMIN_PHONE="01XXXXXXXXX" ADMIN_PASSWORD="change-me-123" npm run db:seed
+
+# B. Promote an existing registered user:
+npm run db:promote -- 01XXXXXXXXX
+```
+
+### Useful scripts
+
+| Script | কাজ |
+|---|---|
+| `npm run dev` | Dev সার্ভার |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint 9 (flat config) |
+| `npm run test` | Vitest ইউনিট টেস্ট |
+| `npm run db:push` / `db:seed` / `db:promote` | Schema push / seed / make admin |
+
+### Photos, reviews & cron (DB mode)
+
+- Listing photos need Vercel Blob: set `BLOB_READ_WRITE_TOKEN` (else upload API returns 503).
+- Reviews are PENDING by default; moderate in Admin → ⭐ রিভিউ ট্যাব.
+- Expired sessions are cleaned by `GET /api/cron/cleanup` (daily Vercel Cron, needs `CRON_SECRET`).

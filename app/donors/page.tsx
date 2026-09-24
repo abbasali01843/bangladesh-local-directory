@@ -2,6 +2,7 @@ import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import { donors, donorIntro, initialOf } from "@/data/community";
 
+import Link from "next/link";
 export default function DonorsPage() {
   return (
     <main className="ps-page">
@@ -27,9 +28,9 @@ export default function DonorsPage() {
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <a href="/contact" className="ps-btn-primary ps-btn-block">
+          <Link href="/contact" className="ps-btn-primary ps-btn-block">
             💝 ডোনার হতে চাইলে যোগাযোগ করুন
-          </a>
+          </Link>
         </div>
       </div>
 

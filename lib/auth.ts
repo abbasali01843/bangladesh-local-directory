@@ -1,6 +1,9 @@
-import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { hashPassword, verifyPassword } from "@/lib/password";
+
+export { hashPassword, verifyPassword };
 
 export type CurrentUser = { id: string; name: string; role: "USER" | "BUSINESS_OWNER" | "ADMIN" };
 
@@ -8,17 +11,6 @@ const COOKIE = "localhub_session";
 const DAYS = 30;
 
 function hashToken(token:string){ return createHash("sha256").update(token).digest("hex"); }
-export function hashPassword(password:string){
- const salt=randomBytes(16).toString("hex");
- const derived=scryptSync(password,salt,64).toString("hex");
- return salt+":"+derived;
-}
-export function verifyPassword(password:string, stored:string){
- const [salt,key]=stored.split(":");
- if(!salt||!key)return false;
- const derived=scryptSync(password,salt,64);
- return timingSafeEqual(derived,Buffer.from(key,"hex"));
-}
 export async function createSession(userId:string){
  const token=randomBytes(32).toString("hex");
  await prisma.session.create({data:{tokenHash:hashToken(token),userId,expiresAt:new Date(Date.now()+DAYS*86400000)}});

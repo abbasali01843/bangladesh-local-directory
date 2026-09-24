@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createSession, hashPassword } from "@/lib/auth";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
-import { isValidBdPhone } from "@/lib/validate";
+import { isValidBdPhone, isValidEmail, normalizeEmail } from "@/lib/validate";
 
 export async function POST(request: Request) {
   const ip = clientIp(request);
-  const rl = rateLimit(`register:${ip}`, 5, 60_000);
+  const rl = await rateLimit(`register:${ip}`, 5, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "RATE_LIMIT", message: "অনেকবার চেষ্টা করেছেন। একটু পর আবার চেষ্টা করুন।" },
@@ -16,19 +16,22 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const name = String(body?.name || "").trim();
+    const name = String(body?.name || "").trim().slice(0, 120);
     const password = String(body?.password || "");
-    const email = body?.email ? String(body.email).trim() : null;
+    const email = normalizeEmail(body?.email);
     const phone = body?.phone ? String(body.phone).trim() : null;
 
     if (!name || name.length < 2) {
       return NextResponse.json({ error: "VALIDATION", message: "নাম দিন" }, { status: 400 });
     }
-    if (password.length < 8) {
-      return NextResponse.json({ error: "VALIDATION", message: "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর" }, { status: 400 });
+    if (password.length < 8 || password.length > 128) {
+      return NextResponse.json({ error: "VALIDATION", message: "পাসওয়ার্ড ৮–১২৮ অক্ষর হতে হবে" }, { status: 400 });
     }
     if (!email && !phone) {
       return NextResponse.json({ error: "VALIDATION", message: "ইমেইল বা মোবাইল দিন" }, { status: 400 });
+    }
+    if (email && !isValidEmail(email)) {
+      return NextResponse.json({ error: "VALIDATION", message: "সঠিক ইমেইল দিন" }, { status: 400 });
     }
     if (phone && !isValidBdPhone(phone)) {
       return NextResponse.json({ error: "VALIDATION", message: "সঠিক মোবাইল নম্বর দিন" }, { status: 400 });

@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
+import Link from "next/link";
 type Me = { id: string; name: string; role: string } | null;
 
 export default function ProfilePage() {
   const [me, setMe] = useState<Me>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -24,7 +27,7 @@ export default function ProfilePage() {
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     setMe(null);
-    window.location.href = "/";
+    router.push("/");
   }
 
   return (
@@ -40,14 +43,14 @@ export default function ProfilePage() {
             <p style={{ textAlign: "center", color: "#6b7280", margin: "4px 0 16px" }}>
               রোল: {me.role}
             </p>
-            <a href="/owner" className="ps-btn-primary ps-btn-block">ওনার ড্যাশবোর্ড</a>
-            <a href="/add-listing" className="ps-btn-primary ps-btn-block" style={{ marginTop: 8 }}>
+            <Link href="/owner" className="ps-btn-primary ps-btn-block">ওনার ড্যাশবোর্ড</Link>
+            <Link href="/add-listing" className="ps-btn-primary ps-btn-block" style={{ marginTop: 8 }}>
               + তথ্য যোগ
-            </a>
+            </Link>
             {me.role === "ADMIN" && (
-              <a href="/admin" className="ps-btn-primary ps-btn-block" style={{ marginTop: 8 }}>
+              <Link href="/admin" className="ps-btn-primary ps-btn-block" style={{ marginTop: 8 }}>
                 অ্যাডমিন প্যানেল
-              </a>
+              </Link>
             )}
             <button type="button" className="ps-btn-ghost ps-btn-block" style={{ marginTop: 12 }} onClick={logout}>
               লগআউট
@@ -58,9 +61,9 @@ export default function ProfilePage() {
             <div className="ps-empty-icon">👤</div>
             <h2>লগইন করুন</h2>
             <p>প্রোফাইল ও লিস্টিং ম্যানেজ করতে অ্যাকাউন্ট প্রয়োজন।</p>
-            <a href="/login" className="ps-btn-primary">লগইন</a>
+            <Link href="/login" className="ps-btn-primary">লগইন</Link>
             <p className="ps-form-footer" style={{ marginTop: 12 }}>
-              নতুন? <a href="/register">রেজিস্টার</a>
+              নতুন? <Link href="/register">রেজিস্টার</Link>
             </p>
           </div>
         )}

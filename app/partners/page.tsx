@@ -2,6 +2,7 @@ import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import { partners, initialOf } from "@/data/community";
 
+import Link from "next/link";
 export default function PartnersPage() {
   return (
     <main className="ps-page">
@@ -31,9 +32,9 @@ export default function PartnersPage() {
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <a href="/contact" className="ps-btn-primary ps-btn-block">
+          <Link href="/contact" className="ps-btn-primary ps-btn-block">
             🤝 আপনিও সহযোদ্ধা হোন — যোগাযোগ করুন
-          </a>
+          </Link>
         </div>
       </div>
 

@@ -2,6 +2,7 @@ import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import { site, hasSocial, hasSupport } from "@/data/site";
 
+import Link from "next/link";
 export default function ContactPage() {
   return (
     <main className="ps-page">
@@ -82,9 +83,9 @@ export default function ContactPage() {
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <a href="/add-listing" className="ps-btn-primary ps-btn-block">
+          <Link href="/add-listing" className="ps-btn-primary ps-btn-block">
             ➕ নতুন তথ্য যোগ করতে চান?
-          </a>
+          </Link>
         </div>
       </div>
 

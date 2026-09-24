@@ -2,6 +2,7 @@ import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import { pilot } from "@/data/pilot";
 
+import Link from "next/link";
 export default function AboutPage() {
   return (
     <main className="ps-page">
@@ -39,16 +40,16 @@ export default function AboutPage() {
               <span className="ps-field-value">৬৪ জেলা</span>
             </div>
           </div>
-          <a href="/area" className="ps-btn-primary ps-btn-block">
+          <Link href="/area" className="ps-btn-primary ps-btn-block">
             আপনার এলাকা দেখুন
-          </a>
-          <a
+          </Link>
+          <Link
             href="/add-listing"
             className="ps-btn-primary ps-btn-block"
             style={{ marginTop: 8 }}
           >
             + তথ্য যোগ করুন
-          </a>
+          </Link>
         </div>
       </div>
       <BottomNav />
