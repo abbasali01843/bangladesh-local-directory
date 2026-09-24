@@ -1,0 +1,41 @@
+# One-time DB setup — GitHub Actions থেকে চালান (লোকাল টার্মিনাল লাগবে না)।
+#
+# ব্যবহার (শুধু প্রথমবার):
+#  1. Repo → Settings → Secrets and variables → Actions → New repository secret:
+#     - DATABASE_URL   (Vercel Storage → Postgres → connection string)
+#     - ADMIN_PHONE    (যেমন 01712345678)
+#     - ADMIN_PASSWORD (৮+ অক্ষর)
+#  2. Repo → Actions → "DB Setup" → Run workflow → YES লিখে Run
+#  3. সবুজ টিক আসা পর্যন্ত অপেক্ষা (৩–৬ মিনিট)
+name: DB Setup (one-time)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to run prisma db push + seed on DATABASE_URL'
+        required: true
+        default: "NO"
+
+jobs:
+  setup:
+    if: inputs.confirm == 'YES'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Create tables
+        run: npx prisma db push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: Seed categories + locations + admin
+        run: npm run db:seed
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ADMIN_PHONE: ${{ secrets.ADMIN_PHONE }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
