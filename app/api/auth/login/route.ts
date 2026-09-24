@@ -5,7 +5,7 @@ import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const ip = clientIp(request);
-  const rl = rateLimit(`login:${ip}`, 10, 60_000);
+  const rl = await rateLimit(`login:${ip}`, 10, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "RATE_LIMIT", message: "অনেকবার চেষ্টা করেছেন। একটু পর আবার চেষ্টা করুন।" },
@@ -15,9 +15,11 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const identifier = String(body?.identifier || "").trim();
+    const raw = String(body?.identifier || "").trim();
+    // ইমেইলে লগইন করলে lowercase-এ মিলবে (রেজিস্টারে normalize করা থাকে)
+    const identifier = raw.includes("@") ? raw.toLowerCase() : raw;
     const password = String(body?.password || "");
-    if (!identifier || !password) {
+    if (!identifier || !password || password.length > 128) {
       return NextResponse.json({ error: "VALIDATION", message: "ইমেইল/মোবাইল ও পাসওয়ার্ড দিন" }, { status: 400 });
     }
 

@@ -1,9 +1,34 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { subOf } from "@/data/categories";
 import { getListing, waNumber, mapsUrl } from "@/lib/listings";
+import { listingJsonLd } from "@/lib/seo";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import ClaimButton from "@/components/ClaimButton";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const s = await getListing(id);
+  if (!s) return { title: "তথ্য পাওয়া যায়নি" };
+  const loc = [s.area, s.union, s.upazila, s.district].filter(Boolean).join(", ");
+  const desc = s.description || `${s.categoryName} — ${loc}`;
+  return {
+    title: s.name,
+    description: desc.slice(0, 160),
+    alternates: { canonical: `/services/${s.id}` },
+    openGraph: {
+      title: `${s.name} — ${s.categoryName}`,
+      description: desc.slice(0, 160),
+      url: `/services/${s.id}`,
+      type: "article",
+    },
+  };
+}
 
 export default async function ServiceDetails({
   params,
@@ -19,6 +44,10 @@ export default async function ServiceDetails({
 
   return (
     <main className="ps-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listingJsonLd(s)).replace(/</g, "\\u003c") }}
+      />
       <TopBar
         title="বিস্তারিত"
         subtitle={s.union || s.upazila}

@@ -422,7 +422,7 @@ export const services: Service[] = [
     phone: "",
     verified: false,
     description: "পানির লাইন, বাথরুম ফিটিং। ডেমো তালিকা — আসল তথ্য যোগ করা চলছে।",
-    fields: { skill: "প্লাম্বিং", availability: "সিঁড়ে/সিডিউলে" },
+    fields: { skill: "প্লাম্বিং", availability: "ফোনে / শিডিউলে" },
   },
   {
     id: "dm-raj",
@@ -436,7 +436,7 @@ export const services: Service[] = [
     phone: "",
     verified: false,
     description: "বাড়ি নির্মাণ, ছাঁক-ওয়াল কাজ। ডেমো তালিকা।",
-    fields: { skill: "রাজমিস্ত্রি", availability: "ডেকে মিটেও হেয়" },
+    fields: { skill: "রাজমিস্ত্রি", availability: "ফোনে ডাকলে পাওয়া যায়" },
   },
   {
     id: "dm-cng",
@@ -463,7 +463,7 @@ export const services: Service[] = [
     area: "কাঞ্চনা বাজার",
     phone: "",
     verified: false,
-    description: "ওষুরের দোকান। ডেমো তালিকা।",
+    description: "ওষুধের দোকান। ডেমো তালিকা।",
     fields: { serviceType: "ফার্মেসি", openingHours: "সকাল ৮টা–রাত ১০টা" },
   },
   {

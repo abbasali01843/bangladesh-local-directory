@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import { categories, subOf } from "@/data/categories";
 import { getListings } from "@/lib/listings";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
 type Params = { category?: string; sub?: string; union?: string };
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Params>;
+}): Promise<Metadata> {
+  const p = await searchParams;
+  const category = p.category ? categories.find((c) => c.id === p.category) : undefined;
+  if (!category) return { title: "সকল সেবা" };
+  const sub = p.sub ? subOf(category.id, p.sub) : undefined;
+  const title = sub ? `${category.name} — ${sub.name}` : category.name;
+  return {
+    title,
+    description: `সাতকানিয়া ও কাঞ্চনার ${title} — ফোন নম্বরসহ স্থানীয় তথ্য।`,
+  };
+}
 
 function hrefWith(p: Params, patch: Partial<Params>) {
   const next = { ...p, ...patch };

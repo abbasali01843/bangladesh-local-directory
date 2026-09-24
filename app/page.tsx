@@ -4,6 +4,7 @@ import { notices } from "@/data/notices";
 import { pilot, satkaniaUnions } from "@/data/pilot";
 import { donors, initialOf } from "@/data/community";
 import { site, hasSocial } from "@/data/site";
+import { websiteJsonLd } from "@/lib/seo";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import HeroSlider, { type Slide } from "@/components/HeroSlider";
@@ -61,6 +62,10 @@ export default function Home() {
 
   return (
     <main className="ps-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
+      />
       <TopBar />
 
       <div className="ps-content">

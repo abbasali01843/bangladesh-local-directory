@@ -48,7 +48,8 @@ Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
 - [x] Phase 3 — Core UX (detail call/map/wa, search fallback)
 - [x] Phase 4 — Engagement (notices, profile, about, SEO)
 - [x] Sprint 1 — DB-mode hardening (P0 fixes: category seed, admin bootstrap, DB-first pages, search `?q`, claims/users admin UI, my submissions, ESLint 9, CI on PR)
-- [ ] Phase 5 — Real DB + images + PWA polish (needs your Postgres)
+- [x] Sprint 2 — Production hardening + SEO/PWA (security headers, Upstash-ready rate limit, auth validation, sitemap/robots/JSON-LD/OG, PWA icons + service worker)
+- [ ] Phase 5 — Real DB + listing photos + scale (needs your Postgres; see below)
 
 ## Optional: Database
 
