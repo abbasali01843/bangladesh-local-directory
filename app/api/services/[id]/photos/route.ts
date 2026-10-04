@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { put, del } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
+import { hasValidImageSignature } from "@/lib/upload-validation";
 
 const MAX_BYTES = 2 * 1024 * 1024; // 2MB
 const MAX_PHOTOS = 5;
@@ -34,6 +37,14 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  const uploadLimit = await rateLimit(`photo-upload:${user.id}`, 10, 60_000);
+  if (!uploadLimit.ok) {
+    return NextResponse.json({ error: "RATE_LIMIT", message: "এক মিনিটে সর্বোচ্চ ১০টি আপলোড করা যাবে।" }, { status: 429 });
+  }
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > MAX_BYTES + 64 * 1024) {
+    return NextResponse.json({ error: "PAYLOAD_TOO_LARGE", message: "ছবি 2MB-এর মধ্যে হতে হবে।" }, { status: 413 });
+  }
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
       { error: "UPLOAD_NOT_CONFIGURED", message: "ছবি আপলোড এখনো চালু হয়নি।" },
@@ -72,8 +83,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         { status: 400 }
       );
     }
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (!hasValidImageSignature(file.type, bytes)) {
+      return NextResponse.json(
+        { error: "VALIDATION", message: "ছবির ফাইলটি সঠিক নয়। আসল JPG/PNG/WebP ছবি দিন।" },
+        { status: 400 }
+      );
+    }
     const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
-    const blob = await put(`services/${id}/${Date.now()}.${ext}`, file, { access: "public" });
+    const blob = await put(`services/${id}/${randomUUID()}.${ext}`, file, { access: "public" });
     const data = await prisma.servicePhoto.create({
       data: { serviceId: id, url: blob.url, sortOrder: count },
     });
