@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { services } from "@/data/services";
 import { categories, subOf } from "@/data/categories";
 import { isValidBdPhone } from "@/lib/validate";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 function digitsOnly(s: string) {
   return s.replace(/\D/g, "").replace(/^880/, "").replace(/^0/, "");
@@ -88,6 +89,14 @@ export async function POST(request: Request) {
     );
   }
   const user = await getCurrentUser();
+  const limiterKey = user?.id ? `service-submit:user:${user.id}` : `service-submit:ip:${clientIp(request)}`;
+  const limit = await rateLimit(limiterKey, user ? 10 : 5, 10 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "RATE_LIMITED", message: "অনেকবার জমা দেওয়া হয়েছে। ১০ মিনিট পরে আবার চেষ্টা করুন।" },
+      { status: 429, headers: { "Retry-After": "600" } }
+    );
+  }
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;
@@ -125,15 +134,36 @@ export async function POST(request: Request) {
     const [catExists, distExists, upExists] = await Promise.all([
       prisma.category.findUnique({ where: { id: categoryId }, select: { id: true } }),
       prisma.district.findUnique({ where: { id: districtId }, select: { id: true } }),
-      prisma.upazila.findUnique({ where: { id: upazilaId }, select: { id: true } }),
+      prisma.upazila.findUnique({ where: { id: upazilaId }, select: { id: true, districtId: true } }),
     ]);
     if (!catExists)
       return NextResponse.json(
         { error: "VALIDATION_ERROR", message: "ক্যাটাগরি DB-তে নেই — আগে `npm run db:seed` চালান।" },
         { status: 400 }
       );
-    if (!distExists || !upExists)
-      return NextResponse.json({ error: "VALIDATION_ERROR", message: "জেলা/উপজেলা সঠিক নয়।" }, { status: 400 });
+    if (!distExists || !upExists || upExists.districtId !== districtId)
+      return NextResponse.json({ error: "VALIDATION_ERROR", message: "জেলা/উপজেলা সঠিক নয় বা একে অপরের সঙ্গে মেলে না।" }, { status: 400 });
+
+    if (body.unionId) {
+      const union = await prisma.union.findUnique({ where: { id: String(body.unionId) }, select: { id: true, upazilaId: true } });
+      if (!union || union.upazilaId !== upazilaId)
+        return NextResponse.json({ error: "VALIDATION_ERROR", message: "নির্বাচিত ইউনিয়ন এই উপজেলার অন্তর্ভুক্ত নয়।" }, { status: 400 });
+      if (body.areaId) {
+        const area = await prisma.area.findUnique({ where: { id: String(body.areaId) }, select: { id: true, unionId: true } });
+        if (!area || area.unionId !== union.id)
+          return NextResponse.json({ error: "VALIDATION_ERROR", message: "নির্বাচিত এলাকা এই ইউনিয়নের অন্তর্ভুক্ত নয়।" }, { status: 400 });
+      }
+    } else if (body.areaId) {
+      return NextResponse.json({ error: "VALIDATION_ERROR", message: "এলাকা দিতে হলে ইউনিয়ন নির্বাচন করুন।" }, { status: 400 });
+    }
+
+    const hasLatitude = body.latitude !== undefined && body.latitude !== null;
+    const hasLongitude = body.longitude !== undefined && body.longitude !== null;
+    if (hasLatitude !== hasLongitude ||
+        (hasLatitude && (typeof body.latitude !== "number" || !Number.isFinite(body.latitude) || body.latitude < -90 || body.latitude > 90)) ||
+        (hasLongitude && (typeof body.longitude !== "number" || !Number.isFinite(body.longitude) || body.longitude < -180 || body.longitude > 180))) {
+      return NextResponse.json({ error: "VALIDATION_ERROR", message: "সঠিক latitude ও longitude দিন।" }, { status: 400 });
+    }
 
     const base =
       name
@@ -159,8 +189,8 @@ export async function POST(request: Request) {
         email,
         address: str(body.address, 300),
         description: str(body.description, 2000),
-        latitude: typeof body.latitude === "number" ? body.latitude : null,
-        longitude: typeof body.longitude === "number" ? body.longitude : null,
+        latitude: hasLatitude ? body.latitude as number : null,
+        longitude: hasLongitude ? body.longitude as number : null,
         createdById: user?.id || null,
         status: "PENDING",
       },
