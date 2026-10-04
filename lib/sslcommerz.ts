@@ -97,7 +97,8 @@ export async function settleVerifiedPayment(valId: string, expectedTransactionId
     return { settled: false, reason: "NOT_VALID" as const };
   }
   const order = await prisma.paymentOrder.findUnique({ where: { transactionId: validation.tran_id } });
-  if (!order) return { settled: false, reason: "ORDER_NOT_FOUND" as const };\n  if (expectedTransactionId && order.transactionId !== expectedTransactionId) return { settled: false, reason: "TRANSACTION_MISMATCH" as const };
+  if (!order) return { settled: false, reason: "ORDER_NOT_FOUND" as const };
+  if (expectedTransactionId && order.transactionId !== expectedTransactionId) return { settled: false, reason: "TRANSACTION_MISMATCH" as const };
   const amount = Number(validation.amount);
   const currency = validation.currency_type || validation.currency;
   if (!Number.isFinite(amount) || Math.abs(amount - Number(order.amount)) > 0.009 || currency !== "BDT") {
