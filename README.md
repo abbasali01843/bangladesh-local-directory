@@ -50,7 +50,8 @@ Next.js 16 · React 19 · Prisma 6 · PostgreSQL · Vercel
 - [x] Sprint 1 — DB-mode hardening (P0 fixes: category seed, admin bootstrap, DB-first pages, search `?q`, claims/users admin UI, my submissions, ESLint 9, CI on PR)
 - [x] Sprint 2 — Production hardening + SEO/PWA (security headers, Upstash-ready rate limit, auth validation, sitemap/robots/JSON-LD/OG, PWA icons + service worker)
 - [x] Sprint 3 — Depth (EIIN directory, listing photos, reviews+moderation, next/link, error/404 pages, cron cleanup, A11y, vitest)
-- [ ] Phase 5 — Real DB live + scale (needs your Postgres; see below)
+- [x] Sprint 3 — Monetization foundation (SSLCommerz checkout + server-side validation/IPN, promotion activation/expiry, owner checkout, admin payment view)
+- [ ] Phase 5 — Real DB live + scale (needs your Postgres and merchant credentials; see below)
 
 ## Optional: Database
 
@@ -86,3 +87,13 @@ npm run db:promote -- 01XXXXXXXXX
 - Listing photos need Vercel Blob: set `BLOB_READ_WRITE_TOKEN` (else upload API returns 503).
 - Reviews are PENDING by default; moderate in Admin → ⭐ রিভিউ ট্যাব.
 - Expired sessions are cleaned by `GET /api/cron/cleanup` (daily Vercel Cron, needs `CRON_SECRET`).
+
+### Paid business promotion (Sprint 3)
+
+- Packages: Basic ৳299, Featured ৳799, Premium ৳1,499 — each lasts 30 days.
+- Owners can start checkout from approved listings in the owner dashboard. The listing must belong to the signed-in user, and the profile must contain a phone and email.
+- Payment activation happens only after the server validates the transaction with SSLCOMMERZ; IPN is supported and repeated notifications are idempotent. Risk-flagged transactions are held for manual review.
+- A newer paid promotion replaces the previous active promotion. Expiry is handled by the existing daily /api/cron/cleanup job.
+- Admins can view orders at /admin/payments.
+
+To enable payments, apply the updated Prisma schema with npx prisma db push, then configure SSLCOMMERZ_STORE_ID, SSLCOMMERZ_STORE_PASSWORD, SSLCOMMERZ_SANDBOX=true, and NEXT_PUBLIC_SITE_URL in Vercel. Configure the matching IPN URL in the SSLCOMMERZ merchant panel. Switch sandbox off only after production merchant approval and live credentials are installed.

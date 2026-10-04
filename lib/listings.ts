@@ -26,6 +26,7 @@ export type ListingView = {
   photos: { id: string; url: string }[];
   rating: { avg: number; count: number };
   reviews: { id: string; rating: number; body: string | null; userName: string; createdAt: string }[];
+  promotionPlan: string | null;
 };
 
 function staticToView(
@@ -58,6 +59,7 @@ function staticToView(
     photos: [],
     rating: { avg: 0, count: 0 },
     reviews: [],
+    promotionPlan: null,
   };
 }
 
@@ -81,6 +83,7 @@ type DbService = {
   fields: { value: string; field: { key: string; label: string } }[];
   photos: { id: string; url: string }[];
   reviews: { id: string; rating: number; body: string | null; createdAt: Date; user: { name: string } }[];
+  promotions: { plan: string; endsAt: Date }[];
 };
 
 function dbToView(s: DbService): ListingView {
@@ -109,6 +112,7 @@ function dbToView(s: DbService): ListingView {
     source: "db",
     photos: s.photos.map((p) => ({ id: p.id, url: p.url })),
     rating: { avg: Math.round(avg * 10) / 10, count: ratings.length },
+    promotionPlan: s.promotions[0]?.plan || null,
     reviews: s.reviews.map((r) => ({
       id: r.id,
       rating: r.rating,
@@ -127,6 +131,7 @@ const dbInclude = {
   area: true,
   fields: { include: { field: true } },
   photos: { orderBy: { sortOrder: "asc" } },
+  promotions: { where: { status: "ACTIVE", endsAt: { gt: new Date() } }, orderBy: { startsAt: "desc" }, take: 1, select: { plan: true, endsAt: true } },
   reviews: {
     where: { status: "APPROVED" },
     include: { user: { select: { name: true } } },
@@ -158,7 +163,8 @@ export async function getListings(opts: {
     if (opts.category) legacy = legacy.filter((s) => s.category === opts.category);
     if (opts.sub) legacy = legacy.filter((s) => s.subcategory === opts.sub);
     if (opts.union) legacy = legacy.filter((s) => s.union === opts.union);
-    const dbList = rows.map(dbToView);
+    const rank = (plan: string | null) => plan === "PREMIUM" ? 3 : plan === "FEATURED" ? 2 : plan === "BASIC" ? 1 : 0;
+    const dbList = rows.map(dbToView).sort((a, b) => rank(b.promotionPlan) - rank(a.promotionPlan));
     const identity = (s: ListingView) =>
       [s.name, s.category, s.district, s.upazila].map((v) => v.trim().toLocaleLowerCase()).join("|");
     const seen = new Set(dbList.map(identity));

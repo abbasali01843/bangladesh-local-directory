@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 

@@ -31,6 +31,23 @@ enum ModerationStatus {
   APPROVED
   REJECTED
 }
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REVIEW
+}
+enum PromotionPlan {
+  BASIC
+  FEATURED
+  PREMIUM
+}
+enum PromotionStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
 
 model User {
   id String @id @default(cuid())
@@ -48,6 +65,7 @@ model User {
   reviews Review[]
   reports Report[]
   favorites Favorite[]
+  paymentOrders PaymentOrder[]
 }
 model District {
   id String @id @default(cuid())
@@ -140,6 +158,8 @@ model Service {
   reviews Review[]
   reports Report[]
   favorites Favorite[]
+  paymentOrders PaymentOrder[]
+  promotions Promotion[]
   @@index([districtId, upazilaId, categoryId, status])
 }
 model ServiceFieldValue {
@@ -209,4 +229,42 @@ model Session {
   createdAt DateTime @default(now())
   user User @relation(fields:[userId], references:[id], onDelete:Cascade)
   @@index([userId])
+}
+
+
+model PaymentOrder {
+  id String @id @default(cuid())
+  userId String
+  serviceId String
+  plan PromotionPlan
+  amount Decimal @db.Decimal(10, 2)
+  currency String @default("BDT")
+  transactionId String @unique
+  gatewaySessionKey String?
+  validationId String?
+  status PaymentStatus @default(PENDING)
+  riskLevel Int?
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  promotion Promotion?
+  @@index([userId, createdAt])
+  @@index([serviceId, status])
+}
+
+model Promotion {
+  id String @id @default(cuid())
+  orderId String @unique
+  serviceId String
+  plan PromotionPlan
+  status PromotionStatus @default(ACTIVE)
+  startsAt DateTime @default(now())
+  endsAt DateTime
+  createdAt DateTime @default(now())
+  order PaymentOrder @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  @@index([serviceId, status, endsAt])
+  @@index([status, endsAt])
 }

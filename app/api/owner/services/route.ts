@@ -9,12 +9,12 @@ export async function GET() {
     const [mine, claimed, claims] = await Promise.all([
       prisma.service.findMany({
         where: { createdById: user.id },
-        include: { category: true, district: true, upazila: true },
+        include: { category: true, district: true, upazila: true, promotions: { where: { status: "ACTIVE", endsAt: { gt: new Date() } }, select: { plan: true, endsAt: true, status: true } } },
         orderBy: { updatedAt: "desc" },
       }),
       prisma.service.findMany({
         where: { claimedById: user.id },
-        include: { category: true, district: true, upazila: true },
+        include: { category: true, district: true, upazila: true, promotions: { where: { status: "ACTIVE", endsAt: { gt: new Date() } }, select: { plan: true, endsAt: true, status: true } } },
         orderBy: { updatedAt: "desc" },
       }),
       prisma.claim.findMany({
