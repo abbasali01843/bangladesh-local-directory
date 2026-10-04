@@ -22,7 +22,7 @@ export type ListingView = {
   fields: { label: string; value: string }[];
   latitude: number | null;
   longitude: number | null;
-  source: "db" | "static";
+  source: "db" | "static" | "mixed";
   photos: { id: string; url: string }[];
   rating: { avg: number; count: number };
   reviews: { id: string; rating: number; body: string | null; userName: string; createdAt: string }[];
@@ -135,7 +135,7 @@ const dbInclude = {
   },
 } as const;
 
-/** তালিকা — DB আগে, না থাকলে static। */
+/** তালিকা — DB + legacy static; duplicate হলে DB record অগ্রাধিকার পায়। */
 export async function getListings(opts: {
   category?: string;
   sub?: string;
@@ -154,7 +154,17 @@ export async function getListings(opts: {
       orderBy: { createdAt: "desc" },
       take: opts.take || 200,
     });
-    return { list: rows.map(dbToView), source: "db" };
+    let legacy = staticServices;
+    if (opts.category) legacy = legacy.filter((s) => s.category === opts.category);
+    if (opts.sub) legacy = legacy.filter((s) => s.subcategory === opts.sub);
+    if (opts.union) legacy = legacy.filter((s) => s.union === opts.union);
+    const dbList = rows.map(dbToView);
+    const identity = (s: ListingView) =>
+      [s.name, s.category, s.district, s.upazila].map((v) => v.trim().toLocaleLowerCase()).join("|");
+    const seen = new Set(dbList.map(identity));
+    const staticList = legacy.map(staticToView).filter((s) => !seen.has(identity(s)));
+    const list = [...dbList, ...staticList].slice(0, opts.take || 200);
+    return { list, source: dbList.length && staticList.length ? "mixed" : "db" };
   } catch {
     let list = staticServices;
     if (opts.category) list = list.filter((s) => s.category === opts.category);
