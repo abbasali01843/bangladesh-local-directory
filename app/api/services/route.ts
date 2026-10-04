@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { services } from "@/data/services";
 import { categories, subOf } from "@/data/categories";
 import { isValidBdPhone } from "@/lib/validate";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 function digitsOnly(s: string) {
   return s.replace(/\D/g, "").replace(/^880/, "").replace(/^0/, "");
@@ -19,64 +20,87 @@ export async function GET(request: Request) {
   const subcategory = searchParams.get("subcategory") || undefined;
 
   try {
-    const data = await prisma.service.findMany({
-      where: {
-        status: "APPROVED",
-        ...(districtId ? { districtId } : {}),
-        ...(upazilaId ? { upazilaId } : {}),
-        ...(categoryId ? { categoryId } : {}),
-        ...(subcategory ? { subcategory } : {}),
-        ...(q
-          ? {
-              OR: [
-                { name: { contains: q, mode: "insensitive" } },
-                { description: { contains: q, mode: "insensitive" } },
-                { phone: { contains: q } },
-                { address: { contains: q, mode: "insensitive" } },
-              ],
-            }
-          : {}),
-      },
-      include: { category: true, district: true, upazila: true, union: true, area: true },
-      orderBy: { createdAt: "desc" },
-      take: 50,
+    const [data, district, upazila] = await Promise.all([
+      prisma.service.findMany({
+        where: {
+          status: "APPROVED",
+          ...(districtId ? { districtId } : {}),
+          ...(upazilaId ? { upazilaId } : {}),
+          ...(categoryId ? { categoryId } : {}),
+          ...(subcategory ? { subcategory } : {}),
+          ...(q ? { OR: [
+            { name: { contains: q, mode: "insensitive" } },
+            { description: { contains: q, mode: "insensitive" } },
+            { phone: { contains: q } },
+            { address: { contains: q, mode: "insensitive" } },
+          ] } : {}),
+        },
+        include: { category: true, district: true, upazila: true, union: true, area: true },
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      }),
+      districtId ? prisma.district.findUnique({ where: { id: districtId }, select: { name: true } }) : Promise.resolve(null),
+      upazilaId ? prisma.upazila.findUnique({ where: { id: upazilaId }, select: { name: true, districtId: true } }) : Promise.resolve(null),
+    ]);
+
+    const qd = digitsOnly(q);
+    let legacy = services;
+    if (categoryId) legacy = legacy.filter((item) => item.category === categoryId);
+    if (subcategory) legacy = legacy.filter((item) => item.subcategory === subcategory);
+    if (districtId) legacy = district ? legacy.filter((item) => item.district === district.name) : [];
+    if (upazilaId) legacy = upazila ? legacy.filter((item) => item.upazila === upazila.name && (!districtId || upazila.districtId === districtId)) : [];
+    if (q) legacy = legacy.filter((item) =>
+      item.name.toLowerCase().includes(q) ||
+      item.description.toLowerCase().includes(q) ||
+      item.union.toLowerCase().includes(q) ||
+      item.area.toLowerCase().includes(q) ||
+      (item.phone && (item.phone.includes(q) || (qd.length >= 3 && digitsOnly(item.phone).includes(qd))))
+    );
+
+    const staticData = legacy.map((item) => {
+      const cat = categories.find((category) => category.id === item.category);
+      return {
+        id: item.id, name: item.name, description: item.description, phone: item.phone,
+        subcategory: item.subcategory || null,
+        verificationStatus: item.verified ? "VERIFIED" : "UNVERIFIED",
+        category: { id: item.category, name: cat?.name || item.category },
+        district: { name: item.district }, upazila: { name: item.upazila },
+        union: { name: item.union }, area: { name: item.area },
+      };
     });
-    return NextResponse.json({ data, source: "db" });
+    const identity = (item: { name: string; category: { id: string }; district: { name: string }; upazila: { name: string } }) =>
+      [item.name, item.category.id, item.district.name, item.upazila.name].map((value) => value.trim().toLocaleLowerCase()).join("|");
+    const seen = new Set(data.map(identity));
+    const merged = [...data, ...staticData.filter((item) => !seen.has(identity(item)))].slice(0, 50);
+    return NextResponse.json({ data: merged, source: data.length && staticData.length ? "mixed" : staticData.length ? "static" : "db" });
   } catch {
     let list = services;
-    if (categoryId) list = list.filter((s) => s.category === categoryId);
-    if (subcategory) list = list.filter((s) => s.subcategory === subcategory);
+    if (categoryId) list = list.filter((item) => item.category === categoryId);
+    if (subcategory) list = list.filter((item) => item.subcategory === subcategory);
     if (q) {
       const qd = digitsOnly(q);
-      list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(q) ||
-          s.description.toLowerCase().includes(q) ||
-          s.union.includes(q) ||
-          s.area.includes(q) ||
-          (s.phone && (s.phone.includes(q) || (qd.length >= 3 && digitsOnly(s.phone).includes(qd))))
+      list = list.filter((item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q) ||
+        item.union.includes(q) ||
+        item.area.includes(q) ||
+        (item.phone && (item.phone.includes(q) || (qd.length >= 3 && digitsOnly(item.phone).includes(qd))))
       );
     }
-    const data = list.map((s) => {
-      const cat = categories.find((c) => c.id === s.category);
+    const data = list.map((item) => {
+      const cat = categories.find((category) => category.id === item.category);
       return {
-        id: s.id,
-        name: s.name,
-        description: s.description,
-        phone: s.phone,
-        subcategory: s.subcategory || null,
-        verificationStatus: s.verified ? "VERIFIED" : "UNVERIFIED",
-        category: { id: s.category, name: cat?.name || s.category },
-        district: { name: s.district },
-        upazila: { name: s.upazila },
-        union: { name: s.union },
-        area: { name: s.area },
+        id: item.id, name: item.name, description: item.description, phone: item.phone,
+        subcategory: item.subcategory || null,
+        verificationStatus: item.verified ? "VERIFIED" : "UNVERIFIED",
+        category: { id: item.category, name: cat?.name || item.category },
+        district: { name: item.district }, upazila: { name: item.upazila },
+        union: { name: item.union }, area: { name: item.area },
       };
     });
     return NextResponse.json({ data, source: "static" });
   }
 }
-
 export async function POST(request: Request) {
   if (!process.env.DATABASE_URL) {
     return NextResponse.json(
@@ -88,6 +112,14 @@ export async function POST(request: Request) {
     );
   }
   const user = await getCurrentUser();
+  const limiterKey = user?.id ? `service-submit:user:${user.id}` : `service-submit:ip:${clientIp(request)}`;
+  const limit = await rateLimit(limiterKey, user ? 10 : 5, 10 * 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "RATE_LIMITED", message: "অনেকবার জমা দেওয়া হয়েছে। ১০ মিনিট পরে আবার চেষ্টা করুন।" },
+      { status: 429, headers: { "Retry-After": "600" } }
+    );
+  }
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;
@@ -125,15 +157,36 @@ export async function POST(request: Request) {
     const [catExists, distExists, upExists] = await Promise.all([
       prisma.category.findUnique({ where: { id: categoryId }, select: { id: true } }),
       prisma.district.findUnique({ where: { id: districtId }, select: { id: true } }),
-      prisma.upazila.findUnique({ where: { id: upazilaId }, select: { id: true } }),
+      prisma.upazila.findUnique({ where: { id: upazilaId }, select: { id: true, districtId: true } }),
     ]);
     if (!catExists)
       return NextResponse.json(
         { error: "VALIDATION_ERROR", message: "ক্যাটাগরি DB-তে নেই — আগে `npm run db:seed` চালান।" },
         { status: 400 }
       );
-    if (!distExists || !upExists)
-      return NextResponse.json({ error: "VALIDATION_ERROR", message: "জেলা/উপজেলা সঠিক নয়।" }, { status: 400 });
+    if (!distExists || !upExists || upExists.districtId !== districtId)
+      return NextResponse.json({ error: "VALIDATION_ERROR", message: "জেলা/উপজেলা সঠিক নয় বা একে অপরের সঙ্গে মেলে না।" }, { status: 400 });
+
+    if (body.unionId) {
+      const union = await prisma.union.findUnique({ where: { id: String(body.unionId) }, select: { id: true, upazilaId: true } });
+      if (!union || union.upazilaId !== upazilaId)
+        return NextResponse.json({ error: "VALIDATION_ERROR", message: "নির্বাচিত ইউনিয়ন এই উপজেলার অন্তর্ভুক্ত নয়।" }, { status: 400 });
+      if (body.areaId) {
+        const area = await prisma.area.findUnique({ where: { id: String(body.areaId) }, select: { id: true, unionId: true } });
+        if (!area || area.unionId !== union.id)
+          return NextResponse.json({ error: "VALIDATION_ERROR", message: "নির্বাচিত এলাকা এই ইউনিয়নের অন্তর্ভুক্ত নয়।" }, { status: 400 });
+      }
+    } else if (body.areaId) {
+      return NextResponse.json({ error: "VALIDATION_ERROR", message: "এলাকা দিতে হলে ইউনিয়ন নির্বাচন করুন।" }, { status: 400 });
+    }
+
+    const hasLatitude = body.latitude !== undefined && body.latitude !== null;
+    const hasLongitude = body.longitude !== undefined && body.longitude !== null;
+    if (hasLatitude !== hasLongitude ||
+        (hasLatitude && (typeof body.latitude !== "number" || !Number.isFinite(body.latitude) || body.latitude < -90 || body.latitude > 90)) ||
+        (hasLongitude && (typeof body.longitude !== "number" || !Number.isFinite(body.longitude) || body.longitude < -180 || body.longitude > 180))) {
+      return NextResponse.json({ error: "VALIDATION_ERROR", message: "সঠিক latitude ও longitude দিন।" }, { status: 400 });
+    }
 
     const base =
       name
@@ -159,8 +212,8 @@ export async function POST(request: Request) {
         email,
         address: str(body.address, 300),
         description: str(body.description, 2000),
-        latitude: typeof body.latitude === "number" ? body.latitude : null,
-        longitude: typeof body.longitude === "number" ? body.longitude : null,
+        latitude: hasLatitude ? body.latitude as number : null,
+        longitude: hasLongitude ? body.longitude as number : null,
         createdById: user?.id || null,
         status: "PENDING",
       },
