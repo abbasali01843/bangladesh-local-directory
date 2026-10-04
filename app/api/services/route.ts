@@ -35,7 +35,7 @@ export async function GET(request: Request) {
             { address: { contains: q, mode: "insensitive" } },
           ] } : {}),
         },
-        include: { category: true, district: true, upazila: true, union: true, area: true },
+        include: { category: true, district: true, upazila: true, union: true, area: true, promotions: { where: { status: "ACTIVE", endsAt: { gt: new Date() } }, orderBy: { startsAt: "desc" }, take: 1, select: { plan: true } } },
         orderBy: { createdAt: "desc" },
         take: 50,
       }),
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
       return {
         id: item.id, name: item.name, description: item.description, phone: item.phone,
         subcategory: item.subcategory || null,
-        verificationStatus: item.verified ? "VERIFIED" : "UNVERIFIED",
+        verificationStatus: item.verified ? "VERIFIED" : "UNVERIFIED", promotionPlan: null, promotionPlan: null,
         category: { id: item.category, name: cat?.name || item.category },
         district: { name: item.district }, upazila: { name: item.upazila },
         union: { name: item.union }, area: { name: item.area },
@@ -71,7 +71,7 @@ export async function GET(request: Request) {
     const identity = (item: { name: string; category: { id: string }; district: { name: string }; upazila: { name: string } }) =>
       [item.name, item.category.id, item.district.name, item.upazila.name].map((value) => value.trim().toLocaleLowerCase()).join("|");
     const seen = new Set(data.map(identity));
-    const merged = [...data, ...staticData.filter((item) => !seen.has(identity(item)))].slice(0, 50);
+    const ranked = data.map((item) => ({ ...item, promotionPlan: item.promotions[0]?.plan || null }));\n    const rank = (plan: string | null) => plan === "PREMIUM" ? 3 : plan === "FEATURED" ? 2 : plan === "BASIC" ? 1 : 0;\n    const merged = [...ranked, ...staticData.filter((item) => !seen.has(identity(item)))].sort((a, b) => rank(b.promotionPlan) - rank(a.promotionPlan)).slice(0, 50);
     return NextResponse.json({ data: merged, source: data.length && staticData.length ? "mixed" : staticData.length ? "static" : "db" });
   } catch {
     let list = services;
