@@ -120,6 +120,7 @@ export async function settleVerifiedPayment(valId: string, expectedTransactionId
       data: { status: "PAID", paidAt: now, validationId: valId, riskLevel },
     });
     if (claimed.count !== 1) return;
+    await tx.promotion.updateMany({ where: { serviceId: order.serviceId, status: "ACTIVE" }, data: { status: "REVOKED" } });
     await tx.promotion.create({
       data: { orderId: order.id, serviceId: order.serviceId, plan: order.plan, startsAt: now, endsAt },
     });
