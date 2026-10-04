@@ -72,7 +72,7 @@ export async function GET(request: Request) {
       [item.name, item.category.id, item.district.name, item.upazila.name].map((value) => value.trim().toLocaleLowerCase()).join("|");
     const seen = new Set(data.map(identity));
     const merged = [...data, ...staticData.filter((item) => !seen.has(identity(item)))].slice(0, 50);
-    return NextResponse.json({ data: merged, source: data.length && staticData.length ? "mixed" : "db" });
+    return NextResponse.json({ data: merged, source: data.length && staticData.length ? "mixed" : staticData.length ? "static" : "db" });
   } catch {
     let list = services;
     if (categoryId) list = list.filter((item) => item.category === categoryId);
