@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   const limit = await rateLimit(`payment-checkout:${user.id}`, 5, 10 * 60 * 1000);
-  if (!limit.success) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
+  if (!limit.ok) return NextResponse.json({ error: "RATE_LIMITED" }, { status: 429 });
   try {
     const body = await request.json() as { serviceId?: string; plan?: string };
     const plan = body.plan as PromotionPlanKey;
