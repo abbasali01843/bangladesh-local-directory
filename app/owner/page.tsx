@@ -28,6 +28,47 @@ const statusBn: Record<string, string> = {
   SUSPENDED: "⛔ স্থগিত",
 };
 
+
+function PromotionActions({ serviceId, activePlan }: { serviceId: string; activePlan?: string }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  async function checkout(plan: "BASIC" | "FEATURED" | "PREMIUM") {
+    setBusy(true);
+    setError("");
+    try {
+      const response = await fetch("/api/payments/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ serviceId, plan }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.checkoutUrl) {
+        setError(data.error === "PROFILE_CONTACT_REQUIRED" ? "প্রোফাইলে ইমেইল ও ফোন যোগ করুন" : "চেকআউট শুরু করা যায়নি");
+        return;
+      }
+      window.location.assign(data.checkoutUrl);
+    } catch {
+      setError("সার্ভারে সংযোগ করা যাচ্ছে না");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="ps-list-card" style={{ marginTop: 6 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
+        {activePlan ? `চলমান প্রচার: ${activePlan}` : "ব্যবসার প্রচার প্যাকেজ"}
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+        <button type="button" className="ps-btn-ghost" disabled={busy} onClick={() => checkout("BASIC")}>বেসিক ৳২৯৯</button>
+        <button type="button" className="ps-btn-ghost" disabled={busy} onClick={() => checkout("FEATURED")}>ফিচার্ড ৳৭৯৯</button>
+        <button type="button" className="ps-btn-primary" disabled={busy} onClick={() => checkout("PREMIUM")}>প্রিমিয়াম ৳১,৪৯৯</button>
+      </div>
+      {busy && <p className="ps-list-desc">চেকআউট তৈরি হচ্ছে...</p>}
+      {error && <p className="ps-msg-err" style={{ marginTop: 8 }}>{error}</p>}
+    </div>
+  );
+}
+
 function ListingCard({ x }: { x: S }) {
   const approved = x.status === "APPROVED";
   const inner = (
@@ -43,9 +84,12 @@ function ListingCard({ x }: { x: S }) {
     </>
   );
   return approved ? (
-    <Link href={`/services/${x.id}`} className="ps-list-card">
-      {inner}
-    </Link>
+    <div>
+      <Link href={`/services/${x.id}`} className="ps-list-card">
+        {inner}
+      </Link>
+      <PromotionActions serviceId={x.id} activePlan={x.promotions?.[0]?.plan} />
+    </div>
   ) : (
     <div className="ps-list-card">{inner}</div>
   );
