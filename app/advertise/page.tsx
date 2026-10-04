@@ -35,7 +35,7 @@ const packages = [
 ];
 
 export default function AdvertisePage() {
-  const phone = site.supportPhone.replace(/\\D/g, "");
+  const phone = site.supportPhone.replace(/\D/g, "");
   const message = encodeURIComponent("আমি আমার ব্যবসার জন্য প্রিয় সাতকানিয়ার বিজ্ঞাপন/ফিচার্ড লিস্টিং নিতে চাই। প্যাকেজ ও পেমেন্টের বিস্তারিত জানাবেন?");
   const contactHref = phone ? `https://wa.me/${phone}?text=${message}` : "/contact";
 
