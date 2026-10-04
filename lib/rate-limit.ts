@@ -53,9 +53,17 @@ export async function rateLimit(
 }
 
 export function clientIp(request: Request): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown"
-  );
+  // Vercel sets x-real-ip at the edge; prefer it over client-supplied forwarding headers.
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
+  // When only a proxy chain is available, use the last hop (the nearest proxy),
+  // not the first value which may have been supplied by the client.
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const hops = forwarded.split(",");
+    const lastHop = hops[hops.length - 1]?.trim();
+    if (lastHop) return lastHop;
+  }
+  return "unknown";
 }
