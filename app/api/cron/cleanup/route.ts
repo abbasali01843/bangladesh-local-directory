@@ -12,8 +12,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   }
   try {
-    const r = await prisma.session.deleteMany({ where: { expiresAt: { lt: new Date() } } });
-    return NextResponse.json({ ok: true, deleted: r.count });
+    const now = new Date();
+    const [sessions, promotions] = await prisma.$transaction([
+      prisma.session.deleteMany({ where: { expiresAt: { lt: now } } }),
+      prisma.promotion.updateMany({ where: { status: "ACTIVE", endsAt: { lte: now } }, data: { status: "EXPIRED" } }),
+    ]);
+    return NextResponse.json({ ok: true, deletedSessions: sessions.count, expiredPromotions: promotions.count });
   } catch {
     return NextResponse.json({ error: "DATABASE_NOT_CONFIGURED" }, { status: 503 });
   }
