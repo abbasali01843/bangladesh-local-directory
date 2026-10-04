@@ -13,6 +13,7 @@ type S = {
   category?: { name: string };
   district?: { name: string };
   upazila?: { name: string };
+  promotions?: { plan: string; endsAt: string; status: string }[];
 };
 
 type C = {
