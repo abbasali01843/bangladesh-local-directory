@@ -36,6 +36,16 @@ export default function Home() {
       tone: "teal",
     },
     {
+      id: "advertise",
+      eyebrow: "ব্যবসায়ীদের জন্য",
+      title: "আপনার ব্যবসার প্রচার করুন",
+      desc: "স্থানীয় গ্রাহকের কাছে পৌঁছান — পেইড ফিচার্ড লিস্টিং",
+      href: "/advertise",
+      cta: "প্যাকেজ দেখুন",
+      emoji: "📣",
+      tone: "amber",
+    },
+    {
       id: "kanchana",
       eyebrow: "বিশেষ বিভাগ",
       title: `${pilot.union.name} ইউনিয়নের তথ্য আলাদা করে সাজানো`,
