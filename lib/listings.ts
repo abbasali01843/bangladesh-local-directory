@@ -141,7 +141,7 @@ export async function getListings(opts: {
   sub?: string;
   union?: string;
   take?: number;
-}): Promise<{ list: ListingView[]; source: "db" | "static" }> {
+}): Promise<{ list: ListingView[]; source: "db" | "static" | "mixed" }> {
   try {
     const rows = await prisma.service.findMany({
       where: {
