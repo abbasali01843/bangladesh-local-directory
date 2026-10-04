@@ -84,7 +84,6 @@ type DbService = {
   photos: { id: string; url: string }[];
   reviews: { id: string; rating: number; body: string | null; createdAt: Date; user: { name: string } }[];
   promotions: { plan: string; endsAt: Date }[];
-  promotions: { plan: string; endsAt: Date }[];
 };
 
 function dbToView(s: DbService): ListingView {
@@ -113,7 +112,6 @@ function dbToView(s: DbService): ListingView {
     source: "db",
     photos: s.photos.map((p) => ({ id: p.id, url: p.url })),
     rating: { avg: Math.round(avg * 10) / 10, count: ratings.length },
-    promotionPlan: s.promotions[0]?.plan || null,
     promotionPlan: s.promotions[0]?.plan || null,
     reviews: s.reviews.map((r) => ({
       id: r.id,
