@@ -164,7 +164,7 @@ export async function getListings(opts: {
     const seen = new Set(dbList.map(identity));
     const staticList = legacy.map(staticToView).filter((s) => !seen.has(identity(s)));
     const list = [...dbList, ...staticList].slice(0, opts.take || 200);
-    return { list, source: dbList.length && staticList.length ? "mixed" : "db" };
+    return { list, source: dbList.length && staticList.length ? "mixed" : staticList.length ? "static" : "db" };
   } catch {
     let list = staticServices;
     if (opts.category) list = list.filter((s) => s.category === opts.category);
