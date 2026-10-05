@@ -8,7 +8,8 @@ type Listing = {
   id: string;
   name: string;
   status: string;
-  description?: string;\n  moderationNote?: string;
+  description?: string;
+  moderationNote?: string;
   phone?: string;
   category?: { name: string };
   district?: { name: string };
@@ -260,7 +261,8 @@ export default function Admin() {
                     {x.category?.name ? ` · ${x.category.name}` : ""}
                   </p>
                   {x.phone && <p className="ps-list-phone">📞 {x.phone}</p>}
-                  {x.description && <p className="ps-list-desc">{x.description}</p>}\n                  {x.moderationNote && <p className="ps-list-desc">⚠️ কারণ: {x.moderationNote}</p>}
+                  {x.description && <p className="ps-list-desc">{x.description}</p>}
+                  {x.moderationNote && <p className="ps-list-desc">⚠️ কারণ: {x.moderationNote}</p>}
                   <div className="ps-admin-actions">
                     <button
                       type="button"
