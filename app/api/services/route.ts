@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
-import { services } from "@/data/services";
 import { categories, subOf } from "@/data/categories";
 import { isValidBdPhone } from "@/lib/validate";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
@@ -20,7 +19,7 @@ export async function GET(request: Request) {
   const subcategory = searchParams.get("subcategory") || undefined;
 
   try {
-    const [data, district, upazila] = await Promise.all([
+    const [data] = await Promise.all([
       prisma.service.findMany({
         where: {
           status: "APPROVED",
@@ -39,66 +38,11 @@ export async function GET(request: Request) {
         orderBy: { createdAt: "desc" },
         take: 50,
       }),
-      districtId ? prisma.district.findUnique({ where: { id: districtId }, select: { name: true } }) : Promise.resolve(null),
-      upazilaId ? prisma.upazila.findUnique({ where: { id: upazilaId }, select: { name: true, districtId: true } }) : Promise.resolve(null),
     ]);
 
-    const qd = digitsOnly(q);
-    let legacy = services;
-    if (categoryId) legacy = legacy.filter((item) => item.category === categoryId);
-    if (subcategory) legacy = legacy.filter((item) => item.subcategory === subcategory);
-    if (districtId) legacy = district ? legacy.filter((item) => item.district === district.name) : [];
-    if (upazilaId) legacy = upazila ? legacy.filter((item) => item.upazila === upazila.name && (!districtId || upazila.districtId === districtId)) : [];
-    if (q) legacy = legacy.filter((item) =>
-      item.name.toLowerCase().includes(q) ||
-      item.description.toLowerCase().includes(q) ||
-      item.union.toLowerCase().includes(q) ||
-      item.area.toLowerCase().includes(q) ||
-      (item.phone && (item.phone.includes(q) || (qd.length >= 3 && digitsOnly(item.phone).includes(qd))))
-    );
-
-    const staticData = legacy.map((item) => {
-      const cat = categories.find((category) => category.id === item.category);
-      return {
-        id: item.id, name: item.name, description: item.description, phone: item.phone,
-        subcategory: item.subcategory || null,
-        verificationStatus: item.verified ? "VERIFIED" : "UNVERIFIED",
-        category: { id: item.category, name: cat?.name || item.category },
-        district: { name: item.district }, upazila: { name: item.upazila },
-        union: { name: item.union }, area: { name: item.area },
-      };
-    });
-    const identity = (item: { name: string; category: { id: string }; district: { name: string }; upazila: { name: string } }) =>
-      [item.name, item.category.id, item.district.name, item.upazila.name].map((value) => value.trim().toLocaleLowerCase()).join("|");
-    const seen = new Set(data.map(identity));
-    const merged = [...data, ...staticData.filter((item) => !seen.has(identity(item)))].slice(0, 50);
-    return NextResponse.json({ data: merged, source: data.length && staticData.length ? "mixed" : staticData.length ? "static" : "db" });
+    return NextResponse.json({ data, source: "db" });
   } catch {
-    let list = services;
-    if (categoryId) list = list.filter((item) => item.category === categoryId);
-    if (subcategory) list = list.filter((item) => item.subcategory === subcategory);
-    if (q) {
-      const qd = digitsOnly(q);
-      list = list.filter((item) =>
-        item.name.toLowerCase().includes(q) ||
-        item.description.toLowerCase().includes(q) ||
-        item.union.includes(q) ||
-        item.area.includes(q) ||
-        (item.phone && (item.phone.includes(q) || (qd.length >= 3 && digitsOnly(item.phone).includes(qd))))
-      );
-    }
-    const data = list.map((item) => {
-      const cat = categories.find((category) => category.id === item.category);
-      return {
-        id: item.id, name: item.name, description: item.description, phone: item.phone,
-        subcategory: item.subcategory || null,
-        verificationStatus: item.verified ? "VERIFIED" : "UNVERIFIED",
-        category: { id: item.category, name: cat?.name || item.category },
-        district: { name: item.district }, upazila: { name: item.upazila },
-        union: { name: item.union }, area: { name: item.area },
-      };
-    });
-    return NextResponse.json({ data, source: "static" });
+    return NextResponse.json({ error: "DATABASE_UNAVAILABLE", message: "ডাটাবেসে সংযোগ করা যাচ্ছে না।" }, { status: 503 });
   }
 }
 export async function POST(request: Request) {
