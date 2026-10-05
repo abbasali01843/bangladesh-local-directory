@@ -98,9 +98,22 @@ model Area {
   name String
   slug String
   unionId String
+  type LocalityType @default(AREA)
+  parentAreaId String?
+  source String?
+  sourceUrl String?
+  verificationLevel VerificationLevel @default(UNVERIFIED)
+  verifiedAt DateTime?
+  latitude Float?
+  longitude Float?
   union Union @relation(fields:[unionId], references:[id], onDelete:Cascade)
+  parentArea Area? @relation("AreaHierarchy", fields:[parentAreaId], references:[id], onDelete:SetNull)
+  children Area[] @relation("AreaHierarchy")
   services Service[]
   @@unique([unionId, slug])
+  @@index([unionId, type])
+  @@index([parentAreaId])
+  @@index([verificationLevel])
 }
 model Category {
   id String @id @default(cuid())
