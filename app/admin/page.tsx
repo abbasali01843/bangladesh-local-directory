@@ -125,7 +125,7 @@ export default function Admin() {
     if (r.ok) {
       setItems((x) => x.filter((i) => i.id !== id));
       setOk(true);
-      setMessage(action === "approve" ? "লিস্টিং অনুমোদিত হয়েছে" : action === "restore" ? "লিস্টিং আবার প্রকাশিত হয়েছে" : "লিস্টিং বাতিল হয়েছে");
+      setMessage(action === "approve" ? "লিস্টিং অনুমোদিত হয়েছে" : "লিস্টিং বাতিল হয়েছে");
     } else {
       setOk(false);
       setMessage(j.message || j.error || "কাজটি সম্পন্ন হয়নি");
