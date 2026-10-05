@@ -10,13 +10,12 @@ export const metadata: Metadata = {
     template: "%s | প্রিয় সাতকানিয়া",
   },
   description:
-    "সাতকানিয়া ও কাঞ্চনা ইউনিয়নসহ স্থানীয় ডাক্তার, ব্যবসা, মিস্ত্রি, পরিবহন, জরুরি সেবা — সব প্রয়োজনীয় তথ্য এক জায়গায়। Bangladesh Local Directory-র অংশ।",
+    "সাতকানিয়ার স্থানীয় ডাক্তার, ব্যবসা, মিস্ত্রি, পরিবহন, জরুরি সেবা — সব প্রয়োজনীয় তথ্য এক জায়গায়। Bangladesh Local Directory-র অংশ।",
   keywords: [
     "প্রিয় সাতকানিয়া",
     "Priyo Satkania",
     "Bangladesh Local Directory",
     "সাতকানিয়া",
-    "কাঞ্চনা",
     "চট্টগ্রাম",
     "স্থানীয় তথ্য",
     "ডাক্তার",
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     title: "প্রিয় সাতকানিয়া",
-    description: "সাতকানিয়া · কাঞ্চনা থেকে শুরু — সারা বাংলাদেশের স্থানীয় তথ্য",
+    description: "সাতকানিয়ার স্থানীয় তথ্য ও সেবা — সারা বাংলাদেশের স্থানীয় ডিরেক্টরির অংশ।",
     url: "/",
     siteName: site.name,
     locale: "bn_BD",
@@ -42,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "প্রিয় সাতকানিয়া",
-    description: "সাতকানিয়া · কাঞ্চনা থেকে শুরু — সারা বাংলাদেশের স্থানীয় তথ্য",
+    description: "সাতকানিয়ার স্থানীয় তথ্য ও সেবা — সারা বাংলাদেশের স্থানীয় ডিরেক্টরির অংশ।",
     images: ["/og.png"],
   },
   icons: {
