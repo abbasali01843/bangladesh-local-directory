@@ -102,7 +102,7 @@ export async function GET(request: Request) {
   }
 }
 export async function POST(request: Request) {
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.POSTGRES_PRISMA_URL && !process.env.DATABASE_URL) {
     return NextResponse.json(
       {
         error: "DATABASE_NOT_CONFIGURED",
