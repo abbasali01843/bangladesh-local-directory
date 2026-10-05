@@ -8,7 +8,7 @@ type Listing = {
   id: string;
   name: string;
   status: string;
-  description?: string;
+  description?: string;\n  moderationNote?: string;
   phone?: string;
   category?: { name: string };
   district?: { name: string };
@@ -125,7 +125,7 @@ export default function Admin() {
     if (r.ok) {
       setItems((x) => x.filter((i) => i.id !== id));
       setOk(true);
-      setMessage(action === "approve" ? "লিস্টিং অনুমোদিত হয়েছে" : "লিস্টিং বাতিল হয়েছে");
+      setMessage(action === "approve" ? "লিস্টিং অনুমোদিত হয়েছে" : action === "restore" ? "লিস্টিং আবার প্রকাশিত হয়েছে" : "লিস্টিং বাতিল হয়েছে");
     } else {
       setOk(false);
       setMessage(j.message || j.error || "কাজটি সম্পন্ন হয়নি");
@@ -253,14 +253,14 @@ export default function Admin() {
                 <div key={x.id} className="ps-list-card">
                   <div className="ps-list-top">
                     <strong>{x.name}</strong>
-                    <span className="ps-badge">PENDING</span>
+                    <span className="ps-badge">{x.status}</span>
                   </div>
                   <p className="ps-list-loc">
                     📍 {x.upazila?.name || "—"}, {x.district?.name || "—"}
                     {x.category?.name ? ` · ${x.category.name}` : ""}
                   </p>
                   {x.phone && <p className="ps-list-phone">📞 {x.phone}</p>}
-                  {x.description && <p className="ps-list-desc">{x.description}</p>}
+                  {x.description && <p className="ps-list-desc">{x.description}</p>}\n                  {x.moderationNote && <p className="ps-list-desc">⚠️ কারণ: {x.moderationNote}</p>}
                   <div className="ps-admin-actions">
                     <button
                       type="button"
