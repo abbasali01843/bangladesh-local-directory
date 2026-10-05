@@ -25,7 +25,7 @@ export default async function DoctorsPage() {
           <p className="ps-directory-sub">বিশেষজ্ঞ, চেম্বার ও অ্যাপয়েন্টমেন্ট তথ্য এক জায়গায়।</p>
           <div className="ps-stat-grid"><div className="ps-stat"><b>{doctors.length}</b><span>ডাক্তার</span></div><div className="ps-stat"><b>{doctors.reduce((n,d)=>n+d.chambers.length,0)}</b><span>চেম্বার</span></div><div className="ps-stat"><b>২৪/৭</b><span>তথ্য খোঁজা</span></div></div>
         </div>
-        <p className="ps-section-note">চেম্বারের সময় পরিবর্তিত হতে পারে—যাওয়ার আগে ফোনে নিশ্চিত করুন।</p>
+        <div className="ps-info-strip"><span>ℹ️</span><span>চেম্বারের সময় পরিবর্তিত হতে পারে—যাওয়ার আগে ফোনে নিশ্চিত করুন।</span></div>
         {doctors.length === 0 ? (
           <div className="ps-empty"><div className="ps-empty-icon">👨‍⚕️</div><h2>এখনো ডাক্তার তথ্য নেই</h2><p>যাচাই করা তথ্য যোগ হলে এখানে দেখা যাবে।</p></div>
         ) : (
