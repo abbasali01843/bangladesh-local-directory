@@ -21,7 +21,6 @@ export default function AddListing() {
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [staticMode, setStaticMode] = useState(false);
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const hasSubs = (selectedCategory?.subcategories?.length || 0) > 0;
@@ -31,7 +30,6 @@ export default function AddListing() {
       .then((r) => r.json())
       .then((j) => {
         setLoc(j.data || []);
-        setStaticMode(j.source === "static");
       })
       .catch(() => setLoc([]));
   }, []);
@@ -47,15 +45,6 @@ export default function AddListing() {
     setMessage("");
     setOk(false);
     const f = new FormData(e.currentTarget);
-
-    if (staticMode) {
-      setOk(false);
-      setMessage(
-        "ডাটাবেস এখনো সেট নেই। দেখার জন্য ডেমো তথ্য কাজ করছে; নতুন তথ্য সেভ করতে পরে DB লাগবে। এখন শুধু ফর্ম চেক করতে পারেন।"
-      );
-      setBusy(false);
-      return;
-    }
 
     if (!upazila) {
       setOk(false);
@@ -100,12 +89,6 @@ export default function AddListing() {
       <TopBar title="তথ্য যোগ করুন" subtitle="নতুন তালিকা" backHref="/" />
 
       <div className="ps-content">
-        {staticMode && (
-          <div className="ps-msg-err" style={{ marginBottom: 12 }}>
-            ডেমো মোড: ডাটাবেস ছাড়াই সাইট চলছে। তথ্য দেখা যাবে, নতুন সেভ পরে DB সেট করলে চালু হবে।
-          </div>
-        )}
-
         <form onSubmit={submit} className="ps-form">
           <label className="ps-label">
             নাম *
