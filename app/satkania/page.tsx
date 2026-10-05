@@ -32,11 +32,11 @@ export default async function SatkaniaPage() {
     <main className="ps-page">
       <TopBar title="সাতকানিয়া উপজেলা" subtitle="চট্টগ্রাম" backHref="/" />
       <div className="ps-content">
-        <div className="ps-detail" style={{ marginBottom: 16 }}>
-          <div className="ps-detail-icon">📍</div>
-          <h1 className="ps-detail-title">সাতকানিয়া উপজেলা</h1>
-          <p className="ps-list-loc">১টি পৌরসভা · ১৭টি ইউনিয়ন · ৯টি পৌর ওয়ার্ড</p>
-          <p className="ps-detail-desc">২০২২ জনশুমারি অনুযায়ী ৭৩টি মৌজা ও ৮৪টি গ্রাম।</p>
+        <div className="ps-directory-hero">
+          <div className="ps-directory-kicker">LOCAL DIRECTORY · CHATTOGRAM</div>
+          <h1 className="ps-directory-title">সাতকানিয়া উপজেলা</h1>
+          <p className="ps-directory-sub">স্থানীয় মানুষ, প্রতিষ্ঠান ও সেবার তথ্য এক জায়গায়।</p>
+          <div className="ps-stat-grid"><div className="ps-stat"><b>১</b><span>পৌরসভা</span></div><div className="ps-stat"><b>১৭</b><span>ইউনিয়ন</span></div><div className="ps-stat"><b>৮৪</b><span>গ্রাম</span></div></div>
         </div>
 
         <div className="ps-section-head"><span className="ps-section-icon">🏛️</span><h2>পৌরসভা</h2></div>
@@ -61,8 +61,9 @@ export default async function SatkaniaPage() {
         </div>
 
         <div className="ps-section-head">
-          <span className="ps-section-icon">👨‍⚕️</span><h2>ডাক্তার ({doctorCount})</h2><Link href="/doctors" className="ps-section-more">দেখুন ›</Link>
+          <span className="ps-section-icon">👨‍⚕️</span><h2>ডাক্তার ({doctorCount})</h2><Link href="/doctors" className="ps-section-more">সব ডাক্তার ›</Link>
         </div>
+        <p className="ps-section-note">বিশেষজ্ঞ, চেম্বার ও অ্যাপয়েন্টমেন্ট তথ্য</p>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🏥</span>
