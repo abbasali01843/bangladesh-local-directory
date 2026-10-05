@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 
 /** অনুমোদিত রিভিউ (পাবলিক)। */
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -22,6 +23,13 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  const rl = await rateLimit(`review:${user.id}`, 10, 10 * 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "RATE_LIMITED", message: "অনেক রিভিউ জমা হয়েছে। ১০ মিনিট পরে আবার চেষ্টা করুন।" },
+      { status: 429, headers: { "Retry-After": "600" } }
+    );
+  }
   const { id } = await params;
   let body: { rating?: unknown; body?: unknown };
   try {
