@@ -119,8 +119,12 @@ export default function Admin() {
   }
 
   async function act(id: string, action: "approve" | "reject") {
+    const reason = action === "reject" ? window.prompt("বাতিল করার কারণ (ঐচ্ছিক):", "") : null;
+    if (action === "reject" && reason === null) return;
     const r = await fetch("/api/admin/services/" + id + "/" + action, {
       method: "POST",
+      headers: action === "reject" ? { "Content-Type": "application/json" } : undefined,
+      body: action === "reject" ? JSON.stringify({ reason }) : undefined,
     });
     const j = await r.json();
     if (r.ok) {
