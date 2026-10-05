@@ -1,10 +1,11 @@
 import { categories } from "@/data/categories";
-import { countByCategory } from "@/data/services";
+import { getCategoryCounts } from "@/lib/listings";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 
 import Link from "next/link";
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const categoryCounts = await getCategoryCounts();
   return (
     <main className="ps-page">
       <TopBar title="ক্যাটাগরি" subtitle={`${categories.length}টি বিভাগ`} backHref="/" />
@@ -17,7 +18,7 @@ export default function CategoriesPage() {
 
         <div className="ps-cat-grid">
           {categories.map((c) => {
-            const n = countByCategory(c.id);
+            const n = categoryCounts[c.id] ?? 0;
             return (
               <Link key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
                 <div className="ps-cat-icon-wrap">
