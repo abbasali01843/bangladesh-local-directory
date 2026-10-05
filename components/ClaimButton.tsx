@@ -20,7 +20,13 @@ export default function ClaimButton({ id }: { id: string }) {
       } else if (j.error === "DATABASE_NOT_CONFIGURED") {
         setMsg("ডেমো মোডে দাবি জমা হয় না — DB চালু হলে চেষ্টা করুন।");
       } else if (j.error === "NOT_FOUND") {
-        setMsg("এই ডেমো তালিকার দাবি এখন করা যাবে না।");
+        setMsg("এই listing পাওয়া যায়নি।");
+      } else if (j.error === "NOT_CLAIMABLE") {
+        setMsg(j.message || "শুধু প্রকাশিত listing দাবি করা যাবে।");
+      } else if (j.error === "ALREADY_OWNER") {
+        setMsg("এই listing আপনার account থেকেই তৈরি করা হয়েছে।");
+      } else if (j.error === "ALREADY_CLAIMED") {
+        setMsg("এই listing ইতিমধ্যে অন্য account-এর নামে claimed হয়েছে।");
       } else {
         setMsg("দাবি জমা দেওয়া যায়নি, পরে চেষ্টা করুন।");
       }
