@@ -5,13 +5,15 @@ import { pilot, satkaniaUnions } from "@/data/pilot";
 import { donors, initialOf } from "@/data/community";
 import { site, hasSocial } from "@/data/site";
 import { websiteJsonLd } from "@/lib/seo";
+import { prisma } from "@/lib/prisma";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
 import HeroSlider, { type Slide } from "@/components/HeroSlider";
 import NoticeTicker from "@/components/NoticeTicker";
 
 import Link from "next/link";
-export default function Home() {
+export default async function Home() {
+  const ruralUnions = await prisma.union.findMany({ where: { upazilaId: "u_15_74", id: { not: "un_15_74_4621" } }, orderBy: { name: "asc" } });
   const kanchana = servicesInKanchana().slice(0, 6);
   const emergencyPins = getHomeEmergencyServices();
 
@@ -130,10 +132,10 @@ export default function Home() {
           <span className="ps-roadmap-arrow" aria-hidden>
             →
           </span>
-          <div className="ps-roadmap-step soon">
-            <span className="ps-roadmap-dot">২</span>
+          <div className="ps-roadmap-step active">
+            <span className="ps-roadmap-dot">✓</span>
             <span className="ps-roadmap-name">সাতকানিয়া</span>
-            <span className="ps-roadmap-status">শীঘ্রই</span>
+            <span className="ps-roadmap-status">✓ সক্রিয় বিভাগ</span>
           </div>
           <span className="ps-roadmap-arrow" aria-hidden>
             →
@@ -148,23 +150,17 @@ export default function Home() {
         {/* ===== ইউনিয়ন সমূহ — priyosherpur-এর উপজেলা সেকশনের মতো ===== */}
         <div className="ps-section-head">
           <span className="ps-section-icon">🏘️</span>
-          <h2>{pilot.upazila.name} উপজেলার ইউনিয়ন সমূহ</h2>
+          <h2>{pilot.upazila.name} উপজেলার ইউনিয়ন সমূহ ({ruralUnions.length})</h2>
         </div>
         <div className="ps-union-grid">
-          {satkaniaUnions.map((u) => {
-            const hot = u.id === pilot.union.id;
+          {ruralUnions.map((u) => {
+            const hot = u.name === pilot.union.name;
             return (
-              <Link
-                key={u.id}
-                href={hot ? "/satkania" : `/search?q=${encodeURIComponent(u.name)}`}
-                className={`ps-union-card${hot ? " hot" : " soon"}`}
-              >
+              <Link key={u.id} href={"/union/" + encodeURIComponent(u.slug)} className={"ps-union-card" + (hot ? " hot" : "")}>
                 <span className="ps-union-pin">📍</span>
                 <span className="ps-union-body">
                   <span className="ps-union-name">{u.name}</span>
-                  <span className="ps-union-count">
-                    {hot ? "✓ সক্রিয় বিভাগ" : "শীঘ্রই আসছে"}
-                  </span>
+                  <span className="ps-union-count">✓ বিস্তারিত প্রোফাইল</span>
                 </span>
                 <span className="ps-promo-arrow">›</span>
               </Link>
