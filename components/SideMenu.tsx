@@ -17,7 +17,7 @@ const mainLinks = [
   { href: "/search", label: "খুঁজুন", icon: "🔍" },
   { href: "/notices", label: "বিজ্ঞপ্তি", icon: "📢" },
   { href: "/add-listing", label: "তথ্য যোগ করুন", icon: "➕" },
-  { href: "/area", label: "আপনার এলাকা", icon: "📍" },
+  { href: "/satkania", label: "আপনার এলাকা", icon: "📍" },
 ];
 
 const platformLinks = [
