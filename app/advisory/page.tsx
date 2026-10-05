@@ -30,7 +30,7 @@ export default function AdvisoryPage() {
         </div>
 
         <p className="ps-muted-note">
-          ⚙️ তালিকাটি ডেমো — আসল উপদেষ্টা পরিষদের নাম data/community.ts ফাইলে যোগ করুন।
+          পরিষদের তথ্য হালনাগাদ হলে এই তালিকায় প্রকাশ করা হবে।
         </p>
       </div>
 
