@@ -1,8 +1,9 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 type Props = { active?: "home" | "categories" | "add" | "search" | "account" };
 
-const Icon = ({ children }: { children: React.ReactNode }) => (
+const Icon = ({ children }: { children: ReactNode }) => (
   <span className="ps-nav-icon" aria-hidden="true">{children}</span>
 );
 
