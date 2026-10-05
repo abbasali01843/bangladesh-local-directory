@@ -1,5 +1,6 @@
 import { categories } from "@/data/categories";
-import { countByCategory, servicesInKanchana, getHomeEmergencyServices } from "@/data/services";
+import { servicesInKanchana, getHomeEmergencyServices } from "@/data/services";
+import { getCategoryCounts } from "@/lib/listings";
 import { notices } from "@/data/notices";
 import { pilot } from "@/data/pilot";
 import { donors, initialOf } from "@/data/community";
@@ -15,6 +16,7 @@ import Link from "next/link";
 export default async function Home() {
   const ruralUnions = await prisma.union.findMany({ where: { upazilaId: "u_15_74", id: { not: "un_15_74_4621" } }, orderBy: { name: "asc" } });
   const kanchana = servicesInKanchana().slice(0, 6);
+  const categoryCounts = await getCategoryCounts();
   const emergencyPins = getHomeEmergencyServices();
 
   const slides: Slide[] = [
@@ -176,7 +178,7 @@ export default async function Home() {
         </div>
         <div className="ps-cat-grid">
           {categories.map((c) => {
-            const n = countByCategory(c.id);
+            const n = categoryCounts[c.id] ?? 0;
             return (
               <Link key={c.id} href={`/services?category=${c.id}`} className="ps-cat-card">
                 <div className="ps-cat-icon-wrap">
