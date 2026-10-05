@@ -7,9 +7,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!requireAdmin(user)) return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
   const { id } = await params;
   try {
-    const data = await prisma.service.update({ where: { id }, data: { status: "REJECTED", moderationNote } });
+    const body = await request.json().catch(() => ({}));
+    const moderationNote = typeof body?.reason === "string" ? body.reason.trim().slice(0, 1000) : null;
+    const data = await prisma.service.update({
+      where: { id },
+      data: { status: "REJECTED", moderationNote },
+    });
     return NextResponse.json({ data });
-  } catch {
-    return NextResponse.json({ error: "DATABASE_NOT_CONFIGURED" }, { status: 503 });
+  } catch (error: any) {
+    if (error?.code === "P2025") return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+    return NextResponse.json({ error: "SERVER_ERROR" }, { status: 500 });
   }
 }
