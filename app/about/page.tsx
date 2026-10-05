@@ -1,6 +1,5 @@
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
-import { pilot } from "@/data/pilot";
 
 import Link from "next/link";
 export default function AboutPage() {
@@ -14,9 +13,9 @@ export default function AboutPage() {
           <p className="ps-detail-desc">
             সাতকানিয়ার মানুষের জন্য একটি স্বাধীন লোকাল ডিরেক্টরি প্ল্যাটফর্ম —
             এখানে স্থানীয় ব্যবসা, স্বাস্থ্যসেবা, শিক্ষা প্রতিষ্ঠান, মিস্ত্রি ও
-            জরুরি সেবার তথ্য সাজিয়ে দেওয়া হয়। শুরু হয়েছে{" "}
-            <strong>{pilot.label}</strong> থেকে — ধাপে ধাপে সারা বাংলাদেশে বিস্তার হবে।
-            এটি <strong>Bangladesh Local Directory</strong> প্রকল্পের অংশ।
+            জরুরি সেবার তথ্য সাজিয়ে দেওয়া হয়। সাতকানিয়া থেকে শুরু করে ধাপে
+            ধাপে সারা বাংলাদেশে বিস্তার হবে। এটি <strong>Bangladesh Local Directory</strong>
+            প্রকল্পের অংশ।
           </p>
           <p className="ps-list-loc" style={{ marginTop: 8 }}>
             ⚠️ এটি কোনো সরকারি প্রতিষ্ঠানের অ্যাপ নয় এবং সরকারি সেবা প্রদান করে না;
@@ -24,16 +23,16 @@ export default function AboutPage() {
           </p>
           <div className="ps-detail-fields">
             <div className="ps-field-row">
-              <span className="ps-field-label">পাইলট জেলা</span>
-              <span className="ps-field-value">{pilot.district.name}</span>
+              <span className="ps-field-label">বর্তমান কভারেজ</span>
+              <span className="ps-field-value">সাতকানিয়া</span>
             </div>
             <div className="ps-field-row">
-              <span className="ps-field-label">উপজেলা</span>
-              <span className="ps-field-value">{pilot.upazila.name}</span>
+              <span className="ps-field-label">জেলা</span>
+              <span className="ps-field-value">চট্টগ্রাম</span>
             </div>
             <div className="ps-field-row">
-              <span className="ps-field-label">ইউনিয়ন</span>
-              <span className="ps-field-value">{pilot.union.name}</span>
+              <span className="ps-field-label">ইউনিয়ন</span>
+              <span className="ps-field-value">১৭টি</span>
             </div>
             <div className="ps-field-row">
               <span className="ps-field-label">লক্ষ্য</span>
