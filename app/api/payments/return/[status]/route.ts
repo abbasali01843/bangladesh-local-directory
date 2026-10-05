@@ -8,8 +8,9 @@ export async function POST(request: Request, context: Context) {
   const form = await request.formData();
   const valId = String(form.get("val_id") || "");
   const transactionId = String(form.get("tran_id") || "");
+  const sessionKey = String(form.get("sessionkey") || "") || undefined;
   if (status === "success" && valId) {
-    try { await settleVerifiedPayment(valId, transactionId || undefined); } catch { /* IPN retries can complete settlement */ }
+    try { await settleVerifiedPayment(valId, transactionId || undefined, sessionKey); } catch { /* IPN retries can complete settlement */ }
   }
   const origin = process.env.NEXT_PUBLIC_SITE_URL || "https://bangladesh-local-directory.vercel.app";
   const target = status === "success" ? "success" : status === "cancel" ? "cancelled" : "failed";

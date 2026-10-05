@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 export const PROMOTION_PLANS = {
   BASIC: { amount: 299, days: 30, label: "বেসিক" },
   FEATURED: { amount: 799, days: 30, label: "ফিচার্ড" },
-  PREMIUM: { amount: 1499, days: 30, label: "প্রিমিয়াম" },
+  PREMIUM: { amount: 1499, days: 30, label: "প্রিমিয়াম" },
 } as const;
 
 export type PromotionPlanKey = keyof typeof PROMOTION_PLANS;
@@ -83,6 +83,7 @@ export async function validateGatewayPayment(valId: string) {
     store_passwd: config.storePassword,
     format: "json",
   }).toString();
+  // NOTE: never log `url` — it contains the store password (SSLCommerz requires GET query auth).
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) throw new Error("PAYMENT_VALIDATION_UNAVAILABLE");
   return await response.json() as {
@@ -91,7 +92,20 @@ export async function validateGatewayPayment(valId: string) {
   };
 }
 
-export async function settleVerifiedPayment(valId: string, expectedTransactionId?: string) {
+/** প্রচার সক্রিয় করা — পেমেন্ট PAID হওয়ার পর settlement ও admin resolve দুটোই এটি ব্যবহার করে। */
+async function activatePromotion(order: { id: string; serviceId: string; plan: PromotionPlanKey }, now: Date) {
+  const plan = PROMOTION_PLANS[order.plan];
+  const endsAt = new Date(now.getTime() + plan.days * 86400000);
+  await prisma.promotion.updateMany({
+    where: { serviceId: order.serviceId, status: "ACTIVE" },
+    data: { status: "REVOKED" },
+  });
+  await prisma.promotion.create({
+    data: { orderId: order.id, serviceId: order.serviceId, plan: order.plan, startsAt: now, endsAt },
+  });
+}
+
+export async function settleVerifiedPayment(valId: string, expectedTransactionId?: string, sessionKey?: string) {
   const validation = await validateGatewayPayment(valId);
   if (validation.status !== "VALID" || !validation.tran_id || validation.val_id !== valId) {
     return { settled: false, reason: "NOT_VALID" as const };
@@ -99,6 +113,10 @@ export async function settleVerifiedPayment(valId: string, expectedTransactionId
   const order = await prisma.paymentOrder.findUnique({ where: { transactionId: validation.tran_id } });
   if (!order) return { settled: false, reason: "ORDER_NOT_FOUND" as const };
   if (expectedTransactionId && order.transactionId !== expectedTransactionId) return { settled: false, reason: "TRANSACTION_MISMATCH" as const };
+  // IPN/return-এ পাঠানো sessionkey আমাদের তৈরি checkout session-এর সঙ্গে মিলতে হবে।
+  if (sessionKey && order.gatewaySessionKey && sessionKey !== order.gatewaySessionKey) {
+    return { settled: false, reason: "SESSION_MISMATCH" as const };
+  }
   const amount = Number(validation.amount);
   const currency = validation.currency_type || validation.currency;
   if (!Number.isFinite(amount) || Math.abs(amount - Number(order.amount)) > 0.009 || currency !== "BDT") {
@@ -106,26 +124,53 @@ export async function settleVerifiedPayment(valId: string, expectedTransactionId
   }
   const riskLevel = Number(validation.risk_level || 0);
   if (riskLevel === 1) {
+    // শুধু PENDING অর্ডার REVIEW-তে যায় — REVIEW অর্ডার স্বয়ংক্রিয়ভাবে PAID হবে না;
+    // অ্যাডমিন approve/reject করতে হবে (POST /api/admin/payments/[id]/resolve)।
     await prisma.paymentOrder.updateMany({
       where: { id: order.id, paidAt: null, status: "PENDING" },
       data: { status: "REVIEW", validationId: valId, riskLevel },
     });
     return { settled: false, reason: "RISK_REVIEW" as const };
   }
-  const plan = PROMOTION_PLANS[order.plan];
   const now = new Date();
-  const endsAt = new Date(now.getTime() + plan.days * 86400000);
   await prisma.$transaction(async (tx) => {
+    // শুধু PENDING থেকে claim — REVIEW অর্ডার এখানে settle হয় না (risk-hold bypass রোধ)।
     const claimed = await tx.paymentOrder.updateMany({
-      where: { id: order.id, paidAt: null, status: { in: ["PENDING", "REVIEW"] } },
+      where: { id: order.id, paidAt: null, status: "PENDING" },
       data: { status: "PAID", paidAt: now, validationId: valId, riskLevel },
     });
     if (claimed.count !== 1) return;
     await tx.promotion.updateMany({ where: { serviceId: order.serviceId, status: "ACTIVE" }, data: { status: "REVOKED" } });
     await tx.promotion.create({
-      data: { orderId: order.id, serviceId: order.serviceId, plan: order.plan, startsAt: now, endsAt },
+      data: { orderId: order.id, serviceId: order.serviceId, plan: order.plan, startsAt: now, endsAt: new Date(now.getTime() + PROMOTION_PLANS[order.plan].days * 86400000) },
     });
   });
   const updated = await prisma.paymentOrder.findUnique({ where: { id: order.id }, select: { status: true } });
   return { settled: updated?.status === "PAID", reason: updated?.status === "PAID" ? "PAID" as const : "ALREADY_PROCESSED" as const };
+}
+
+/** অ্যাডমিন REVIEW অর্ডার resolve — approve হলে প্রচার সক্রিয়, reject হলে CANCELLED (refund ম্যানুয়ালি)। */
+export async function resolveReviewedOrder(orderId: string, action: "approve" | "reject") {
+  const now = new Date();
+  if (action === "reject") {
+    const r = await prisma.paymentOrder.updateMany({
+      where: { id: orderId, status: "REVIEW", paidAt: null },
+      data: { status: "CANCELLED" },
+    });
+    return { ok: r.count === 1, status: r.count === 1 ? "CANCELLED" as const : "NOT_IN_REVIEW" as const };
+  }
+  const order = await prisma.paymentOrder.findUnique({ where: { id: orderId } });
+  if (!order || order.status !== "REVIEW") return { ok: false, status: "NOT_IN_REVIEW" as const };
+  await prisma.$transaction(async (tx) => {
+    const claimed = await tx.paymentOrder.updateMany({
+      where: { id: orderId, status: "REVIEW", paidAt: null },
+      data: { status: "PAID", paidAt: now },
+    });
+    if (claimed.count !== 1) return;
+    await tx.promotion.updateMany({ where: { serviceId: order.serviceId, status: "ACTIVE" }, data: { status: "REVOKED" } });
+    await tx.promotion.create({
+      data: { orderId: order.id, serviceId: order.serviceId, plan: order.plan, startsAt: now, endsAt: new Date(now.getTime() + PROMOTION_PLANS[order.plan].days * 86400000) },
+    });
+  });
+  return { ok: true, status: "PAID" as const };
 }
