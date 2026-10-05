@@ -122,16 +122,8 @@ export default async function Home() {
           <input name="q" type="search" placeholder="কি খুঁজছেন? নাম, এলাকা বা ফোন..." aria-label="Search" />
         </form>
 
-        {/* ===== রোডম্যাপ: কাঞ্চনা → সাতকানিয়া → বাংলাদেশ ===== */}
+        {/* ===== কভারেজ রোডম্যাপ ===== */}
         <div className="ps-roadmap" aria-label="কভারেজ রোডম্যাপ">
-          <div className="ps-roadmap-step active">
-            <span className="ps-roadmap-dot">✓</span>
-            <span className="ps-roadmap-name">কাঞ্চনা</span>
-            <span className="ps-roadmap-status">✓ সক্রিয় বিভাগ</span>
-          </div>
-          <span className="ps-roadmap-arrow" aria-hidden>
-            →
-          </span>
           <div className="ps-roadmap-step active">
             <span className="ps-roadmap-dot">✓</span>
             <span className="ps-roadmap-name">সাতকানিয়া</span>
@@ -140,10 +132,18 @@ export default async function Home() {
           <span className="ps-roadmap-arrow" aria-hidden>
             →
           </span>
+          <div className="ps-roadmap-step active">
+            <span className="ps-roadmap-dot">✓</span>
+            <span className="ps-roadmap-name">চট্টগ্রাম</span>
+            <span className="ps-roadmap-status">পরবর্তী ধাপ</span>
+          </div>
+          <span className="ps-roadmap-arrow" aria-hidden>
+            →
+          </span>
           <div className="ps-roadmap-step">
             <span className="ps-roadmap-dot">৩</span>
             <span className="ps-roadmap-name">বাংলাদেশ</span>
-            <span className="ps-roadmap-status">পরবর্তী ধাপ</span>
+            <span className="ps-roadmap-status">ভবিষ্যৎ কভারেজ</span>
           </div>
         </div>
 
