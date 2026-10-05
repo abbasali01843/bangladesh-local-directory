@@ -6,9 +6,9 @@ import BottomNav from "@/components/BottomNav";
 export default async function SatkaniaPage() {
   const paur = await prisma.union.findFirst({ where: { id: "un_15_74_4621" } });
   const [wards, mahallas, villages, health] = await Promise.all([
-    prisma.area.findMany({ where: { unionId: "un_15_74_4621", type: "WARD" }, orderBy: { name: "asc" } }),
-    prisma.area.findMany({ where: { unionId: "un_15_74_4621", type: "MAHALLA" }, orderBy: { name: "asc" } }),
-    prisma.area.findMany({ where: { unionId: "un_15_74_4621", type: "VILLAGE" }, orderBy: { name: "asc" } }),
+    prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
+    prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
+    prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
     prisma.service.findMany({
       where: {
         status: "APPROVED",
