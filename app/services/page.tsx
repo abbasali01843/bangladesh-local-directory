@@ -19,7 +19,7 @@ export async function generateMetadata({
   const title = sub ? `${category.name} — ${sub.name}` : category.name;
   return {
     title,
-    description: `সাতকানিয়া ও কাঞ্চনার ${title} — ফোন নম্বরসহ স্থানীয় তথ্য।`,
+    description: `সাতকানিয়ার ${title} — ফোন নম্বরসহ স্থানীয় তথ্য।`,
   };
 }
 
