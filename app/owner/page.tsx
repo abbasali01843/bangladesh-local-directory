@@ -45,7 +45,10 @@ function ListingCard({ x }: { x: S }) {
   return (
     <div className="ps-list-card">
       {approved ? <Link href={`/services/${x.id}`}>{inner}</Link> : inner}
-      <Link href={`/owner/${x.id}/edit`} className="ps-btn-ghost" style={{ marginTop: 8 }}>✏️ সম্পাদনা</Link>
+      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+        <Link href={`/owner/${x.id}/edit`} className="ps-btn-ghost">✏️ সম্পাদনা</Link>
+        {x.status !== "SUSPENDED" && <button type="button" className="ps-btn-ghost" disabled={actionId === x.id} onClick={() => suspendListing(x.id)}>{actionId === x.id ? "..." : "⏸️ সরান"}</button>}
+      </div>
     </div>
   );
 }use client";
@@ -110,6 +113,21 @@ export default function OwnerDashboard() {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [needLogin, setNeedLogin] = useState(false);
+  const [actionId, setActionId] = useState<string | null>(null);
+
+  async function suspendListing(id: string) {
+    if (!window.confirm("এই listing-টি public থেকে সরিয়ে দিতে চান?")) return;
+    setActionId(id);
+    const r = await fetch(`/api/services/${id}/suspend`, { method: "POST" });
+    setActionId(null);
+    if (r.ok) {
+      setMine(v => v.map(x => x.id === id ? { ...x, status: "SUSPENDED" } : x));
+      setClaimed(v => v.map(x => x.id === id ? { ...x, status: "SUSPENDED" } : x));
+    } else {
+      const j = await r.json().catch(() => ({}));
+      setMsg(j.message || "লিস্টিংটি সরানো যায়নি");
+    }
+  }
 
   useEffect(() => {
     fetch("/api/owner/services")
