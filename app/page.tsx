@@ -116,8 +116,8 @@ export default async function Home() {
           <span className="ps-roadmap-arrow" aria-hidden>
             →
           </span>
-          <div className="ps-roadmap-step active">
-            <span className="ps-roadmap-dot">✓</span>
+          <div className="ps-roadmap-step soon">
+            <span className="ps-roadmap-dot">২</span>
             <span className="ps-roadmap-name">চট্টগ্রাম</span>
             <span className="ps-roadmap-status">পরবর্তী ধাপ</span>
           </div>
