@@ -51,8 +51,8 @@ export default function Home() {
       eyebrow: "বিশেষ বিভাগ",
       title: `${pilot.union.name} ইউনিয়নের তথ্য আলাদা করে সাজানো`,
       desc: "স্কুল · মসজিদ · হাটবাজার · স্বাস্থ্যকেন্দ্র",
-      href: "/area",
-      cta: "এলাকা দেখুন",
+      href: "/satkania",
+      cta: "সাতকানিয়া দেখুন",
       emoji: "🏘️",
       tone: "amber",
     },
@@ -109,7 +109,7 @@ export default function Home() {
         </div>
 
 
-        <Link href="/area" className="ps-promo">
+        <Link href="/satkania" className="ps-promo">
           <span className="ps-promo-pill">{pilot.union.name}</span>
           <span className="ps-promo-text">ইউনিয়ন প্রোফাইল · স্কুল · হাট · মসজিদ</span>
           <span className="ps-promo-arrow">›</span>
@@ -156,7 +156,7 @@ export default function Home() {
             return (
               <Link
                 key={u.id}
-                href={hot ? "/area" : `/search?q=${encodeURIComponent(u.name)}`}
+                href={hot ? "/satkania" : `/search?q=${encodeURIComponent(u.name)}`}
                 className={`ps-union-card${hot ? " hot" : " soon"}`}
               >
                 <span className="ps-union-pin">📍</span>
