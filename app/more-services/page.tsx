@@ -12,7 +12,7 @@ type Item = {
 
 const items: Item[] = [
   { icon: "🚨", label: "জরুরি সেবা", desc: "হটলাইন, পুলিশ, ফায়ার, অ্যাম্বুলেন্স", href: "/services?category=emergency" },
-  { icon: "🏘️", label: "আপনার এলাকা", desc: "কাঞ্চনা ইউনিয়ন প্রোফাইল", href: "/area" },
+  { icon: "🏘️", label: "আপনার এলাকা", desc: "সাতকানিয়ার এলাকা ও ইউনিয়ন", href: "/satkania" },
   { icon: "➕", label: "তথ্য যোগ করুন", desc: "ফ্রি লিস্টিং জমা দিন", href: "/add-listing" },
   { icon: "📢", label: "বিজ্ঞপ্তি", desc: "সর্বশেষ আপডেট ও ঘোষণা", href: "/notices" },
   { icon: "🔍", label: "খুঁজুন", desc: "নাম, এলাকা বা ফোন দিয়ে", href: "/search" },
