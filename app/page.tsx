@@ -16,6 +16,7 @@ export default async function Home() {
   const ruralUnions = await prisma.union.findMany({ where: { upazilaId: "u_15_74", id: { not: "un_15_74_4621" } }, orderBy: { name: "asc" } });
   const categoryCounts = await getCategoryCounts();
   const emergencyPins = getHomeEmergencyServices();
+  const activeServiceCount = Object.values(categoryCounts).reduce((sum, n) => sum + n, 0);
 
   const slides: Slide[] = [
     {
@@ -76,6 +77,20 @@ export default async function Home() {
         <HeroSlider slides={slides} />
 
         <NoticeTicker />
+
+        <div className="ps-home-status">
+          <div className="ps-home-status-main">
+            <span className="ps-live-dot" />
+            <div>
+              <strong>সাতকানিয়া এখন সক্রিয়</strong>
+              <span>স্থানীয় ডিরেক্টরি ধাপে ধাপে তৈরি হচ্ছে</span>
+            </div>
+          </div>
+          <div className="ps-home-stats">
+            <span><b>{ruralUnions.length}</b> ইউনিয়ন</span>
+            <span><b>{activeServiceCount}</b> তথ্য</span>
+          </div>
+        </div>
 
         <div className="ps-section-head">
           <span className="ps-section-icon">🚨</span>
