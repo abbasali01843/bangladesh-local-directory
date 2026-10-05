@@ -136,6 +136,22 @@ const dbInclude = {
 } as const;
 
 /** তালিকা — DB + legacy static; duplicate হলে DB record অগ্রাধিকার পায়। */
+/** ক্যাটাগরি কাউন্ট — APPROVED DB data থাকলে সেটিই source of truth; না থাকলে legacy count fallback। */
+export async function getCategoryCounts(): Promise<Record<string, number>> {
+  const fallback = Object.fromEntries(categories.map((c) => [c.id, c.count]));
+  try {
+    const grouped = await prisma.service.groupBy({
+      by: ["categoryId"],
+      where: { status: "APPROVED" },
+      _count: { _all: true },
+    });
+    for (const row of grouped) fallback[row.categoryId] = row._count._all;
+  } catch {
+    // Static counts remain available if the DB is temporarily unavailable.
+  }
+  return fallback;
+}
+
 export async function getListings(opts: {
   category?: string;
   sub?: string;
