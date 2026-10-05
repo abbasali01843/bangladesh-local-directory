@@ -1,7 +1,7 @@
 import SideMenu from "@/components/SideMenu";
 import { site } from "@/data/site";
-
 import Link from "next/link";
+
 type Props = {
   title?: string;
   subtitle?: string;
@@ -22,27 +22,31 @@ export default function TopBar({
   return (
     <div className="ps-topwrap">
       <header className="ps-topbar">
-        {backHref ? (
-          <Link href={backHref} className="ps-iconbtn" aria-label="Back">
-            ←
-          </Link>
-        ) : showMenu ? (
-          <SideMenu />
-        ) : (
-          <span className="ps-iconbtn" aria-hidden="true" />
-        )}
-
-        <div className="ps-brand">
-          <span className="ps-logo">📍</span>
-          <div>
-            <div className="ps-brand-title">{title}</div>
-            <div className="ps-brand-sub">{subtitle}</div>
-          </div>
+        <div className="ps-topbar-side">
+          {backHref ? (
+            <Link href={backHref} className="ps-iconbtn ps-iconbtn-soft" aria-label="ফিরে যান">
+              ←
+            </Link>
+          ) : showMenu ? (
+            <SideMenu />
+          ) : (
+            <span className="ps-iconbtn" aria-hidden="true" />
+          )}
         </div>
 
-        <Link href={rightHref} className="ps-iconbtn" aria-label="Action">
-          {rightLabel}
+        <Link href="/" className="ps-brand" aria-label="হোম">
+          <span className="ps-logo">📍</span>
+          <span className="ps-brand-copy">
+            <span className="ps-brand-title">{title}</span>
+            <span className="ps-brand-sub">{subtitle}</span>
+          </span>
         </Link>
+
+        <div className="ps-topbar-side ps-topbar-right">
+          <Link href={rightHref} className="ps-iconbtn ps-iconbtn-soft" aria-label="বিজ্ঞপ্তি">
+            {rightLabel}
+          </Link>
+        </div>
       </header>
     </div>
   );
