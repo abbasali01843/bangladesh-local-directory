@@ -211,14 +211,14 @@ export default async function Home() {
           ))}
         </div>
 
-        {/* ===== কাঞ্চনা ফিচার্ড ===== */}
+        {/* ===== DB-ভিত্তিক সেবা ===== */}
         <div className="ps-section-head">
           <span className="ps-section-icon">⭐</span>
-          <h2>শুধু {pilot.union.name} ইউনিয়ন</h2>
-          <Link href="/area" className="ps-section-more">সব ›</Link>
+          <h2>নির্বাচিত সেবা</h2>
+          <Link href="/services" className="ps-section-more">সব ›</Link>
         </div>
         <div className="ps-list">
-          {kanchana.map((s) => (
+          {kanchana.length > 0 ? kanchana.slice(0, 4).map((s) => (
             <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
               <div className="ps-list-top">
                 <strong>{s.name}</strong>
@@ -226,26 +226,13 @@ export default async function Home() {
               </div>
               <p className="ps-list-loc">📍 {s.area}</p>
             </Link>
-          ))}
-        </div>
-
-        {/* ===== সম্মানিত ডোনারবৃন্দ ===== */}
-        <div className="ps-section-head" style={{ marginTop: 16 }}>
-          <span className="ps-section-icon">💝</span>
-          <h2>সম্মানিত ডোনারবৃন্দ</h2>
-          <Link href="/donors" className="ps-section-more">সম্পূর্ণ তালিকা ›</Link>
-        </div>
-        <div className="ps-person-grid">
-          {donors.slice(0, 2).map((d) => (
-            <div key={d.id} className="ps-person">
-              <span className="ps-person-avatar">{initialOf(d.name)}</span>
-              <span className="ps-person-body">
-                <span className="ps-person-name">{d.name}</span>
-                <span className="ps-person-role">{d.role}</span>
-              </span>
-              <span className="ps-person-amount">{d.amount}</span>
+          )) : (
+            <div className="ps-empty" style={{ margin: 0 }}>
+              <div className="ps-empty-icon">📋</div>
+              <p>নতুন সেবা যোগ হলে এখানে দেখাবে।</p>
+              <Link href="/add-listing" className="ps-btn-primary">+ তথ্য যোগ করুন</Link>
             </div>
-          ))}
+          )}
         </div>
 
         {/* ===== যোগাযোগ / ফুটার ===== */}
