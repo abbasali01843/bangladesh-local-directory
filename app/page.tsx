@@ -210,28 +210,18 @@ export default async function Home() {
           ))}
         </div>
 
-        {/* ===== DB-ভিত্তিক সেবা ===== */}
+        {/* ===== নির্বাচিত সেবা ===== */}
         <div className="ps-section-head">
           <span className="ps-section-icon">⭐</span>
           <h2>নির্বাচিত সেবা</h2>
           <Link href="/services" className="ps-section-more">সব ›</Link>
         </div>
         <div className="ps-list">
-          {kanchana.length > 0 ? kanchana.slice(0, 4).map((s) => (
-            <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
-              <div className="ps-list-top">
-                <strong>{s.name}</strong>
-                <span className="ps-badge">{s.union}</span>
-              </div>
-              <p className="ps-list-loc">📍 {s.area}</p>
-            </Link>
-          )) : (
-            <div className="ps-empty" style={{ margin: 0 }}>
-              <div className="ps-empty-icon">📋</div>
-              <p>নতুন সেবা যোগ হলে এখানে দেখাবে।</p>
-              <Link href="/add-listing" className="ps-btn-primary">+ তথ্য যোগ করুন</Link>
-            </div>
-          )}
+          <div className="ps-empty" style={{ margin: 0 }}>
+            <div className="ps-empty-icon">📋</div>
+            <p>নতুন সেবা যোগ হলে এখানে দেখাবে।</p>
+            <Link href="/add-listing" className="ps-btn-primary">+ তথ্য যোগ করুন</Link>
+          </div>
         </div>
 
         {/* ===== যোগাযোগ / ফুটার ===== */}
