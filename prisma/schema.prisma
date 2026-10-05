@@ -119,6 +119,7 @@ model Service {
   email String?
   address String?
   description String?
+  moderationNote String?
   latitude Float?
   longitude Float?
   status ListingStatus @default(PENDING)
