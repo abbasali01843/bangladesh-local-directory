@@ -715,3 +715,9 @@ textarea.ps-input{min-height:105px;padding-top:12px}
 .ps-contact-row{border-radius:15px}
 .ps-card-actions{gap:7px;flex-wrap:wrap}
 .ps-card-action{border-radius:10px}
+
+.ps-notice-hero{background:linear-gradient(135deg,#f2faf5,#fff);border-color:#dcebe1}
+.ps-notice-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:9px;color:#7a8780;font-weight:800;letter-spacing:.08em}
+.ps-notice-meta span{color:var(--ps-green);background:#eaf7ef;border-radius:999px;padding:4px 7px}
+.ps-notice-title{font-size:15px;line-height:1.4;margin:0 0 5px}
+.ps-notice-card{padding:15px 16px}
