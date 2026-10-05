@@ -48,6 +48,7 @@ export default async function UnionPage({ params }: { params: Promise<{ slug: st
   const mauzas = areas.filter(a => a.type === "MAUZA");
   const markets = areas.filter(a => a.type === "MARKET");
   const landmarks = areas.filter(a => a.type === "LANDMARK");
+  const otherServices = services.filter(s => !s.category.name.includes("স্বাস্থ্য") && !s.category.name.includes("শিক্ষা"));
 
   return (
     <main className="ps-page">
@@ -100,9 +101,9 @@ export default async function UnionPage({ params }: { params: Promise<{ slug: st
           </Link>
         )) : <p className="ps-section-note">এই ইউনিয়নের শিক্ষা প্রতিষ্ঠানের তথ্য এখনো যোগ করা হয়নি।</p>}</div>
 
-        <div className="ps-section-head"><span className="ps-section-icon">📋</span><h2>অন্যান্য সেবা ({services.length})</h2></div>
+        <div className="ps-section-head"><span className="ps-section-icon">📋</span><h2>অন্যান্য সেবা ({otherServices.length})</h2></div>
         <div className="ps-chips" style={{ marginBottom: 16 }}>
-          {services.map(s => <Link key={s.id} href={"/services/" + s.id} className="ps-chip">{s.name}</Link>)}
+          {otherServices.map(s => <Link key={s.id} href={"/services/" + s.id} className="ps-chip">{s.name}</Link>)}
         </div>
       </div>
       <BottomNav active="home" />
