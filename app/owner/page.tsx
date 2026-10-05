@@ -42,12 +42,14 @@ function ListingCard({ x }: { x: S }) {
       </p>
     </>
   );
+  const edit = <Link href={`/owner/${x.id}/edit`} className="ps-btn-ghost" style={{ marginTop: 8 }}>✏️ সম্পাদনা</Link>;
   return approved ? (
     <Link href={`/services/${x.id}`} className="ps-list-card">
       {inner}
+      {edit}
     </Link>
   ) : (
-    <div className="ps-list-card">{inner}</div>
+    <div className="ps-list-card">{inner}{edit}</div>
   );
 }
 
