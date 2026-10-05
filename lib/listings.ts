@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { services as staticServices } from "@/data/services";
 import { categories } from "@/data/categories";
 
-/** DB ও static — দুই উৎসের একরকম ডিসপ্লে শেপ। */
 export type ListingView = {
   id: string;
   name: string;
@@ -22,44 +20,11 @@ export type ListingView = {
   fields: { label: string; value: string }[];
   latitude: number | null;
   longitude: number | null;
-  source: "db" | "static" | "mixed";
+  source: "db";
   photos: { id: string; url: string }[];
   rating: { avg: number; count: number };
   reviews: { id: string; rating: number; body: string | null; userName: string; createdAt: string }[];
 };
-
-function staticToView(
-  s: (typeof staticServices)[number]
-): ListingView {
-  const c = categories.find((x) => x.id === s.category);
-  return {
-    id: s.id,
-    name: s.name,
-    category: s.category,
-    categoryName: c?.name || s.category,
-    categoryIcon: c?.icon || "📋",
-    subcategory: s.subcategory || null,
-    district: s.district,
-    upazila: s.upazila,
-    union: s.union,
-    area: s.area,
-    phone: s.phone || "",
-    email: "",
-    verified: s.verified,
-    verificationStatus: s.verified ? "VERIFIED" : "UNVERIFIED",
-    description: s.description,
-    fields: Object.entries(s.fields).map(([key, value]) => ({
-      label: c?.fields.find((f) => f.key === key)?.label || key,
-      value,
-    })),
-    latitude: null,
-    longitude: null,
-    source: "static",
-    photos: [],
-    rating: { avg: 0, count: 0 },
-    reviews: [],
-  };
-}
 
 type DbService = {
   id: string;
@@ -135,21 +100,19 @@ const dbInclude = {
   },
 } as const;
 
-/** তালিকা — DB + curated static fallback; duplicate হলে DB record অগ্রাধিকার পায়। */
-/** ক্যাটাগরি কাউন্ট — APPROVED DB data থাকলে সেটিই source of truth; না থাকলে curated static data fallback। */
 export async function getCategoryCounts(): Promise<Record<string, number>> {
-  const fallback = Object.fromEntries(categories.map((c) => [c.id, staticServices.filter((s) => s.category === c.id).length]));
+  const counts = Object.fromEntries(categories.map((c) => [c.id, 0]));
   try {
     const grouped = await prisma.service.groupBy({
       by: ["categoryId"],
       where: { status: "APPROVED" },
       _count: { _all: true },
     });
-    for (const row of grouped) fallback[row.categoryId] = row._count._all;
+    for (const row of grouped) counts[row.categoryId] = row._count._all;
   } catch {
-    // Curated static counts remain available if the DB is temporarily unavailable.
+    // Keep zero counts if the database is temporarily unavailable.
   }
-  return fallback;
+  return counts;
 }
 
 export async function getListings(opts: {
@@ -157,55 +120,29 @@ export async function getListings(opts: {
   sub?: string;
   union?: string;
   take?: number;
-}): Promise<{ list: ListingView[]; source: "db" | "static" | "mixed" }> {
-  try {
-    const rows = await prisma.service.findMany({
-      where: {
-        status: "APPROVED",
-        ...(opts.category ? { categoryId: opts.category } : {}),
-        ...(opts.sub ? { subcategory: opts.sub } : {}),
-        ...(opts.union ? { union: { name: opts.union } } : {}),
-      },
-      include: dbInclude,
-      orderBy: { createdAt: "desc" },
-      take: opts.take || 200,
-    });
-    let legacy = staticServices;
-    if (opts.category) legacy = legacy.filter((s) => s.category === opts.category);
-    if (opts.sub) legacy = legacy.filter((s) => s.subcategory === opts.sub);
-    if (opts.union) legacy = legacy.filter((s) => s.union === opts.union);
-    const dbList = rows.map(dbToView);
-    const identity = (s: ListingView) =>
-      [s.name, s.category, s.district, s.upazila].map((v) => v.trim().toLocaleLowerCase()).join("|");
-    const seen = new Set(dbList.map(identity));
-    const staticList = legacy.map(staticToView).filter((s) => !seen.has(identity(s)));
-    const list = [...dbList, ...staticList].slice(0, opts.take || 200);
-    return { list, source: dbList.length && staticList.length ? "mixed" : staticList.length ? "static" : "db" };
-  } catch {
-    let list = staticServices;
-    if (opts.category) list = list.filter((s) => s.category === opts.category);
-    if (opts.sub) list = list.filter((s) => s.subcategory === opts.sub);
-    if (opts.union) list = list.filter((s) => s.union === opts.union);
-    return { list: list.map(staticToView), source: "static" };
-  }
+}): Promise<{ list: ListingView[]; source: "db" }> {
+  const rows = await prisma.service.findMany({
+    where: {
+      status: "APPROVED",
+      ...(opts.category ? { categoryId: opts.category } : {}),
+      ...(opts.sub ? { subcategory: opts.sub } : {}),
+      ...(opts.union ? { union: { name: opts.union } } : {}),
+    },
+    include: dbInclude,
+    orderBy: { createdAt: "desc" },
+    take: opts.take || 200,
+  });
+  return { list: rows.map(dbToView), source: "db" };
 }
 
-/** বিস্তারিত — DB-তে APPROVED খুঁজে, না পেলে curated static id মিলিয়ে। */
 export async function getListing(id: string): Promise<ListingView | null> {
-  try {
-    const row = await prisma.service.findFirst({
-      where: { id, status: "APPROVED" },
-      include: dbInclude,
-    });
-    if (row) return dbToView(row);
-  } catch {
-    // DB নেই — নিচে static fallback
-  }
-  const s = staticServices.find((x) => x.id === id);
-  return s ? staticToView(s) : null;
+  const row = await prisma.service.findFirst({
+    where: { id, status: "APPROVED" },
+    include: dbInclude,
+  });
+  return row ? dbToView(row) : null;
 }
 
-/** বাংলাদেশি মোবাইল → wa.me নম্বর (8801XXXXXXXXX); না হলে null। */
 export function waNumber(phone: string): string | null {
   const d = phone.replace(/\D/g, "");
   const norm = d.startsWith("880")
