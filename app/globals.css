@@ -25,7 +25,9 @@ a { color: inherit; text-decoration: none; }
   display: flex; align-items: center; justify-content: center;
   font-size: 18px; cursor: pointer; color: #333;
 }
-.ps-brand { display: flex; align-items: center; gap: 8px; }
+.ps-brand { display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; flex: 1; }
+.ps-brand > div { min-width: 0; }
+.ps-brand-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px; }
 .ps-logo { font-size: 28px; line-height: 1; }
 .ps-brand-title { font-weight: 800; font-size: 16px; color: #0a7a3e; line-height: 1.1; }
 .ps-brand-sub { font-size: 10px; color: #6b7280; }
