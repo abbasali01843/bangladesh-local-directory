@@ -6,9 +6,9 @@ import BottomNav from "@/components/BottomNav";
 export default async function SatkaniaPage() {
   const paur = await prisma.union.findFirst({ where: { id: "un_15_74_4621" } });
   const [wards, mahallas, villages, health, doctorCount] = await Promise.all([
-    prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
-    prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
-    prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
+    prisma.area.findMany({ where: { unionId: "un_15_74_4621", type: "WARD" }, orderBy: { name: "asc" } }),
+    prisma.area.findMany({ where: { unionId: "un_15_74_4621", type: "MAHALLA" }, orderBy: { name: "asc" } }),
+    prisma.area.findMany({ where: { unionId: "un_15_74_4621", type: "VILLAGE" }, orderBy: { name: "asc" } }),
     prisma.service.findMany({
       where: {
         status: "APPROVED",
@@ -70,18 +70,13 @@ export default async function SatkaniaPage() {
           <h2>স্বাস্থ্যসেবা ({health.length})</h2>
           <Link href="/services?category=health" className="ps-section-more">সব ›</Link>
         </div>
-        <div className="ps-list">
-          {health.map(s => (
-            <Link key={s.id} href={`/services/${s.id}`} className="ps-list-card">
-              <div className="ps-list-top">
-                <strong>{s.name}</strong>
-                <span className="ps-badge">✓ {s.verificationLevel}</span>
-              </div>
-              <p className="ps-list-loc">📍 {[s.union?.name, s.area?.name].filter(Boolean).join(" · ") || "সাতকানিয়া"}</p>
-              {s.subcategory && <p className="ps-list-sub">🏷️ {s.subcategory}</p>}
-            </Link>
-          ))}
-        </div>
+        <div>{health.map(s => (
+          <Link key={s.id} href={`/services/${s.id}`} className="ps-prof-card">
+            <div className="ps-doctor-head"><div className="ps-doctor-avatar">🏥</div><div className="ps-doctor-main"><h3 className="ps-doctor-name">{s.name}</h3><div className="ps-doctor-specialty">{s.subcategory || "স্বাস্থ্যসেবা"}</div></div><span className="ps-verified">{s.verificationLevel}</span></div>
+            <div className="ps-meta-grid"><div className="ps-meta"><span className="ps-meta-label">এলাকা</span><span className="ps-meta-value">{[s.union?.name, s.area?.name].filter(Boolean).join(" · ") || "সাতকানিয়া"}</span></div><div className="ps-meta"><span className="ps-meta-label">স্ট্যাটাস</span><span className="ps-meta-value">✓ অনুমোদিত</span></div></div>
+            <div className="ps-card-actions"><span className="ps-card-action primary">বিস্তারিত দেখুন</span></div>
+          </Link>
+        ))}</div>
       </div>
       <BottomNav active="home" />
     </main>
