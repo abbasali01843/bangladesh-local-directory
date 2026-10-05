@@ -1,9 +1,9 @@
 import { categories } from "@/data/categories";
-import { servicesInKanchana, getHomeEmergencyServices } from "@/data/services";
+import { getHomeEmergencyServices } from "@/data/services";
 import { getCategoryCounts } from "@/lib/listings";
 import { notices } from "@/data/notices";
 import { pilot } from "@/data/pilot";
-import { donors, initialOf } from "@/data/community";
+
 import { site, hasSocial } from "@/data/site";
 import { websiteJsonLd } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
@@ -15,7 +15,6 @@ import NoticeTicker from "@/components/NoticeTicker";
 import Link from "next/link";
 export default async function Home() {
   const ruralUnions = await prisma.union.findMany({ where: { upazilaId: "u_15_74", id: { not: "un_15_74_4621" } }, orderBy: { name: "asc" } });
-  const kanchana = servicesInKanchana().slice(0, 6);
   const categoryCounts = await getCategoryCounts();
   const emergencyPins = getHomeEmergencyServices();
 
