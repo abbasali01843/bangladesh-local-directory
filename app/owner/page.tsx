@@ -42,6 +42,56 @@ function ListingCard({ x }: { x: S }) {
       </p>
     </>
   );
+  return (
+    <div className="ps-list-card">
+      {approved ? <Link href={`/services/${x.id}`}>{inner}</Link> : inner}
+      <Link href={`/owner/${x.id}/edit`} className="ps-btn-ghost" style={{ marginTop: 8 }}>✏️ সম্পাদনা</Link>
+    </div>
+  );
+}use client";
+
+import { useEffect, useState } from "react";
+import TopBar from "@/components/TopBar";
+import BottomNav from "@/components/BottomNav";
+
+import Link from "next/link";
+type S = {
+  id: string;
+  name: string;
+  status: string;
+  verificationStatus: string;
+  category?: { name: string };
+  district?: { name: string };
+  upazila?: { name: string };
+};
+
+type C = {
+  id: string;
+  status: string;
+  service?: { id: string; name: string };
+};
+
+const statusBn: Record<string, string> = {
+  PENDING: "⏳ রিভিউতে",
+  APPROVED: "✅ প্রকাশিত",
+  REJECTED: "❌ বাতিল",
+  SUSPENDED: "⛔ স্থগিত",
+};
+
+function ListingCard({ x }: { x: S }) {
+  const approved = x.status === "APPROVED";
+  const inner = (
+    <>
+      <div className="ps-list-top">
+        <strong>{x.name}</strong>
+        <span className="ps-badge">{statusBn[x.status] || x.status}</span>
+      </div>
+      <p className="ps-list-loc">
+        📍 {x.upazila?.name || "—"}, {x.district?.name || "—"}
+        {x.category?.name ? ` · ${x.category.name}` : ""}
+      </p>
+    </>
+  );
   const edit = <Link href={`/owner/${x.id}/edit`} className="ps-btn-ghost" style={{ marginTop: 8 }}>✏️ সম্পাদনা</Link>;
   return approved ? (
     <Link href={`/services/${x.id}`} className="ps-list-card">
