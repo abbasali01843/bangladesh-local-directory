@@ -6,10 +6,6 @@ import { categories, subOf } from "@/data/categories";
 import { isValidBdPhone } from "@/lib/validate";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
-function digitsOnly(s: string) {
-  return s.replace(/\D/g, "").replace(/^880/, "").replace(/^0/, "");
-}
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.trim().toLowerCase() || "";

@@ -3,10 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { categories, subOf } from "@/data/categories";
 import { isValidBdPhone } from "@/lib/validate";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  const rl = await rateLimit(`service-edit:${user.id}`, 20, 10 * 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "RATE_LIMITED", message: "অনেকবার সম্পাদনা করা হয়েছে। ১০ মিনিট পরে আবার চেষ্টা করুন।" },
+      { status: 429, headers: { "Retry-After": "600" } }
+    );
+  }
   const { id } = await params;
 
   try {

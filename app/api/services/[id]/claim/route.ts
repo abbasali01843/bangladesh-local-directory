@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  const rl = await rateLimit(`claim:${user.id}`, 5, 10 * 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "RATE_LIMITED", message: "অনেক দাবি জমা হয়েছে। ১০ মিনিট পরে আবার চেষ্টা করুন।" },
+      { status: 429, headers: { "Retry-After": "600" } }
+    );
+  }
 
   const { id } = await params;
   try {
