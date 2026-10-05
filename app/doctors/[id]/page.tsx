@@ -16,7 +16,7 @@ export default async function DoctorDetailPage({ params }: { params: Promise<{ i
       <TopBar title="ডাক্তারের তথ্য" subtitle="সাতকানিয়া" backHref="/doctors" />
       <div className="ps-content">
         <div className="ps-detail">
-          <div className="ps-detail-icon">👨‍⚕️</div>
+          <div className="ps-profile-avatar">👨‍⚕️</div>
           <h1 className="ps-detail-title">{doctor.name}</h1>
           {doctor.specialty && <p className="ps-list-sub">🩺 {doctor.specialty}</p>}
           {doctor.qualification && <p className="ps-detail-desc">{doctor.qualification}</p>}
