@@ -1,7 +1,7 @@
 import { categories } from "@/data/categories";
 import { countByCategory, servicesInKanchana, getHomeEmergencyServices } from "@/data/services";
 import { notices } from "@/data/notices";
-import { pilot, satkaniaUnions } from "@/data/pilot";
+import { pilot } from "@/data/pilot";
 import { donors, initialOf } from "@/data/community";
 import { site, hasSocial } from "@/data/site";
 import { websiteJsonLd } from "@/lib/seo";
