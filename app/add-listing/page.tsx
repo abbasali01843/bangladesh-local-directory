@@ -33,7 +33,7 @@ export default function AddListing() {
         setLoc(j.data || []);
         setStaticMode(j.source === "static");
       })
-      .catch(() => setStaticMode(true));
+      .catch(() => setLoc([]));
   }, []);
 
   const d = loc.find((x) => x.id === district);
@@ -244,7 +244,7 @@ export default function AddListing() {
           {message && <div className={ok ? "ps-msg-ok" : "ps-msg-err"}>{message}</div>}
 
           <button disabled={busy || !district} className="ps-btn-primary ps-btn-block">
-            {busy ? "জমা হচ্ছে..." : staticMode ? "চেক করুন (ডেমো)" : "জমা দিন — Admin Review"}
+            {busy ? "জমা হচ্ছে..." : "জমা দিন — Admin Review"}
           </button>
         </form>
       </div>
