@@ -5,7 +5,7 @@ import BottomNav from "@/components/BottomNav";
 
 export default async function SatkaniaPage() {
   const paur = await prisma.union.findFirst({ where: { id: "un_15_74_4621" } });
-  const [wards, mahallas, villages, health] = await Promise.all([
+  const [wards, mahallas, villages, health, doctorCount] = await Promise.all([
     prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
     prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
     prisma.area.findMany({ where: { unionId: "un_15_74_4621" }, orderBy: { name: "asc" } }),
@@ -51,6 +51,10 @@ export default async function SatkaniaPage() {
         <div className="ps-section-head"><span className="ps-section-icon">🌾</span><h2>গ্রাম ({villages.length})</h2></div>
         <div className="ps-chips" style={{ marginBottom: 16 }}>
           {villages.map(v => <span key={v.id} className="ps-chip">{v.name}</span>)}
+        </div>
+
+        <div className="ps-section-head">
+          <span className="ps-section-icon">👨‍⚕️</span><h2>ডাক্তার ({doctorCount})</h2><Link href="/doctors" className="ps-section-more">দেখুন ›</Link>
         </div>
 
         <div className="ps-section-head">
