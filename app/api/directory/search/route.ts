@@ -40,7 +40,7 @@ export async function GET(request: Request) {
     });
     return NextResponse.json({ data, source: "db" });
   } catch {
-    // Fallback: search static demo services
+    // Fallback: search curated static services
     let list = services;
     if (categoryId) list = list.filter((s) => s.category === categoryId);
     if (q) {
