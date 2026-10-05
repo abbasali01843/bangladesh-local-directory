@@ -19,6 +19,13 @@ export default async function SatkaniaPage() {
       orderBy: { name: "asc" },
       take: 100,
     }),
+    prisma.doctor.count({
+      where: {
+        chambers: {
+          some: { service: { upazila: { name: { contains: "সাতকান" } } } },
+        },
+      },
+    }),
   ]);
 
   return (
