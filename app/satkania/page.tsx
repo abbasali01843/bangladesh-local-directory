@@ -12,8 +12,8 @@ export default async function SatkaniaPage() {
     prisma.service.findMany({
       where: {
         status: "APPROVED",
-        upazila: { name: { contains: "সাতকান", mode: "insensitive" } },
-        category: { name: { contains: "স্বাস্থ্য", mode: "insensitive" } },
+        upazila: { name: { contains: "সাতকান" } },
+        category: { name: { contains: "স্বাস্থ্য" } },
       },
       include: { union: true, area: true },
       orderBy: { name: "asc" },
