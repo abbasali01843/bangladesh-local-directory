@@ -2,7 +2,6 @@ import { categories } from "@/data/categories";
 import { getHomeEmergencyServices } from "@/data/services";
 import { getCategoryCounts } from "@/lib/listings";
 import { notices } from "@/data/notices";
-import { pilot } from "@/data/pilot";
 
 import { site, hasSocial } from "@/data/site";
 import { websiteJsonLd } from "@/lib/seo";
@@ -50,15 +49,6 @@ export default async function Home() {
       tone: "amber",
     },
     {
-      id: "kanchana",
-      eyebrow: "বিশেষ বিভাগ",
-      title: `${pilot.union.name} ইউনিয়নের তথ্য আলাদা করে সাজানো`,
-      desc: "স্কুল · মসজিদ · হাটবাজার · স্বাস্থ্যকেন্দ্র",
-      href: "/satkania",
-      cta: "সাতকানিয়া দেখুন",
-      emoji: "🏘️",
-      tone: "amber",
-    },
     ...(hasSocial
       ? [
           {
@@ -113,7 +103,7 @@ export default async function Home() {
 
 
         <Link href="/satkania" className="ps-promo">
-          <span className="ps-promo-pill">{pilot.union.name}</span>
+          <span className="ps-promo-pill">সাতকানিয়া</span>
           <span className="ps-promo-text">ইউনিয়ন প্রোফাইল · স্কুল · হাট · মসজিদ</span>
           <span className="ps-promo-arrow">›</span>
         </Link>
@@ -151,11 +141,11 @@ export default async function Home() {
         {/* ===== ইউনিয়ন সমূহ — priyosherpur-এর উপজেলা সেকশনের মতো ===== */}
         <div className="ps-section-head">
           <span className="ps-section-icon">🏘️</span>
-          <h2>{pilot.upazila.name} উপজেলার ইউনিয়ন সমূহ ({ruralUnions.length})</h2>
+          <h2>সাতকানিয়া উপজেলার ইউনিয়ন সমূহ ({ruralUnions.length})</h2>
         </div>
         <div className="ps-union-grid">
           {ruralUnions.map((u) => {
-            const hot = u.name === pilot.union.name;
+            const hot = false;
             return (
               <Link key={u.id} href={"/union/" + encodeURIComponent(u.slug)} className={"ps-union-card" + (hot ? " hot" : "")}>
                 <span className="ps-union-pin">📍</span>
