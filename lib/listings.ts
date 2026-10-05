@@ -135,10 +135,10 @@ const dbInclude = {
   },
 } as const;
 
-/** তালিকা — DB + legacy static; duplicate হলে DB record অগ্রাধিকার পায়। */
-/** ক্যাটাগরি কাউন্ট — APPROVED DB data থাকলে সেটিই source of truth; না থাকলে legacy count fallback। */
+/** তালিকা — DB + curated static fallback; duplicate হলে DB record অগ্রাধিকার পায়। */
+/** ক্যাটাগরি কাউন্ট — APPROVED DB data থাকলে সেটিই source of truth; না থাকলে curated static data fallback। */
 export async function getCategoryCounts(): Promise<Record<string, number>> {
-  const fallback = Object.fromEntries(categories.map((c) => [c.id, c.count]));
+  const fallback = Object.fromEntries(categories.map((c) => [c.id, staticServices.filter((s) => s.category === c.id).length]));
   try {
     const grouped = await prisma.service.groupBy({
       by: ["categoryId"],
@@ -147,7 +147,7 @@ export async function getCategoryCounts(): Promise<Record<string, number>> {
     });
     for (const row of grouped) fallback[row.categoryId] = row._count._all;
   } catch {
-    // Static counts remain available if the DB is temporarily unavailable.
+    // Curated static counts remain available if the DB is temporarily unavailable.
   }
   return fallback;
 }
@@ -190,7 +190,7 @@ export async function getListings(opts: {
   }
 }
 
-/** বিস্তারিত — DB-তে APPROVED খুঁজে, না পেলে static id মিলিয়ে। */
+/** বিস্তারিত — DB-তে APPROVED খুঁজে, না পেলে curated static id মিলিয়ে। */
 export async function getListing(id: string): Promise<ListingView | null> {
   try {
     const row = await prisma.service.findFirst({
