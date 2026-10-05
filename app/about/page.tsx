@@ -39,7 +39,7 @@ export default function AboutPage() {
               <span className="ps-field-value">৬৪ জেলা</span>
             </div>
           </div>
-          <Link href="/area" className="ps-btn-primary ps-btn-block">
+          <Link href="/satkania" className="ps-btn-primary ps-btn-block">
             আপনার এলাকা দেখুন
           </Link>
           <Link
